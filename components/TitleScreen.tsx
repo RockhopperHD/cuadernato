@@ -29,12 +29,18 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ setMode, isListLocked 
             Dictionary
           </button>
            <button
-            onClick={() => setMode('importList')}
+            onClick={() => setMode('listBuilder')}
+            className="w-64 bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-green-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
+          >
+            List Builder
+          </button>
+           <button
+            onClick={() => setMode('markList')}
             disabled={isListLocked}
-            title={isListLocked ? "A locked list is active. Unlock it before importing a new one." : "Import a new word list"}
+            title={isListLocked ? "A locked list is active. Unlock it before marking a new one." : "Mark a new word list"}
             className="w-64 bg-slate-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-slate-300 disabled:bg-slate-400 dark:disabled:bg-slate-800 disabled:cursor-not-allowed disabled:transform-none"
           >
-            Import List
+            Mark List
           </button>
           <button
             disabled

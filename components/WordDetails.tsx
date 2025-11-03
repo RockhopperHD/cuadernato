@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { DictionaryEntry, SpanishSide } from '../types';
 import { ConjugationChart } from './ConjugationChart';
@@ -37,7 +38,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
     if (isListLocked && isWordOnList) {
         return (
             <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                <div className="text-9xl font-bold text-slate-300 dark:text-slate-600 select-none">✕</div>
+                <div className="text-9xl font-bold text-blue-300 dark:text-blue-600 select-none">✕</div>
                 <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-300 mt-4">Word not available</h2>
                 <p className="text-slate-500 dark:text-slate-400 mt-2">
                     This word is on a locked list.
@@ -62,12 +63,14 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
         return 0;
     });
 
+    const listIconColor = isListLocked ? 'text-blue-500' : 'text-green-500';
+
     return (
         <div className="p-6 md:p-8 overflow-y-auto h-full relative">
             <div className="absolute top-6 right-6 flex items-center gap-2 z-10">
                  <button 
                     onClick={onListIconClick}
-                    className="text-green-500 hover:text-green-400 transition-colors p-2"
+                    className={`${listIconColor} hover:opacity-80 transition-opacity p-2`}
                     aria-label="List status"
                  >
                     <VerticalTriangleIcon filled={isWordOnList} className="w-8 h-8"/>
@@ -81,6 +84,13 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                 </button>
             </div>
             
+            {entry.grand_note && (
+                <div className="mb-6 p-4 bg-slate-100 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <h3 className="text-xl font-bold text-center mb-2">{entry.grand_note.title}</h3>
+                    <p className="text-slate-600 dark:text-slate-300">{entry.grand_note.description}</p>
+                </div>
+            )}
+
             <div className="space-y-6">
                 {sortedMeanings.map((meaning, index) => {
                     const { spanish, english, note } = meaning;

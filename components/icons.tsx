@@ -115,8 +115,9 @@ export const LockIcon: React.FC<{ className?: string }> = ({ className }) => (
     </svg>
 );
 
-export const CloseIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+// Fix: Added `strokeWidth` prop to allow for dynamic stroke width.
+export const CloseIcon: React.FC<{ className?: string; strokeWidth?: string | number }> = ({ className, strokeWidth = "2" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
@@ -128,4 +129,11 @@ export const BanIcon: React.FC<{ className?: string; style?: React.CSSProperties
         <circle cx="12" cy="12" r="10" />
         <path d="m4.93 4.93 14.14 14.14" />
     </svg>
+);
+
+export const WarningIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <title>Warning: Word not in dictionary</title>
+    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+  </svg>
 );

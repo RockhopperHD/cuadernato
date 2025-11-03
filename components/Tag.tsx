@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface TagProps {
-  type: 'VULGAR' | 'REFLEXIVE' | 'LATAM' | 'SPAIN' | 'GENDER-SPECIFIC' | string;
+  type: 'VULGAR' | 'REFLEXIVE' | 'LATAM' | 'SPAIN' | 'GENDER-SPECIFIC' | 'COLLOQUIAL' | string;
 }
 
 const tagStyles: { [key: string]: { bg: string, text: string, tooltip: string } } = {
@@ -10,6 +10,7 @@ const tagStyles: { [key: string]: { bg: string, text: string, tooltip: string } 
   LATAM: { bg: 'bg-sky-500', text: 'text-white', tooltip: 'This usage is common in Latin America.' },
   SPAIN: { bg: 'bg-amber-500', text: 'text-white', tooltip: 'This usage is common in Spain.' },
   'GENDER-SPECIFIC': { bg: 'bg-purple-500', text: 'text-white', tooltip: "Changing this word's gender (e.g. -o to -a) significantly changes its meaning." },
+  COLLOQUIAL: { bg: 'bg-cyan-500', text: 'text-white', tooltip: 'This is a colloquial or informal term.' },
 };
 
 export const Tag: React.FC<TagProps> = ({ type }) => {

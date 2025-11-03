@@ -260,13 +260,17 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
   },
   {
     id: '000013',
-    starred: false,
+    starred: true,
+    grand_note: {
+        title: "Split Word",
+        description: "In English, 'to be' is a single verb. In Spanish, it's split into two: `ser` and `estar`. `Ser` is used for permanent or lasting attributes (identity, origin, characteristics). `Estar` is used for temporary states and locations."
+    },
     meanings: [
       {
         spanish: {
           word: 'ser',
           pos: 'verb',
-          as_in: 'to be (essence, identity)',
+          as_in: 'essence, identity',
           conjugations: {
             indicative: {
               present: { yo: '(soy)', tu: '(eres)', el: '(es)', nosotros: 'somos', vosotros: 'sois', ellos: '(son)' },
@@ -276,7 +280,23 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           }
         },
         english: { word: 'to be', pos: 'verb', as_in: 'essence, identity' },
-        note: "One of two Spanish verbs meaning 'to be'. `Ser` is used for permanent or lasting attributes (identity, origin, characteristics), while `estar` is used for temporary states and locations."
+        note: "Use `ser` for permanent or lasting attributes."
+      },
+      {
+        spanish: {
+          word: 'estar',
+          pos: 'verb',
+          as_in: 'location, temporary state',
+          conjugations: {
+            indicative: {
+              present: { yo: 'est(oy)', tu: 'estás', el: 'está', nosotros: 'estamos', vosotros: 'estáis', ellos: 'están' },
+              preterite: { yo: '(estuve)', tu: '(estuviste)', el: '(estuvo)', nosotros: '(estuvimos)', vosotros: '(estuvisteis)', ellos: '(estuvieron)' },
+              imperfect: { yo: 'estaba', tu: 'estabas', el: 'estaba', nosotros: 'estábamos', vosotros: 'estabais', ellos: 'estaban' }
+            }
+          }
+        },
+        english: { word: 'to be', pos: 'verb', as_in: 'location, temporary state' },
+        note: "Use `estar` for temporary states and locations."
       }
     ],
     related_spanish: [],
@@ -429,25 +449,36 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: []
   },
   {
-    id: '000023',
-    starred: true,
+    id: '000024',
+    starred: false,
     meanings: [
       {
-        spanish: {
-          word: 'estar',
-          pos: 'verb',
-          as_in: 'to be (location, temporary state)',
-          conjugations: {
-            indicative: {
-              present: { yo: 'est(oy)', tu: 'estás', el: 'está', nosotros: 'estamos', vosotros: 'estáis', ellos: 'están' },
-              preterite: { yo: '(estuve)', tu: '(estuviste)', el: '(estuvo)', nosotros: '(estuvimos)', vosotros: '(estuvisteis)', ellos: '(estuvieron)' },
-              imperfect: { yo: 'estaba', tu: 'estabas', el: 'estaba', nosotros: 'estábamos', vosotros: 'estabais', ellos: 'estaban' }
-            }
-          }
+        spanish: { 
+          word: 'vale', 
+          pos: 'adverb',
+          as_in: 'agreement or confirmation',
+          region: 'SPAIN',
+          tags: ['COLLOQUIAL']
         },
-        english: { word: 'to be', pos: 'verb', as_in: 'location, temporary state' },
-        note: "One of two Spanish verbs meaning 'to be'. `Estar` is used for temporary states and locations, while `ser` is used for permanent or lasting attributes."
+        english: { word: 'OK', pos: 'adverb', as_in: 'agreement or confirmation' },
+        note: 'A very common colloquial term in Spain used to mean "OK", "alright", "got it", or to show agreement.'
       }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000025',
+    starred: false,
+    meanings: [
+        {
+            spanish: { word: 'araña', pos: 'noun', as_in: 'the arachnid', gender_map: { 'araña': 'f' } },
+            english: { word: 'spider', pos: 'noun', as_in: 'the arachnid' }
+        },
+        {
+            spanish: { word: 'araña', pos: 'noun', as_in: 'a light fixture', gender_map: { 'araña': 'f' } },
+            english: { word: 'chandelier', pos: 'noun', as_in: 'a light fixture' }
+        }
     ],
     related_spanish: [],
     related_english: []

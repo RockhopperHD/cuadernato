@@ -2,7 +2,7 @@
 export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb';
 export type Gender = 'm' | 'f' | 'n' | 'invalid';
 export type Region = 'LATAM' | 'SPAIN';
-export type TagType = 'VULGAR' | 'REFLEXIVE' | 'GENDER-SPECIFIC';
+export type TagType = 'VULGAR' | 'REFLEXIVE' | 'GENDER-SPECIFIC' | 'COLLOQUIAL';
 
 export type Tense = 'present' | 'preterite' | 'imperfect';
 export type Mood = 'indicative' | 'subjunctive';
@@ -45,7 +45,15 @@ export interface DictionaryEntry {
   meanings: Meaning[];
   related_spanish: string[];
   related_english: string[];
+  grand_note?: { title: string; description: string };
 }
 
-export type AppMode = 'title' | 'dictionary' | 'importList';
-export type ModalType = 'listInfo' | 'lockList' | 'unlockList' | 'removeListConfirmation';
+export type CustomListPayload = {
+    name: string;
+    pairs: { spanish: string; english: string }[];
+    password?: string;
+    showVulgar?: boolean;
+};
+
+export type AppMode = 'title' | 'dictionary' | 'markList' | 'listBuilder';
+export type ModalType = 'listStatus';
