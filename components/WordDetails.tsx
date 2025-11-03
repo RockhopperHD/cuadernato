@@ -66,28 +66,11 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
     const listIconColor = isListLocked ? 'text-blue-500' : 'text-green-500';
 
     return (
-        <div className="p-6 md:p-8 overflow-y-auto h-full relative">
-            <div className="absolute top-6 right-6 flex items-center gap-2 z-10">
-                 <button 
-                    onClick={onListIconClick}
-                    className={`${listIconColor} hover:opacity-80 transition-opacity p-2`}
-                    aria-label="List status"
-                 >
-                    <VerticalTriangleIcon filled={isWordOnList} className="w-8 h-8"/>
-                 </button>
-                <button 
-                    onClick={() => onStar(entry.id)} 
-                    className="text-yellow-400 hover:text-yellow-300 transition-colors p-2"
-                    aria-label={entry.starred ? 'Unstar word' : 'Star word'}
-                >
-                    <StarIcon starred={entry.starred} className="w-8 h-8"/>
-                </button>
-            </div>
-            
+        <div className="p-6 md:p-8 overflow-y-auto h-full">
             {entry.grand_note && (
-                <div className="mb-6 p-4 bg-slate-100 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <h3 className="text-xl font-bold text-center mb-2">{entry.grand_note.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-300">{entry.grand_note.description}</p>
+                <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/30">
+                    <h3 className="text-xl font-bold text-center mb-2 text-slate-900 dark:text-yellow-100">{entry.grand_note.title}</h3>
+                    <p className="text-slate-900 dark:text-yellow-200">{entry.grand_note.description}</p>
                 </div>
             )}
 
@@ -102,21 +85,44 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
 
                     return (
                         <div key={index} className="pb-6 border-b border-slate-200 dark:border-slate-700 last:border-b-0">
-                            <div className="flex items-baseline gap-3">
-                                <h2 className={`text-4xl font-bold ${index === 0 ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{headerText}</h2>
-                                <span className="text-slate-500 dark:text-slate-400">{headerPos}</span>
-                                {!isES && (
-                                  <div className="flex items-center gap-2">
-                                    {spanish.region && <Tag type={spanish.region} />}
-                                    {spanish.tags?.map(t => <Tag key={t} type={t} />)}
-                                  </div>
+                            <div className="flex justify-between items-start gap-4">
+                                <div>
+                                    <div className="flex items-baseline gap-3">
+                                        <h2 className={`text-4xl font-bold ${index === 0 ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{headerText}</h2>
+                                        <span className="text-slate-500 dark:text-slate-400">{headerPos}</span>
+                                        {!isES && (
+                                        <div className="flex items-center gap-2">
+                                            {spanish.region && <Tag type={spanish.region} />}
+                                            {spanish.tags?.map(t => <Tag key={t} type={t} />)}
+                                        </div>
+                                        )}
+                                    </div>
+                                    <div className="mt-2">
+                                        <span className="text-xs font-semibold px-2 py-1 rounded text-yellow-600 dark:text-yellow-500 bg-yellow-200 dark:bg-yellow-900/50">
+                                            AS IN
+                                        </span>
+                                        <span className="ml-2 text-slate-600 dark:text-slate-300 italic">{asInText}</span>
+                                    </div>
+                                </div>
+                                
+                                {index === 0 && (
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        <button 
+                                            onClick={onListIconClick}
+                                            className={`${listIconColor} hover:opacity-80 transition-opacity p-2`}
+                                            aria-label="List status"
+                                        >
+                                            <VerticalTriangleIcon filled={isWordOnList} className="w-8 h-8"/>
+                                        </button>
+                                        <button 
+                                            onClick={() => onStar(entry.id)} 
+                                            className="text-yellow-400 hover:text-yellow-300 transition-colors p-2"
+                                            aria-label={entry.starred ? 'Unstar word' : 'Star word'}
+                                        >
+                                            <StarIcon starred={entry.starred} className="w-8 h-8"/>
+                                        </button>
+                                    </div>
                                 )}
-                            </div>
-                            <div className="mt-2">
-                                <span className="text-xs font-semibold px-2 py-1 rounded text-yellow-600 dark:text-yellow-500 bg-yellow-200 dark:bg-yellow-900/50">
-                                    AS IN
-                                </span>
-                                <span className="ml-2 text-slate-600 dark:text-slate-300 italic">{asInText}</span>
                             </div>
 
                             {note && (

@@ -173,7 +173,23 @@ const App: React.FC = () => {
       return Array.from(terms).some(term => term.toLowerCase().startsWith(lowerCaseQuery));
     });
 
-    return filtered.sort((a, b) => {
+    const mappedResults = filtered.map(entry => {
+        // Special handling for the 'ser'/'estar' entry
+        if (entry.id === '000013' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
+            const relevantMeaning = entry.meanings.find(m => m.spanish.word === lowerCaseQuery);
+            if (relevantMeaning) {
+                // Create a temporary, filtered entry for display
+                return {
+                    ...entry,
+                    meanings: [relevantMeaning],
+                    grand_note: undefined, // Hide the grand note in this specific case
+                };
+            }
+        }
+        return entry;
+    });
+
+    return mappedResults.sort((a, b) => {
       const aHasExactMatch = a.meanings.some(m => lang === 'ES' ? m.spanish.word.toLowerCase() === lowerCaseQuery : m.english.word.toLowerCase() === lowerCaseQuery);
       const bHasExactMatch = b.meanings.some(m => lang === 'ES' ? m.spanish.word.toLowerCase() === lowerCaseQuery : m.english.word.toLowerCase() === lowerCaseQuery);
       if (aHasExactMatch && !bHasExactMatch) return -1;
@@ -305,7 +321,15 @@ const App: React.FC = () => {
               </div>
             </>
           ) : (
-            <p className="text-center text-slate-500 dark:text-slate-400">No list is currently marked. Use the "Mark List" feature on the title screen to activate one.</p>
+             <div className="text-center">
+                <p className="text-slate-500 dark:text-slate-400 mb-4">No list is currently marked.</p>
+                <button 
+                    onClick={() => { setModal(null); setMode('markList'); }}
+                    className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700"
+                >
+                    Mark a List
+                </button>
+            </div>
           )}
 
           <button onClick={() => setModal(null)} className="mt-2 w-full bg-slate-200 dark:bg-slate-600 font-semibold py-2 px-4 rounded-md hover:bg-slate-300 dark:hover:bg-slate-500">
