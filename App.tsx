@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { DICTIONARY_DATA } from './data/dictionary';
 import { DictionaryEntry, AppMode, ModalType } from './types';
@@ -12,6 +13,11 @@ import { ListActiveIndicator } from './components/ListActiveIndicator';
 import { Modal } from './components/Modal';
 import { ListBuilder } from './components/ListBuilder';
 import { ViewWordsScreen } from './components/ViewWordsScreen';
+
+// Helper to remove accents from a string for comparison
+const removeAccents = (str: string): string => {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
 
 // Custom hook for localStorage state
 function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
@@ -203,6 +209,32 @@ const App: React.FC = () => {
 
   }, [query, lang, dictionaryData, showVulgar, isListLocked, activeListSet, listShowVulgar]);
 
+  const suggestion = useMemo(() => {
+    if (lang !== 'ES' || !query || searchResults.length > 0) {
+      return null;
+    }
+
+    const lowerCaseQuery = query.toLowerCase();
+    const queryWithoutAccents = removeAccents(lowerCaseQuery);
+    
+    // Only suggest if the user's query is accent-less.
+    if (lowerCaseQuery !== queryWithoutAccents) {
+        return null;
+    }
+
+    // Find the first dictionary entry that matches the query without accents
+    for (const entry of DICTIONARY_DATA) {
+        for (const meaning of entry.meanings) {
+            const spanishWord = meaning.spanish.word;
+            if (removeAccents(spanishWord.toLowerCase()) === queryWithoutAccents && spanishWord.toLowerCase() !== queryWithoutAccents) {
+                return spanishWord; 
+            }
+        }
+    }
+
+    return null;
+  }, [query, lang, searchResults]);
+
   useEffect(() => {
     if (query) {
         if (searchResults.length > 0) {
@@ -216,6 +248,20 @@ const App: React.FC = () => {
         setSelectedEntry(null);
     }
   }, [query, searchResults, selectedEntry]);
+
+  const renderSuggestion = (suggestionText: string) => {
+    const queryWithoutAccents = removeAccents(query.toLowerCase());
+    if (suggestionText.length !== queryWithoutAccents.length) return suggestionText;
+
+    return suggestionText.split('').map((char, index) => {
+      const queryChar = queryWithoutAccents[index];
+      // Highlight if the character is different but matches when accents are removed
+      if (queryChar && char.toLowerCase() !== queryChar.toLowerCase() && removeAccents(char.toLowerCase()) === queryChar.toLowerCase()) {
+        return <span key={index} className="text-yellow-500 dark:text-yellow-400">{char}</span>;
+      }
+      return char;
+    });
+  };
 
   const renderModalContent = () => {
     if (!modal) return null;
@@ -533,6 +579,16 @@ const App: React.FC = () => {
                     <p className="text-slate-500 dark:text-slate-400 mt-2">
                       Try another word or switch languages.
                     </p>
+                    {suggestion && (
+                      <div className="mt-6 p-4 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                        <button 
+                          onClick={() => setQuery(suggestion)}
+                          className="text-lg text-slate-700 dark:text-slate-200"
+                        >
+                          Did you mean <span className="font-bold italic">{renderSuggestion(suggestion)}</span>?
+                        </button>
+                      </div>
+                    )}
                     <button onClick={toggleLang} className="mt-4 text-yellow-500 dark:text-yellow-400 hover:underline">
                       Did you mean to search in {lang === 'ES' ? 'English' : 'Spanish'}?
                     </button>

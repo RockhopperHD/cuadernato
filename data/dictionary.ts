@@ -482,5 +482,1112 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     ],
     related_spanish: [],
     related_english: []
+  },
+  {
+    id: '000026',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'agua', pos: 'noun', as_in: 'the liquid', gender_map: { 'agua': 'f' } },
+        english: { word: 'water', pos: 'noun', as_in: 'the liquid' },
+        note: 'Agua is a feminine noun, but uses the masculine article "el" in the singular (el agua) to avoid the "a-a" sound. In plural, it is "las aguas".'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000027',
+    starred: false,
+    meanings: [
+        {
+            spanish: { word: 'sol', pos: 'noun', as_in: 'the star at the center of the Solar System', gender_map: { 'sol': 'm' } },
+            english: { word: 'sun', pos: 'noun', as_in: 'the star we orbit' }
+        }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000028',
+    starred: false,
+    meanings: [
+        {
+            spanish: { word: 'luna', pos: 'noun', as_in: 'the Earth\'s natural satellite', gender_map: { 'luna': 'f' } },
+            english: { word: 'moon', pos: 'noun', as_in: 'the Earth\'s natural satellite' }
+        }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000029',
+    starred: false,
+    meanings: [
+        {
+            spanish: { word: 'coche', pos: 'noun', as_in: 'a road vehicle', region: 'SPAIN', gender_map: { 'coche': 'm' } },
+            english: { word: 'car', pos: 'noun', as_in: 'a road vehicle' },
+        },
+        {
+            spanish: { word: 'carro', pos: 'noun', as_in: 'a road vehicle', region: 'LATAM', gender_map: { 'carro': 'm' } },
+            english: { word: 'car', pos: 'noun', as_in: 'a road vehicle' },
+        }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000030',
+    starred: false,
+    meanings: [
+        {
+            spanish: { word: 'ordenador', pos: 'noun', as_in: 'an electronic device', region: 'SPAIN', gender_map: { 'ordenador': 'm' } },
+            english: { word: 'computer', pos: 'noun', as_in: 'an electronic device' },
+        },
+        {
+            spanish: { word: 'computadora', pos: 'noun', as_in: 'an electronic device', region: 'LATAM', gender_map: { 'computadora': 'f' } },
+            english: { word: 'computer', pos: 'noun', as_in: 'an electronic device' },
+        }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000031',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'gato', pos: 'noun', as_in: 'the animal', gender_map: { 'gato': 'm', 'gata': 'f' } },
+        english: { word: 'cat', pos: 'noun', as_in: 'the animal' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000032',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'perro', pos: 'noun', as_in: 'the animal', gender_map: { 'perro': 'm', 'perra': 'f' } },
+        english: { word: 'dog', pos: 'noun', as_in: 'the animal' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000033',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'amigo', pos: 'noun', as_in: 'a companion', gender_map: { 'amigo': 'm', 'amiga': 'f' } },
+        english: { word: 'friend', pos: 'noun', as_in: 'a companion' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000034',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'tiempo', pos: 'noun', as_in: 'duration or the moment', gender_map: { 'tiempo': 'm' } },
+        english: { word: 'time', pos: 'noun', as_in: 'duration or the moment' }
+      },
+      {
+        spanish: { word: 'tiempo', pos: 'noun', as_in: 'atmospheric conditions', gender_map: { 'tiempo': 'm' } },
+        english: { word: 'weather', pos: 'noun', as_in: 'atmospheric conditions' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000035',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'gente', pos: 'noun', as_in: 'human beings in general', gender_map: { 'gente': 'f' } },
+        english: { word: 'people', pos: 'noun', as_in: 'human beings in general' },
+        note: '`Gente` is a singular feminine noun in Spanish, even though it refers to a group of people.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000036',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'día', pos: 'noun', as_in: 'a 24-hour period', gender_map: { 'día': 'm' } },
+        english: { word: 'day', pos: 'noun', as_in: 'a 24-hour period' },
+        note: 'Despite ending in -a, `día` is a masculine noun.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000037',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'mano', pos: 'noun', as_in: 'part of the body', gender_map: { 'mano': 'f' } },
+        english: { word: 'hand', pos: 'noun', as_in: 'part of the body' },
+        note: 'Despite ending in -o, `mano` is a feminine noun.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000038',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'problema', pos: 'noun', as_in: 'a difficulty', gender_map: { 'problema': 'm' } },
+        english: { word: 'problem', pos: 'noun', as_in: 'a difficulty' },
+        note: 'Nouns of Greek origin ending in -ma are typically masculine, like `problema`.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000039',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'ciudad', pos: 'noun', as_in: 'a large town', gender_map: { 'ciudad': 'f' } },
+        english: { word: 'city', pos: 'noun', as_in: 'a large town' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000040',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'país', pos: 'noun', as_in: 'a nation', gender_map: { 'país': 'm' } },
+        english: { word: 'country', pos: 'noun', as_in: 'a nation' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000041',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'trabajo', pos: 'noun', as_in: 'a job or task', gender_map: { 'trabajo': 'm' } },
+        english: { word: 'work', pos: 'noun', as_in: 'a job or task' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000042',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'comida', pos: 'noun', as_in: 'food', gender_map: { 'comida': 'f' } },
+        english: { word: 'food', pos: 'noun', as_in: 'sustenance' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000043',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'bebida', pos: 'noun', as_in: 'a drink', gender_map: { 'bebida': 'f' } },
+        english: { word: 'drink', pos: 'noun', as_in: 'a beverage' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000044',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'mañana', pos: 'noun', as_in: 'the early part of the day', gender_map: { 'mañana': 'f' } },
+        english: { word: 'morning', pos: 'noun', as_in: 'the early part of the day' }
+      },
+      {
+        spanish: { word: 'mañana', pos: 'adverb', as_in: 'the day after today' },
+        english: { word: 'tomorrow', pos: 'adverb', as_in: 'the day after today' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000045',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'noche', pos: 'noun', as_in: 'the period of darkness', gender_map: { 'noche': 'f' } },
+        english: { word: 'night', pos: 'noun', as_in: 'the period of darkness' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000046',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'tarde', pos: 'noun', as_in: 'the part of the day between noon and evening', gender_map: { 'tarde': 'f' } },
+        english: { word: 'afternoon', pos: 'noun', as_in: 'between noon and evening' }
+      },
+      {
+        spanish: { word: 'tarde', pos: 'adverb', as_in: 'not on time' },
+        english: { word: 'late', pos: 'adverb', as_in: 'not on time' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000047',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'hombre', pos: 'noun', as_in: 'an adult male human', gender_map: { 'hombre': 'm' } },
+        english: { word: 'man', pos: 'noun', as_in: 'an adult male human' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000048',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'mujer', pos: 'noun', as_in: 'an adult female human', gender_map: { 'mujer': 'f' } },
+        english: { word: 'woman', pos: 'noun', as_in: 'an adult female human' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000049',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'tío', pos: 'noun', as_in: 'the brother of one\'s parent', gender_map: { 'tío': 'm', 'tía': 'f' } },
+        english: { word: 'uncle', pos: 'noun', as_in: 'the brother of one\'s parent' }
+      },
+      {
+        spanish: { word: 'tío', pos: 'noun', as_in: 'an informal term for a man', region: 'SPAIN', tags: ['COLLOQUIAL'], gender_map: { 'tío': 'm', 'tía': 'f' } },
+        english: { word: 'guy', pos: 'noun', as_in: 'an informal term for a person' },
+        note: 'In Spain, "tío" and "tía" are very common ways to refer to a guy or girl, similar to "dude" in English.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000050',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'querer',
+          pos: 'verb',
+          as_in: 'to desire something',
+          conjugations: {
+            indicative: {
+              present: { yo: 'qu((ie))ro', tu: 'qu((ie))res', el: 'qu((ie))re', nosotros: 'queremos', vosotros: 'queréis', ellos: 'qu((ie))ren' }
+            }
+          }
+        },
+        english: { word: 'to want', pos: 'verb', as_in: 'to desire something' }
+      },
+      {
+        spanish: {
+          word: 'querer',
+          pos: 'verb',
+          as_in: 'to feel affection for someone'
+        },
+        english: { word: 'to love', pos: 'verb', as_in: 'to feel affection for someone' },
+        note: '`Querer` is used for friends and family. For romantic love, `amar` is often used.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000051',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'poder',
+          pos: 'verb',
+          as_in: 'to be able to',
+          conjugations: {
+            indicative: {
+              present: { yo: 'p((ue))do', tu: 'p((ue))des', el: 'p((ue))de', nosotros: 'podemos', vosotros: 'podéis', ellos: 'p((ue))den' }
+            }
+          }
+        },
+        english: { word: 'to be able to', pos: 'verb', as_in: 'can' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000052',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'hacer',
+          pos: 'verb',
+          as_in: 'to perform an action',
+          conjugations: {
+            indicative: {
+              present: { yo: 'ha(go)', tu: 'haces', el: 'hace', nosotros: 'hacemos', vosotros: 'hacéis', ellos: 'hacen' }
+            }
+          }
+        },
+        english: { word: 'to do', pos: 'verb', as_in: 'to perform an action' }
+      },
+      {
+        spanish: { word: 'hacer', pos: 'verb', as_in: 'to create or construct' },
+        english: { word: 'to make', pos: 'verb', as_in: 'to create or construct' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000053',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'decir',
+          pos: 'verb',
+          as_in: 'to utter words',
+          conjugations: {
+            indicative: {
+              present: { yo: 'd(i)go', tu: 'd((i))ces', el: 'd((i))ce', nosotros: 'decimos', vosotros: 'decís', ellos: 'd((i))cen' }
+            }
+          }
+        },
+        english: { word: 'to say', pos: 'verb', as_in: 'to utter words' }
+      },
+       {
+        spanish: { word: 'decir', pos: 'verb', as_in: 'to narrate' },
+        english: { word: 'to tell', pos: 'verb', as_in: 'to narrate' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000054',
+    starred: true,
+    grand_note: {
+        title: "To Know: Saber vs. Conocer",
+        description: "Spanish has two verbs for 'to know'. `Saber` is used for facts, information, and how to do something. `Conocer` is used for being familiar with a person, place, or thing."
+    },
+    meanings: [
+      {
+        spanish: {
+          word: 'saber',
+          pos: 'verb',
+          as_in: 'to know facts or information',
+           conjugations: {
+            indicative: {
+              present: { yo: '(sé)', tu: 'sabes', el: 'sabe', nosotros: 'sabemos', vosotros: 'sabéis', ellos: 'saben' }
+            }
+          }
+        },
+        english: { word: 'to know', pos: 'verb', as_in: 'facts, information, skills' },
+        note: "Example: `Yo sé tu nombre.` (I know your name.)"
+      },
+      {
+        spanish: {
+          word: 'conocer',
+          pos: 'verb',
+          as_in: 'to be familiar with people or places',
+          conjugations: {
+            indicative: {
+              present: { yo: 'cono(zc)o', tu: 'conoces', el: 'conoce', nosotros: 'conocemos', vosotros: 'conocéis', ellos: 'conocen' }
+            }
+          }
+        },
+        english: { word: 'to know', pos: 'verb', as_in: 'people, places, things' },
+        note: "Example: `Yo conozco a María.` (I know Maria.)"
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000055',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'ver',
+          pos: 'verb',
+          as_in: 'to perceive with the eyes',
+          conjugations: {
+            indicative: {
+              present: { yo: 'v(eo)', tu: 'ves', el: 've', nosotros: 'vemos', vosotros: 'veis', ellos: 'ven' }
+            }
+          }
+        },
+        english: { word: 'to see', pos: 'verb', as_in: 'to perceive with the eyes' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000056',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'dar',
+          pos: 'verb',
+          as_in: 'to transfer possession',
+          conjugations: {
+            indicative: {
+              present: { yo: 'd(oy)', tu: 'das', el: 'da', nosotros: 'damos', vosotros: 'dais', ellos: 'dan' }
+            }
+          }
+        },
+        english: { word: 'to give', pos: 'verb', as_in: 'to transfer possession' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000057',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'venir',
+          pos: 'verb',
+          as_in: 'to arrive at a place',
+          conjugations: {
+            indicative: {
+              present: { yo: 'ven(go)', tu: 'v((ie))nes', el: 'v((ie))ne', nosotros: 'venimos', vosotros: 'venís', ellos: 'v((ie))nen' }
+            }
+          }
+        },
+        english: { word: 'to come', pos: 'verb', as_in: 'to arrive at a place' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000058',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'pensar',
+          pos: 'verb',
+          as_in: 'to have in one\'s mind',
+          conjugations: {
+            indicative: {
+              present: { yo: 'p((ie))nso', tu: 'p((ie))nsas', el: 'p((ie))nsa', nosotros: 'pensamos', vosotros: 'pensáis', ellos: 'p((ie))nsan' }
+            }
+          }
+        },
+        english: { word: 'to think', pos: 'verb', as_in: 'to have in one\'s mind' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000059',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'dormir',
+          pos: 'verb',
+          as_in: 'to be asleep',
+          conjugations: {
+            indicative: {
+              present: { yo: 'd((ue))rmo', tu: 'd((ue))rmes', el: 'd((ue))rme', nosotros: 'dormimos', vosotros: 'dormís', ellos: 'd((ue))rmen' }
+            }
+          }
+        },
+        english: { word: 'to sleep', pos: 'verb', as_in: 'to be asleep' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000060',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'jugar',
+          pos: 'verb',
+          as_in: 'to play a game or sport',
+          conjugations: {
+            indicative: {
+              present: { yo: 'j((ue))go', tu: 'j((ue))gas', el: 'j((ue))ga', nosotros: 'jugamos', vosotros: 'jugáis', ellos: 'j((ue))gan' }
+            }
+          }
+        },
+        english: { word: 'to play', pos: 'verb', as_in: 'a game or sport' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000061',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'sentir',
+          pos: 'verb',
+          as_in: 'to feel an emotion',
+          conjugations: {
+            indicative: {
+              present: { yo: 's((ie))nto', tu: 's((ie))ntes', el: 's((ie))nte', nosotros: 'sentimos', vosotros: 'sentís', ellos: 's((ie))nten' }
+            }
+          }
+        },
+        english: { word: 'to feel', pos: 'verb', as_in: 'an emotion' }
+      },
+      {
+        spanish: {
+          word: 'sentir',
+          pos: 'verb',
+          as_in: 'to be sorry'
+        },
+        english: { word: 'to be sorry', pos: 'verb', as_in: 'to regret' },
+        note: '`Lo siento` literally means "I feel it", but is used to say "I\'m sorry".'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000062',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'pedir',
+          pos: 'verb',
+          as_in: 'to request something',
+          conjugations: {
+            indicative: {
+              present: { yo: 'p((i))do', tu: 'p((i))des', el: 'p((i))de', nosotros: 'pedimos', vosotros: 'pedís', ellos: 'p((i))den' }
+            }
+          }
+        },
+        english: { word: 'to ask for', pos: 'verb', as_in: 'to request something' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000063',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'bueno', pos: 'adjective', as_in: 'of high quality', gender_map: { 'bueno': 'm', 'buena': 'f' } },
+        english: { word: 'good', pos: 'adjective', as_in: 'of high quality' },
+        note: 'When placed before a masculine singular noun, `bueno` shortens to `buen` (e.g., `un buen día`).'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000064',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'malo', pos: 'adjective', as_in: 'of low quality', gender_map: { 'malo': 'm', 'mala': 'f' } },
+        english: { word: 'bad', pos: 'adjective', as_in: 'of low quality' },
+        note: 'When placed before a masculine singular noun, `malo` shortens to `mal` (e.g., `un mal día`).'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000065',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'joven', pos: 'adjective', as_in: 'not old', gender_map: { 'joven': 'n' } },
+        english: { word: 'young', pos: 'adjective', as_in: 'not old' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000066',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'feliz', pos: 'adjective', as_in: 'feeling pleasure', gender_map: { 'feliz': 'n' } },
+        english: { word: 'happy', pos: 'adjective', as_in: 'feeling pleasure' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000067',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'fácil', pos: 'adjective', as_in: 'not difficult', gender_map: { 'fácil': 'n' } },
+        english: { word: 'easy', pos: 'adjective', as_in: 'not difficult' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000068',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'difícil', pos: 'adjective', as_in: 'not easy', gender_map: { 'difícil': 'n' } },
+        english: { word: 'difficult', pos: 'adjective', as_in: 'not easy' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000069',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'otro', pos: 'adjective', as_in: 'different or additional', gender_map: { 'otro': 'm', 'otra': 'f' } },
+        english: { word: 'other', pos: 'adjective', as_in: 'different or additional' }
+      },
+      {
+        spanish: { word: 'otro', pos: 'adjective', as_in: 'one more' },
+        english: { word: 'another', pos: 'adjective', as_in: 'one more' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000070',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'mucho', pos: 'adjective', as_in: 'a large amount of', gender_map: { 'mucho': 'm', 'mucha': 'f' } },
+        english: { word: 'much', pos: 'adjective', as_in: 'a large amount of' }
+      },
+       {
+        spanish: { word: 'mucho', pos: 'adverb', as_in: 'to a great extent' },
+        english: { word: 'a lot', pos: 'adverb', as_in: 'to a great extent' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000071',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'poco', pos: 'adjective', as_in: 'a small amount of', gender_map: { 'poco': 'm', 'poca': 'f' } },
+        english: { word: 'little', pos: 'adjective', as_in: 'a small amount of' }
+      },
+       {
+        spanish: { word: 'poco', pos: 'adverb', as_in: 'to a small extent' },
+        english: { word: 'a little', pos: 'adverb', as_in: 'to a small extent' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000072',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'guay', pos: 'adjective', as_in: 'excellent or attractive', region: 'SPAIN', tags: ['COLLOQUIAL'] },
+        english: { word: 'cool', pos: 'adjective', as_in: 'excellent or attractive' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000073',
+    starred: true,
+    meanings: [
+      {
+        spanish: { word: 'listo', pos: 'adjective', as_in: 'prepared for something', gender_map: { 'listo': 'm', 'lista': 'f' } },
+        english: { word: 'ready', pos: 'adjective', as_in: 'prepared for something' },
+        note: 'This meaning is often used with the verb `estar` (e.g., `estoy listo`).'
+      },
+       {
+        spanish: { word: 'listo', pos: 'adjective', as_in: 'intelligent', gender_map: { 'listo': 'm', 'lista': 'f' } },
+        english: { word: 'clever', pos: 'adjective', as_in: 'intelligent' },
+        note: 'This meaning is often used with the verb `ser` (e.g., `es muy lista`).'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000074',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'buscar',
+          pos: 'verb',
+          as_in: 'to try to find',
+          conjugations: {
+            indicative: {
+              present: { yo: 'busco', tu: 'buscas', el: 'busca', nosotros: 'buscamos', vosotros: 'buscáis', ellos: 'buscan' }
+            }
+          }
+        },
+        english: { word: 'to look for', pos: 'verb', as_in: 'to try to find' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000075',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'encontrar',
+          pos: 'verb',
+          as_in: 'to discover something',
+          conjugations: {
+            indicative: {
+              present: { yo: 'enc((ue))ntro', tu: 'enc((ue))ntras', el: 'enc((ue))ntra', nosotros: 'encontramos', vosotros: 'encontráis', ellos: 'enc((ue))ntran' }
+            }
+          }
+        },
+        english: { word: 'to find', pos: 'verb', as_in: 'to discover something' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000076',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'coger',
+          pos: 'verb',
+          as_in: 'to take or to catch',
+          region: 'SPAIN',
+          conjugations: {
+            indicative: {
+              present: { yo: 'cojo', tu: 'coges', el: 'coge', nosotros: 'cogemos', vosotros: 'cogéis', ellos: 'cogen' }
+            }
+          }
+        },
+        english: { word: 'to take', pos: 'verb', as_in: 'to grab' },
+        note: 'Be careful! In many parts of Latin America, `coger` is a vulgar term for sexual intercourse. `Tomar` or `agarrar` are safer alternatives.'
+      },
+      {
+        spanish: {
+          word: 'coger',
+          pos: 'verb',
+          as_in: 'to have sexual intercourse',
+          region: 'LATAM',
+          tags: ['VULGAR']
+        },
+        english: { word: 'to fuck', pos: 'verb', as_in: 'to have sexual intercourse' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000077',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'ojo', pos: 'noun', as_in: 'the organ of sight', gender_map: { 'ojo': 'm' } },
+        english: { word: 'eye', pos: 'noun', as_in: 'the organ of sight' }
+      },
+      {
+        spanish: { word: '¡Ojo!', pos: 'adverb', as_in: 'an expression of warning' },
+        english: { word: 'Watch out!', pos: 'adverb', as_in: 'an expression of warning' },
+        note: 'Used as an interjection, `¡Ojo!` means "Be careful!" or "Look out!".'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000078',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'salud', pos: 'noun', as_in: 'physical well-being', gender_map: { 'salud': 'f' } },
+        english: { word: 'health', pos: 'noun', as_in: 'physical well-being' }
+      },
+      {
+        spanish: { word: '¡Salud!', pos: 'adverb', as_in: 'a toast' },
+        english: { word: 'Cheers!', pos: 'adverb', as_in: 'a toast' },
+        note: 'Also said after someone sneezes, like "Bless you!".'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000079',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'dinero', pos: 'noun', as_in: 'money', gender_map: { 'dinero': 'm' } },
+        english: { word: 'money', pos: 'noun', as_in: 'currency' }
+      },
+      {
+        spanish: { word: 'plata', pos: 'noun', as_in: 'money', region: 'LATAM', tags: ['COLLOQUIAL'], gender_map: { 'plata': 'f' } },
+        english: { word: 'money', pos: 'noun', as_in: 'currency' },
+        note: '`Plata` literally means silver, but it is a very common colloquial term for money in Latin America.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000080',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'ahora', pos: 'adverb', as_in: 'at the present time' },
+        english: { word: 'now', pos: 'adverb', as_in: 'at the present time' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000081',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'siempre', pos: 'adverb', as_in: 'at all times' },
+        english: { word: 'always', pos: 'adverb', as_in: 'at all times' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000082',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'nunca', pos: 'adverb', as_in: 'at no time' },
+        english: { word: 'never', pos: 'adverb', as_in: 'at no time' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000083',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'también', pos: 'adverb', as_in: 'in addition' },
+        english: { word: 'also', pos: 'adverb', as_in: 'in addition' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000084',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'tampoco', pos: 'adverb', as_in: 'in addition, in the negative' },
+        english: { word: 'neither', pos: 'adverb', as_in: 'not either' },
+        note: '`Tampoco` is the negative counterpart to `también`.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000085',
+    starred: true,
+    grand_note: {
+        title: "Por qué, porque, porqué, por que",
+        description: "These four forms are often confused. `¿Por qué?` is 'Why?'. `Porque` is 'Because'. `El porqué` is 'The reason'. `Por que` (two words, no accent) is less common and means 'for which'."
+    },
+    meanings: [
+      {
+        spanish: {
+          word: '¿por qué?',
+          pos: 'adverb',
+          as_in: 'asking for a reason'
+        },
+        english: { word: 'why?', pos: 'adverb', as_in: 'for what reason' }
+      },
+      {
+        spanish: {
+          word: 'porque',
+          pos: 'adverb',
+          as_in: 'giving a reason'
+        },
+        english: { word: 'because', pos: 'adverb', as_in: 'for the reason that' }
+      },
+      {
+        spanish: {
+          word: 'el porqué',
+          pos: 'noun',
+          as_in: 'the reason itself',
+          gender_map: { 'porqué': 'm' }
+        },
+        english: { word: 'the reason', pos: 'noun', as_in: 'the cause' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000086',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'resaca',
+          pos: 'noun',
+          as_in: 'after drinking alcohol',
+          gender_map: { 'resaca': 'f' }
+        },
+        english: { word: 'hangover', pos: 'noun', as_in: 'after drinking alcohol' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000087',
+    starred: true,
+    meanings: [
+      {
+        spanish: {
+          word: 'sobremesa',
+          pos: 'noun',
+          as_in: 'conversation after a meal',
+          gender_map: { 'sobremesa': 'f' }
+        },
+        english: { word: 'after-dinner conversation', pos: 'noun', as_in: 'chatting at the table' },
+        note: 'A culturally significant Spanish word for the time spent relaxing and chatting at the table after a meal is finished.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000088',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'estadounidense',
+          pos: 'adjective',
+          as_in: 'from the United States',
+          gender_map: { 'estadounidense': 'n' }
+        },
+        english: { word: 'American', pos: 'adjective', as_in: 'from the United States' },
+        note: 'While `americano` is often used, `estadounidense` is more specific to the USA, as `americano` can refer to anyone from the Americas.'
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000089',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'poner',
+          pos: 'verb',
+          as_in: 'to place something',
+          conjugations: {
+            indicative: {
+              present: { yo: 'pon(go)', tu: 'pones', el: 'pone', nosotros: 'ponemos', vosotros: 'ponéis', ellos: 'ponen' }
+            }
+          }
+        },
+        english: { word: 'to put', pos: 'verb', as_in: 'to place something' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000090',
+    starred: false,
+    meanings: [
+      {
+        spanish: {
+          word: 'cerrar',
+          pos: 'verb',
+          as_in: 'to close something',
+          conjugations: {
+            indicative: {
+              present: { yo: 'c((ie))rro', tu: 'c((ie))rras', el: 'c((ie))rra', nosotros: 'cerramos', vosotros: 'cerráis', ellos: 'c((ie))rran' }
+            }
+          }
+        },
+        english: { word: 'to close', pos: 'verb', as_in: 'to shut something' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
   }
 ];
