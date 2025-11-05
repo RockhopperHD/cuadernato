@@ -11,6 +11,11 @@
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Stack+Sans+Headline:wght@600&display=swap" rel="stylesheet">
+  
   <style>
     /* Custom scrollbar for a better look */
     ::-webkit-scrollbar {
@@ -35,6 +40,31 @@
     .dark ::-webkit-scrollbar-thumb:hover {
       background: #6366f1; /* indigo-500 */
     }
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .animate-slide-up {
+      opacity: 0;
+      animation: slideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    /* FIX 2: 
+      Changed body font-family to 'Inter'.
+    */
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-display {
+      font-family: 'Stack Sans Headline', sans-serif;
+      font-weight: 600;
+    }
   </style>
 <script type="importmap">
 {
@@ -46,7 +76,7 @@
 }
 </script>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 font-sans">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>

@@ -88,7 +88,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                             <div className="flex justify-between items-start gap-4">
                                 <div>
                                     <div className="flex items-baseline gap-3">
-                                        <h2 className={`text-4xl font-bold ${index === 0 ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{headerText}</h2>
+                                        <h2 className={`text-4xl font-extrabold ${index === 0 ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{headerText}</h2>
                                         <span className="text-slate-500 dark:text-slate-400">{headerPos}</span>
                                         {!isES && (
                                         <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                                         )}
                                     </div>
                                     <div className="mt-2">
-                                        <span className="text-xs font-semibold px-2 py-1 rounded text-yellow-600 dark:text-yellow-500 bg-yellow-200 dark:bg-yellow-900/50">
+                                        <span className="text-xs font-bold px-2 py-1 rounded text-yellow-600 dark:text-yellow-500 bg-yellow-200 dark:bg-yellow-900/50">
                                             AS IN
                                         </span>
                                         <span className="ml-2 text-slate-600 dark:text-slate-300 italic">{asInText}</span>

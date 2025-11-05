@@ -438,7 +438,10 @@ const App: React.FC = () => {
             <BackIcon className="w-6 h-6"/>
           </button>
           <img src="https://via.placeholder.com/200" alt="Cuadernato Logo" className="w-10 h-10 rounded-md" />
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Cuadernato</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 font-display">Cuadernato</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Dictionary</p>
+          </div>
         </div>
         <div className="flex items-center gap-2 sm:gap-4">
           <ListActiveIndicator 

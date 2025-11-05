@@ -1,5 +1,6 @@
 
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { AppMode } from '../types';
 
 interface TitleScreenProps {
@@ -7,13 +8,30 @@ interface TitleScreenProps {
 }
 
 export const TitleScreen: React.FC<TitleScreenProps> = ({ setMode }) => {
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('cuadernato_animated') !== 'true') {
+      setShouldAnimate(true);
+      sessionStorage.setItem('cuadernato_animated', 'true');
+    }
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full text-center">
         {/* Update: Replaced AppLogoIcon with a placeholder image */}
         <div className="flex flex-col items-center justify-center mb-4">
             <img src="https://via.placeholder.com/200" alt="Cuadernato Logo" className="w-32 h-32 rounded-lg" />
-            <h1 className="text-7xl font-bold text-slate-800 dark:text-slate-100 mt-4">
-                Cuadernato
+            <h1 className="text-7xl font-bold text-slate-800 dark:text-slate-100 mt-4 font-display">
+                {shouldAnimate ? 'Cuadernato'.split('').map((char, index) => (
+                    <span
+                      key={index}
+                      className="inline-block animate-slide-up"
+                      style={{ animationDelay: `${index * 0.05}s` }}
+                    >
+                      {char}
+                    </span>
+                )) : 'Cuadernato'}
             </h1>
         </div>
         <p className="text-xl text-slate-500 dark:text-slate-400 mb-12">

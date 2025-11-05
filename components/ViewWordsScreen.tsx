@@ -21,7 +21,7 @@ const WordItem: React.FC<{
     const primaryWord = entry.meanings[0]?.spanish?.word || entry.meanings[0]?.english?.word || 'Unknown';
 
     return (
-        <div className="flex items-center justify-between p-2 bg-slate-200 dark:bg-slate-700 rounded-md">
+        <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-700 rounded-md">
             <button onClick={() => onSelectWord(entry)} className="flex-grow text-left truncate pr-2 hover:underline">
                 {primaryWord}
             </button>
@@ -45,9 +45,9 @@ const WordColumn: React.FC<{
     onToggleStar: (id: string) => void;
     onSelectWord: (entry: DictionaryEntry) => void;
 }> = ({ title, words, onToggleStar, onSelectWord }) => (
-    <div className="flex flex-col bg-black/30 rounded-xl p-3 overflow-hidden">
-        <h2 className="text-xl font-bold text-center mb-3 text-slate-300">{title}</h2>
-        <div className="flex-grow overflow-y-auto space-y-2 pr-2 min-h-0">
+    <div className="flex flex-col bg-white dark:bg-slate-800 shadow-lg rounded-xl p-3 overflow-hidden">
+        <h2 className="text-xl font-bold text-center mb-3 text-slate-800 dark:text-slate-200">{title}</h2>
+        <div className="flex-grow overflow-y-auto space-y-2 pr-2 min-h-0 bg-slate-100 dark:bg-slate-900/50 p-2 rounded-md">
             {words.length > 0 ? (
                 words.map(entry => (
                     <WordItem
@@ -86,15 +86,16 @@ export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData
     const allWords = useMemo(() => [...filteredData].sort((a,b) => a.meanings[0].spanish.word.localeCompare(b.meanings[0].spanish.word)), [filteredData]);
 
     return (
-        <div className="flex flex-col h-screen w-full p-4 sm:p-6 lg:p-8 bg-[#191724] text-slate-200">
-            <header className="flex items-center w-full max-w-5xl mx-auto mb-6">
-                <div className="flex items-center gap-4">
-                    <button onClick={onBack} className="p-2 rounded-full hover:bg-slate-700 transition-colors">
+        <div className="min-h-screen flex flex-col w-full p-4 sm:p-6 lg:p-8">
+            <header className="w-full max-w-5xl mx-auto flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                    <button onClick={onBack} className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <BackIcon className="w-6 h-6" />
                     </button>
+                    <img src="https://via.placeholder.com/200" alt="Cuadernato Logo" className="w-10 h-10 rounded-md" />
                     <div>
-                        <h1 className="text-4xl font-bold">View Words</h1>
-                        <p className="text-slate-400">Browse your entire word collection</p>
+                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 font-display">Cuadernato</h1>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">View Words</p>
                     </div>
                 </div>
             </header>
@@ -104,7 +105,7 @@ export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search all words..."
-                    className="w-full bg-black/50 text-white placeholder-slate-400 text-lg p-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500"
+                    className="w-full bg-white dark:bg-slate-800 shadow-lg placeholder-slate-400 text-lg p-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-400"
                 />
                 <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-4" style={{ minHeight: 0 }}>
                     <WordColumn title="Starred Words" words={starredWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} />
@@ -112,6 +113,11 @@ export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData
                     <WordColumn title="All Words" words={allWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} />
                 </div>
             </main>
+            <footer className="w-full max-w-5xl mx-auto text-center py-4 mt-4">
+                <p className="text-xs text-slate-400 dark:text-slate-500">
+                  © 2024 Cuadernato. All Rights Reserved. A sample application for demonstration purposes.
+                </p>
+            </footer>
         </div>
     );
 };
