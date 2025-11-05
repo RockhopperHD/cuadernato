@@ -8,10 +8,10 @@ import { WordDetails } from './components/WordDetails';
 import { RotatingTips } from './components/RotatingTips';
 import { SettingsIcon, BackIcon, VerticalTriangleIcon, StarIcon } from './components/icons';
 import { TitleScreen } from './components/TitleScreen';
-import { ImportListScreen } from './components/ImportListScreen';
 import { ListActiveIndicator } from './components/ListActiveIndicator';
 import { Modal } from './components/Modal';
 import { ListBuilder } from './components/ListBuilder';
+import { ViewWordsScreen } from './components/ViewWordsScreen';
 
 // Custom hook for localStorage state
 function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
@@ -44,6 +44,7 @@ const App: React.FC = () => {
   const [lang, setLang] = useState<'ES' | 'EN'>('ES');
   const [query, setQuery] = useState('');
   const [selectedEntry, setSelectedEntry] = useState<DictionaryEntry | null>(null);
+  const [viewingWordEntry, setViewingWordEntry] = useState<DictionaryEntry | null>(null);
 
   // App structure state
   const [mode, setMode] = useState<AppMode>('title');
@@ -65,14 +66,14 @@ const App: React.FC = () => {
   const [showVulgar, setShowVulgar] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   
-  const handleMarkList = (ids: string[], checksum: string, name: string, password?: string, showVulgar?: boolean) => {
+  const handleActivateList = (ids: string[], checksum: string, name: string, password?: string, showVulgar?: boolean) => {
     const displayChecksum = (parseInt(checksum, 10) % 10000000).toString().slice(0, 7);
     setActiveList(ids);
     setListName(name);
     setListChecksum(displayChecksum);
     setListActivationTimestamp(Date.now());
     
-    // Reset lock state when marking a new list
+    // Reset lock state when activating a new list
     setIsListLocked(false);
     setListLockTimestamp(null);
     setListPassword(password || null); // Store password if provided
@@ -81,7 +82,7 @@ const App: React.FC = () => {
     setMode('dictionary');
   };
 
-  const handleRemoveList = () => {
+  const handleDeactivateList = () => {
       setActiveList([]);
       setListName(null);
       setListChecksum(null);
@@ -137,6 +138,9 @@ const App: React.FC = () => {
     );
     if (selectedEntry && selectedEntry.id === idToToggle) {
         setSelectedEntry(prev => prev ? {...prev, starred: !prev.starred} : null);
+    }
+    if (viewingWordEntry && viewingWordEntry.id === idToToggle) {
+        setViewingWordEntry(prev => prev ? {...prev, starred: !prev.starred} : null);
     }
   };
   
@@ -271,10 +275,10 @@ const App: React.FC = () => {
     if (currentSubview === 'removeConfirm') {
         return (
             <div>
-                <p className="text-slate-600 dark:text-slate-300 mb-4">Are you sure you want to remove the current list? This cannot be undone.</p>
+                <p className="text-slate-600 dark:text-slate-300 mb-4">Are you sure you want to deactivate the current list? This cannot be undone.</p>
                  <div className="flex gap-2 mt-4">
                     <button onClick={() => setModal({ type: 'listStatus', subview: 'main' })} className="w-full bg-slate-200 dark:bg-slate-600 font-semibold py-2 px-4 rounded-md hover:bg-slate-300 dark:hover:bg-slate-500">Cancel</button>
-                    <button onClick={handleRemoveList} className="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700">Remove List</button>
+                    <button onClick={handleDeactivateList} className="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700">Deactivate List</button>
                 </div>
             </div>
         );
@@ -294,7 +298,7 @@ const App: React.FC = () => {
                   <p className="font-mono text-lg font-semibold">{listChecksum || 'N/A'}</p>
               </div>
               <div className="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg">
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Marked For</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Activated For</p>
                   <p className="font-semibold">{formatTimeAgo(listActivationTimestamp)}</p>
               </div>
 
@@ -317,17 +321,17 @@ const App: React.FC = () => {
                  ) : listPassword && (
                       <button onClick={handleLockList} className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700">Lock List</button>
                  )}
-                 <button onClick={() => setModal({ type: 'listStatus', subview: 'removeConfirm' })} className="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700">Remove List...</button>
+                 <button onClick={() => setModal({ type: 'listStatus', subview: 'removeConfirm' })} className="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700">Deactivate List...</button>
               </div>
             </>
           ) : (
              <div className="text-center">
-                <p className="text-slate-500 dark:text-slate-400 mb-4">No list is currently marked.</p>
+                <p className="text-slate-500 dark:text-slate-400 mb-4">No list is currently activated.</p>
                 <button 
-                    onClick={() => { setModal(null); setMode('markList'); }}
+                    onClick={() => { setModal(null); setMode('listBuilder'); }}
                     className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700"
                 >
-                    Mark a List
+                    Create a List
                 </button>
             </div>
           )}
@@ -341,29 +345,61 @@ const App: React.FC = () => {
 
 
   if (mode === 'title') {
-    return <TitleScreen setMode={setMode} isListLocked={isListLocked} />;
+    return <TitleScreen setMode={setMode} />;
   }
   
-  if (mode === 'markList') {
-    return (
-      <ImportListScreen 
-        onImport={handleMarkList} 
-        onBack={() => setMode('title')} 
-        dictionary={dictionaryData}
-      />
-    );
-  }
-
   if (mode === 'listBuilder') {
     return (
       <ListBuilder 
         setMode={setMode}
         dictionary={dictionaryData}
+        onActivate={handleActivateList}
       />
     );
   }
-  
+
   const modalVariant = isListLocked ? 'blue' : activeListSet.size > 0 ? 'green' : 'gray';
+
+  if (mode === 'viewWords') {
+    return (
+      <>
+        <ViewWordsScreen
+            dictionaryData={dictionaryData}
+            activeListSet={activeListSet}
+            onToggleStar={toggleStar}
+            onSelectWord={(entry) => setViewingWordEntry(entry)}
+            onBack={() => setMode('title')}
+        />
+        {modal && modal.type === 'listStatus' && (
+          <Modal 
+            title="List Status" 
+            onClose={() => { setModal(null); setPasswordInput(''); }}
+            variant={modalVariant}
+          >
+              {renderModalContent()}
+          </Modal>
+        )}
+        {viewingWordEntry && (
+            <Modal title="Word Details" onClose={() => setViewingWordEntry(null)}>
+                <div className="max-h-[70vh] overflow-y-auto -m-6">
+                    <WordDetails
+                          entry={viewingWordEntry} 
+                          lang={'EN'} // Default to EN view for simplicity, as query isn't available
+                          onStar={toggleStar} 
+                          query={''}
+                          isWordOnList={activeListSet.has(viewingWordEntry.id)}
+                          isListLocked={isListLocked}
+                          onListIconClick={() => {
+                            setViewingWordEntry(null);
+                            setModal({ type: 'listStatus' });
+                          }}
+                    />
+                </div>
+            </Modal>
+        )}
+      </>
+    );
+  }
   
   return (
     <div className="min-h-screen flex flex-col p-4 sm:p-6 lg:p-8 relative">
@@ -375,6 +411,25 @@ const App: React.FC = () => {
         >
             {renderModalContent()}
         </Modal>
+      )}
+
+      {viewingWordEntry && (
+          <Modal title="Word Details" onClose={() => setViewingWordEntry(null)}>
+              <div className="max-h-[70vh] overflow-y-auto -m-6">
+                  <WordDetails
+                        entry={viewingWordEntry} 
+                        lang={'EN'} // Default to EN view for simplicity, as query isn't available
+                        onStar={toggleStar} 
+                        query={''}
+                        isWordOnList={activeListSet.has(viewingWordEntry.id)}
+                        isListLocked={isListLocked}
+                        onListIconClick={() => {
+                          setViewingWordEntry(null);
+                          setModal({ type: 'listStatus' });
+                        }}
+                  />
+              </div>
+          </Modal>
       )}
 
       <header className="w-full max-w-4xl mx-auto flex justify-between items-center mb-4">

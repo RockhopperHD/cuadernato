@@ -55,5 +55,5 @@ export type CustomListPayload = {
     showVulgar?: boolean;
 };
 
-export type AppMode = 'title' | 'dictionary' | 'markList' | 'listBuilder';
+export type AppMode = 'title' | 'dictionary' | 'listBuilder' | 'viewWords';
 export type ModalType = 'listStatus';
