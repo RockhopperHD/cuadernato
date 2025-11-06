@@ -18,8 +18,6 @@ export type PronounConjugation = {
 
 export interface SpanishSide {
   word: string;
-  pos: PartOfSpeech;
-  as_in: string;
   region?: Region;
   reflexive?: boolean;
   gender_map?: { [key: string]: Gender };
@@ -30,11 +28,11 @@ export interface SpanishSide {
 
 export interface EnglishSide {
   word: string;
-  pos: PartOfSpeech;
-  as_in: string;
 }
 
 export interface Meaning {
+  pos: PartOfSpeech;
+  as_in: string;
   spanish: SpanishSide;
   english: EnglishSide;
   note?: string;

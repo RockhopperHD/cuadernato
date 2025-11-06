@@ -1,4 +1,4 @@
-import { Mood, PronounConjugation, SpanishSide, Tense } from '../types';
+import { Mood, PartOfSpeech, PronounConjugation, SpanishSide, Tense } from '../types';
 
 const PRONOUNS: (keyof PronounConjugation)[] = ['yo', 'tu', 'el', 'nosotros', 'vosotros', 'ellos'];
 
@@ -79,9 +79,10 @@ const buildForm = (stem: string, ending: string, pronoun: keyof PronounConjugati
 };
 
 export const generateConjugations = (
-  spanish: SpanishSide
+  spanish: SpanishSide,
+  pos: PartOfSpeech
 ): Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>> => {
-  if (spanish.pos !== 'verb') {
+  if (pos !== 'verb') {
     return {};
   }
 
