@@ -2022,5 +2022,249 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     ],
     related_spanish: [],
     related_english: []
-  }
+  },
+{
+    id: '000106',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'gratis', pos: 'adjective', as_in: 'free, without charge', gender_map: { 'gratis': 'n' } },
+        english: { word: 'free', pos: 'adjective', as_in: 'without charge' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000107',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'deal', pos: 'adjective', as_in: 'relating to gods (rare)', gender_map: { 'deal': 'n' } },
+        english: { word: 'divine', pos: 'adjective', as_in: 'relating to gods (archaic)' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000108',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'abactinal', pos: 'adjective', as_in: 'facing away from the mouth', gender_map: { 'abactinal': 'n' } },
+        english: { word: 'abactinal', pos: 'adjective', as_in: 'facing away from the mouth' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000109',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'abaxial', pos: 'adjective', as_in: 'facing away from the stem', gender_map: { 'abaxial': 'n' } },
+        english: { word: 'abaxial', pos: 'adjective', as_in: 'facing away from the stem' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000110',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'abdominal', pos: 'adjective', as_in: 'relating to the abdomen', gender_map: { 'abdominal': 'n' } },
+        english: { word: 'abdominal', pos: 'adjective', as_in: 'relating to the abdomen' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000111',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'abominable', pos: 'adjective', as_in: 'causing moral revulsion', gender_map: { 'abominable': 'n' } },
+        english: { word: 'abominable', pos: 'adjective', as_in: 'causing moral revulsion' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000112',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'aboral', pos: 'adjective', as_in: 'opposite to the mouth', gender_map: { 'aboral': 'n' } },
+        english: { word: 'aboral', pos: 'adjective', as_in: 'opposite to the mouth' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000113',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'abrogable', pos: 'adjective', as_in: 'capable of being repealed', gender_map: { 'abrogable': 'n' } },
+        english: { word: 'abrogable', pos: 'adjective', as_in: 'capable of being repealed' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000114',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'accidental', pos: 'adjective', as_in: 'happening by chance', gender_map: { 'accidental': 'n' } },
+        english: { word: 'accidental', pos: 'adjective', as_in: 'happening by chance' }
+      },
+      {
+        spanish: { word: 'accidental', pos: 'adjective', as_in: 'nonessential', gender_map: { 'accidental': 'n' } },
+        english: { word: 'nonessential', pos: 'adjective', as_in: 'not necessary' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000115',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'plural', pos: 'adjective', as_in: 'more than one', gender_map: { 'plural': 'n' } },
+        english: { word: 'plural', pos: 'adjective', as_in: 'more than one' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000116',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'libre', pos: 'adjective', as_in: 'not imprisoned', gender_map: { 'libre': 'n' } },
+        english: { word: 'free', pos: 'adjective', as_in: 'not imprisoned' }
+      },
+      {
+        spanish: { word: 'libre', pos: 'adjective', as_in: 'without obligations', gender_map: { 'libre': 'n' } },
+        english: { word: 'free', pos: 'adjective', as_in: 'available' }
+      },
+      {
+        spanish: { word: 'libre', pos: 'adjective', as_in: 'free of (containing none)', gender_map: { 'libre': 'n' } },
+        english: { word: 'free', pos: 'adjective', as_in: 'containing none of' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000117',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'acid', pos: 'adjective', as_in: 'music genre', gender_map: { 'acid': 'n' } },
+        english: { word: 'acid', pos: 'adjective', as_in: 'music genre' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000118',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'chiapaneco', pos: 'adjective', as_in: 'from Chiapas, Mexico', gender_map: { 'chiapaneco': 'm', 'chiapaneca': 'f' } },
+        english: { word: 'Chiapanecan', pos: 'adjective', as_in: 'from Chiapas, Mexico' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000119',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'amoral', pos: 'adjective', as_in: 'lacking moral sense', gender_map: { 'amoral': 'n' } },
+        english: { word: 'amoral', pos: 'adjective', as_in: 'unconcerned with morals' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000120',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'perro', pos: 'adjective', as_in: 'dog-like', gender_map: { 'perro': 'm', 'perra': 'f' } },
+        english: { word: 'doggish', pos: 'adjective', as_in: 'resembling a dog' }
+      },
+      {
+        spanish: { word: 'perro', pos: 'adjective', as_in: 'awful, very bad', gender_map: { 'perro': 'm', 'perra': 'f' }, tags: ['COLLOQUIAL'] },
+        english: { word: 'awful', pos: 'adjective', as_in: 'very bad' }
+      },
+      {
+        spanish: { word: 'perro', pos: 'adjective', as_in: 'wicked, mean', gender_map: { 'perro': 'm', 'perra': 'f' }, tags: ['COLLOQUIAL'] },
+        english: { word: 'wicked', pos: 'adjective', as_in: 'mean-spirited' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000121',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'centavo', pos: 'adjective', as_in: 'one hundredth part', gender_map: { 'centavo': 'm', 'centava': 'f' } },
+        english: { word: 'hundredth', pos: 'adjective', as_in: 'fractional part' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000122',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'singular', pos: 'adjective', as_in: 'grammatical number', gender_map: { 'singular': 'n' } },
+        english: { word: 'singular', pos: 'adjective', as_in: 'grammatical number' }
+      },
+      {
+        spanish: { word: 'singular', pos: 'adjective', as_in: 'odd, peculiar', gender_map: { 'singular': 'n' } },
+        english: { word: 'peculiar', pos: 'adjective', as_in: 'odd, unique' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
+  {
+    id: '000123',
+    starred: false,
+    meanings: [
+      {
+        spanish: { word: 'andante', pos: 'adjective', as_in: 'walking, errant (knights)', gender_map: { 'andante': 'n' } },
+        english: { word: 'errant', pos: 'adjective', as_in: 'roaming (archaic)' }
+      },
+      {
+        spanish: { word: 'andante', pos: 'adjective', as_in: 'moderately slow tempo', gender_map: { 'andante': 'n' } },
+        english: { word: 'andante', pos: 'adjective', as_in: 'moderately slow (music)' }
+      }
+    ],
+    related_spanish: [],
+    related_english: []
+  },
 ];
