@@ -10,21 +10,43 @@ interface ViewWordsScreenProps {
     onToggleStar: (id: string) => void;
     onSelectWord: (entry: DictionaryEntry) => void;
     onBack: () => void;
+    mastery: Record<string, number>;
+    onResetMastery: () => void;
 }
+
+const MasteryIndicator: React.FC<{ value: number }> = ({ value }) => {
+    return (
+        <div className="flex items-center gap-1" aria-label={`Mastery ${value} of 2`}>
+            {[0, 1].map(index => (
+                <span
+                    key={index}
+                    className={`inline-block h-2.5 w-2.5 rounded-full ${index < value ? 'bg-emerald-500 dark:bg-emerald-400' : 'bg-slate-300 dark:bg-slate-600'}`}
+                ></span>
+            ))}
+        </div>
+    );
+};
 
 const WordItem: React.FC<{
     entry: DictionaryEntry;
     onToggleStar: (id: string) => void;
     onSelectWord: (entry: DictionaryEntry) => void;
-}> = ({ entry, onToggleStar, onSelectWord }) => {
+    masteryValue: number;
+}> = ({ entry, onToggleStar, onSelectWord, masteryValue }) => {
     // Determine the primary word to display. Prefers Spanish, but falls back to English.
     const primaryWord = entry.meanings[0]?.spanish?.word || entry.meanings[0]?.english?.word || 'Unknown';
 
     return (
-        <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-700 rounded-md">
-            <button onClick={() => onSelectWord(entry)} className="flex-grow text-left truncate pr-2 hover:underline">
-                {primaryWord}
-            </button>
+        <div className="flex items-center justify-between gap-2 p-2 bg-white dark:bg-slate-700 rounded-md">
+            <div className="flex flex-col flex-grow min-w-0">
+                <button onClick={() => onSelectWord(entry)} className="text-left truncate hover:underline">
+                    {primaryWord}
+                </button>
+                <div className="mt-1 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                    <span>Mastery</span>
+                    <MasteryIndicator value={masteryValue} />
+                </div>
+            </div>
             <button
                 onClick={(e) => {
                     e.stopPropagation();
@@ -44,7 +66,8 @@ const WordColumn: React.FC<{
     words: DictionaryEntry[];
     onToggleStar: (id: string) => void;
     onSelectWord: (entry: DictionaryEntry) => void;
-}> = ({ title, words, onToggleStar, onSelectWord }) => (
+    mastery: Record<string, number>;
+}> = ({ title, words, onToggleStar, onSelectWord, mastery }) => (
     <div className="flex flex-col bg-white dark:bg-slate-800 shadow-lg rounded-xl p-3 overflow-hidden">
         <h2 className="text-xl font-bold text-center mb-3 text-slate-800 dark:text-slate-200">{title}</h2>
         <div className="flex-grow overflow-y-auto space-y-2 pr-2 min-h-0 bg-slate-100 dark:bg-slate-900/50 p-2 rounded-md">
@@ -55,6 +78,7 @@ const WordColumn: React.FC<{
                         entry={entry}
                         onToggleStar={onToggleStar}
                         onSelectWord={onSelectWord}
+                        masteryValue={mastery[entry.id] ?? 0}
                     />
                 ))
             ) : (
@@ -65,7 +89,7 @@ const WordColumn: React.FC<{
 );
 
 
-export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData, activeListSet, onToggleStar, onSelectWord, onBack }) => {
+export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData, activeListSet, onToggleStar, onSelectWord, onBack, mastery, onResetMastery }) => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredData = useMemo(() => {
@@ -98,6 +122,12 @@ export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData
                         <p className="text-sm text-slate-500 dark:text-slate-400">View Words</p>
                     </div>
                 </div>
+                <button
+                    onClick={onResetMastery}
+                    className="bg-rose-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-rose-700 transition-colors"
+                >
+                    Reset Mastery
+                </button>
             </header>
             <main className="flex-grow w-full max-w-5xl mx-auto flex flex-col gap-4 overflow-hidden" style={{ minHeight: 0 }}>
                 <input
@@ -108,9 +138,9 @@ export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData
                     className="w-full bg-white dark:bg-slate-800 shadow-lg placeholder-slate-400 text-lg p-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-400"
                 />
                 <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-4" style={{ minHeight: 0 }}>
-                    <WordColumn title="Starred Words" words={starredWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} />
-                    <WordColumn title="Activated List" words={listWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} />
-                    <WordColumn title="All Words" words={allWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} />
+                    <WordColumn title="Starred Words" words={starredWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} mastery={mastery} />
+                    <WordColumn title="Activated List" words={listWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} mastery={mastery} />
+                    <WordColumn title="All Words" words={allWords} onToggleStar={onToggleStar} onSelectWord={onSelectWord} mastery={mastery} />
                 </div>
             </main>
             <footer className="w-full max-w-5xl mx-auto text-center py-4 mt-4">

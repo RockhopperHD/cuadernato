@@ -15,6 +15,7 @@ import { Modal } from './components/Modal';
 import { AccentPalette } from './components/AccentPalette';
 import { ListBuilder } from './components/ListBuilder';
 import { ViewWordsScreen } from './components/ViewWordsScreen';
+import { VocabPractice } from './components/VocabPractice';
 
 // Helper to remove accents from a string for comparison
 const removeAccents = (str: string): string => {
@@ -68,6 +69,7 @@ const App: React.FC = () => {
   const [listActivationTimestamp, setListActivationTimestamp] = useLocalStorage<number | null>('listActivationTimestamp', null);
   const [listLockTimestamp, setListLockTimestamp] = useLocalStorage<number | null>('listLockTimestamp', null);
   const [listShowVulgar, setListShowVulgar] = useLocalStorage<boolean | null>('listShowVulgar', null);
+  const [vocabMastery, setVocabMastery] = useLocalStorage<Record<string, number>>('vocabMastery', {});
   const activeListSet = useMemo(() => new Set(activeList), [activeList]);
 
   // Settings state
@@ -131,6 +133,22 @@ const App: React.FC = () => {
       }
       setModal(null);
   }
+
+  const handleUpdateMastery = (entryId: string, newValue: number) => {
+    setVocabMastery(prev => {
+      const next = { ...prev };
+      if (newValue <= 0) {
+        delete next[entryId];
+      } else {
+        next[entryId] = newValue;
+      }
+      return next;
+    });
+  };
+
+  const handleResetMastery = () => {
+    setVocabMastery({});
+  };
   
   const toggleLang = () => {
     setLang(prev => (prev === 'ES' ? 'EN' : 'ES'));
@@ -473,6 +491,22 @@ const App: React.FC = () => {
 
   const modalVariant = isListLocked ? 'blue' : activeListSet.size > 0 ? 'green' : 'gray';
 
+  if (mode === 'vocabPractice') {
+    return (
+      <>
+        <VocabPractice
+          dictionaryData={dictionaryData}
+          mastery={vocabMastery}
+          onUpdateMastery={handleUpdateMastery}
+          onResetMastery={handleResetMastery}
+          onBack={() => setMode('title')}
+          activeList={activeList}
+        />
+        <AccentPalette />
+      </>
+    );
+  }
+
   if (mode === 'viewWords') {
     return (
       <>
@@ -482,6 +516,8 @@ const App: React.FC = () => {
             onToggleStar={toggleStar}
             onSelectWord={(entry) => setViewingWordEntry(entry)}
             onBack={() => setMode('title')}
+            mastery={vocabMastery}
+            onResetMastery={handleResetMastery}
         />
         {modal && modal.type === 'listStatus' && (
           <Modal
