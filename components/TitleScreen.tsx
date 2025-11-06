@@ -44,6 +44,12 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ setMode }) => {
           >
             Dictionary
           </button>
+          <button
+            onClick={() => setMode('vocabPractice')}
+            className="w-full bg-orange-500 text-white font-bold py-4 px-6 rounded-lg text-xl hover:bg-orange-600 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-orange-300"
+          >
+            Vocabulary Practice
+          </button>
            <div className="flex w-full gap-2 mt-2">
               <button
                 onClick={() => setMode('listBuilder')}
