@@ -12,6 +12,7 @@ import { SettingsIcon, BackIcon, VerticalTriangleIcon, StarIcon } from './compon
 import { TitleScreen } from './components/TitleScreen';
 import { ListActiveIndicator } from './components/ListActiveIndicator';
 import { Modal } from './components/Modal';
+import { AccentPalette } from './components/AccentPalette';
 import { ListBuilder } from './components/ListBuilder';
 import { ViewWordsScreen } from './components/ViewWordsScreen';
 
@@ -449,16 +450,24 @@ const App: React.FC = () => {
 
 
   if (mode === 'title') {
-    return <TitleScreen setMode={setMode} />;
+    return (
+      <>
+        <TitleScreen setMode={setMode} />
+        <AccentPalette />
+      </>
+    );
   }
-  
+
   if (mode === 'listBuilder') {
     return (
-      <ListBuilder 
-        setMode={setMode}
-        dictionary={dictionaryData}
-        onActivate={handleActivateList}
-      />
+      <>
+        <ListBuilder
+          setMode={setMode}
+          dictionary={dictionaryData}
+          onActivate={handleActivateList}
+        />
+        <AccentPalette />
+      </>
     );
   }
 
@@ -475,8 +484,8 @@ const App: React.FC = () => {
             onBack={() => setMode('title')}
         />
         {modal && modal.type === 'listStatus' && (
-          <Modal 
-            title="List Status" 
+          <Modal
+            title="List Status"
             onClose={() => { setModal(null); setPasswordInput(''); }}
             variant={modalVariant}
           >
@@ -487,9 +496,9 @@ const App: React.FC = () => {
             <Modal title="Word Details" onClose={() => setViewingWordEntry(null)}>
                 <div className="max-h-[70vh] overflow-y-auto -m-6">
                     <WordDetails
-                          entry={viewingWordEntry} 
+                          entry={viewingWordEntry}
                           lang={'EN'} // Default to EN view for simplicity, as query isn't available
-                          onStar={toggleStar} 
+                          onStar={toggleStar}
                           query={''}
                           isWordOnList={activeListSet.has(viewingWordEntry.id)}
                           isListLocked={isListLocked}
@@ -501,6 +510,7 @@ const App: React.FC = () => {
                 </div>
             </Modal>
         )}
+        <AccentPalette />
       </>
     );
   }
@@ -508,8 +518,8 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col p-4 sm:p-6 lg:p-8 relative">
        {modal && modal.type === 'listStatus' && (
-        <Modal 
-          title="List Status" 
+        <Modal
+          title="List Status"
           onClose={() => { setModal(null); setPasswordInput(''); }}
           variant={modalVariant}
         >
@@ -669,6 +679,7 @@ const App: React.FC = () => {
           © 2024 Cuadernato. All Rights Reserved. A sample application for demonstration purposes.
         </p>
       </footer>
+      <AccentPalette />
     </div>
   );
 };
