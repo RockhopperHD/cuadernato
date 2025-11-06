@@ -1,6 +1,7 @@
 
 
 
+// Temporary comment to refresh PR
 import React, { useState, useMemo, useEffect } from 'react';
 import { DICTIONARY_DATA } from './data/dictionary';
 import { DictionaryEntry, AppMode, ModalType } from './types';

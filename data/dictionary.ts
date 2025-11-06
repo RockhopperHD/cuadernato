@@ -352,30 +352,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
       },
       {
         "pos": "noun",
-        "as_in": "the field of study",
-        "spanish": {
-          "word": "derecho",
-          "tags": [
-            "GENDER-SPECIFIC"
-          ],
-          "gender_map": {
-            "derecho": "m"
-          }
-        },
-        "english": {
-          "word": "law"
-        }
-      }
-    ],
-    "related_spanish": [],
-    "related_english": []
-  },
-  {
-    "id": "000012",
-    "starred": false,
-    "meanings": [
-      {
-        "pos": "noun",
         "as_in": "the right side or direction",
         "spanish": {
           "word": "derecha",
@@ -388,6 +364,22 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         },
         "english": {
           "word": "right"
+        }
+      },
+      {
+        "pos": "noun",
+        "as_in": "the field of study",
+        "spanish": {
+          "word": "derecho",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
+          "gender_map": {
+            "derecho": "m"
+          }
+        },
+        "english": {
+          "word": "law"
         }
       }
     ],
@@ -3112,6 +3104,19 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "id": "000079",
     "starred": false,
     "meanings": [
+      {
+        "pos": "noun",
+        "as_in": "the metal",
+        "spanish": {
+          "word": "plata",
+          "gender_map": {
+            "plata": "f"
+          }
+        },
+        "english": {
+          "word": "silver"
+        }
+      },
       {
         "pos": "noun",
         "as_in": "currency",
