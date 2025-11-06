@@ -151,7 +151,14 @@ const App: React.FC = () => {
     }
   };
   
-  const searchResults = useMemo(() => {
+  type SearchResult = {
+    entry: DictionaryEntry;
+    matchedMeaningIndex: number;
+    matchedTerm: string;
+    matchedExact: boolean;
+  };
+
+  const searchResults = useMemo<SearchResult[]>(() => {
     let visibleData = dictionaryData;
     const isVulgarFilterActive = activeListSet.size > 0 
       ? listShowVulgar === false 
@@ -165,50 +172,100 @@ const App: React.FC = () => {
 
     if (!query) return [];
     const lowerCaseQuery = query.toLowerCase();
-    
-    const filtered = visibleData.filter(entry => {
+
+    const filtered = visibleData.reduce<SearchResult[]>((acc, entry) => {
       if (isListLocked && activeListSet.has(entry.id)) {
-          return false; // Hide from search results if locked
+        return acc; // Hide from search results if locked
       }
-      const terms = new Set<string>();
-      if (lang === 'ES') {
-        entry.meanings.forEach(meaning => {
-          terms.add(meaning.spanish.word);
-          if (meaning.spanish.gender_map) {
-            Object.keys(meaning.spanish.gender_map).forEach(key => terms.add(key.split('/')[0].trim()));
+
+      type CandidateMatch = {
+        meaningIndex: number;
+        term: string;
+      };
+
+      const matches: CandidateMatch[] = [];
+
+      entry.meanings.forEach((meaning, meaningIndex) => {
+        if (lang === 'ES') {
+          const primaryTerm = meaning.spanish.word;
+          if (primaryTerm.toLowerCase().startsWith(lowerCaseQuery)) {
+            matches.push({ meaningIndex, term: primaryTerm });
           }
-        });
-      } else { // lang === 'EN'
-        entry.meanings.forEach(meaning => terms.add(meaning.english.word));
-      }
-      return Array.from(terms).some(term => term.toLowerCase().startsWith(lowerCaseQuery));
-    });
 
-    const mappedResults = filtered.map(entry => {
-        // Special handling for the 'ser'/'estar' entry
-        if (entry.id === '000013' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
-            const relevantMeaning = entry.meanings.find(m => m.spanish.word === lowerCaseQuery);
-            if (relevantMeaning) {
-                // Create a temporary, filtered entry for display
-                return {
-                    ...entry,
-                    meanings: [relevantMeaning],
-                    grand_note: undefined, // Hide the grand note in this specific case
-                };
-            }
+          if (meaning.spanish.gender_map) {
+            Object.keys(meaning.spanish.gender_map).forEach(key => {
+              const genderTerm = key.split('/')[0].trim();
+              if (genderTerm.toLowerCase().startsWith(lowerCaseQuery)) {
+                matches.push({ meaningIndex, term: genderTerm });
+              }
+            });
+          }
+        } else {
+          const primaryTerm = meaning.english.word;
+          if (primaryTerm.toLowerCase().startsWith(lowerCaseQuery)) {
+            matches.push({ meaningIndex, term: primaryTerm });
+          }
         }
-        return entry;
-    });
+      });
 
-    return mappedResults.sort((a, b) => {
-      const aHasExactMatch = a.meanings.some(m => lang === 'ES' ? m.spanish.word.toLowerCase() === lowerCaseQuery : m.english.word.toLowerCase() === lowerCaseQuery);
-      const bHasExactMatch = b.meanings.some(m => lang === 'ES' ? m.spanish.word.toLowerCase() === lowerCaseQuery : m.english.word.toLowerCase() === lowerCaseQuery);
-      if (aHasExactMatch && !bHasExactMatch) return -1;
-      if (!aHasExactMatch && bHasExactMatch) return 1;
-      return 0;
+      if (matches.length === 0) {
+        return acc;
+      }
+
+      matches.sort((a, b) => {
+        const aLower = a.term.toLowerCase();
+        const bLower = b.term.toLowerCase();
+        const aExact = aLower === lowerCaseQuery;
+        const bExact = bLower === lowerCaseQuery;
+        if (aExact && !bExact) return -1;
+        if (!aExact && bExact) return 1;
+        return aLower.localeCompare(bLower);
+      });
+
+      const bestMatch = matches[0];
+
+      // Special handling for the 'ser'/'estar' entry
+      if (entry.id === '000013' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
+        const relevantMeaningIndex = entry.meanings.findIndex(m => m.spanish.word === lowerCaseQuery);
+        if (relevantMeaningIndex !== -1) {
+          acc.push({
+            entry: {
+              ...entry,
+              meanings: [entry.meanings[relevantMeaningIndex]],
+              grand_note: undefined,
+            },
+            matchedMeaningIndex: 0,
+            matchedTerm: entry.meanings[relevantMeaningIndex].spanish.word,
+            matchedExact: true,
+          });
+          return acc;
+        }
+      }
+
+      acc.push({
+        entry,
+        matchedMeaningIndex: bestMatch.meaningIndex,
+        matchedTerm: bestMatch.term,
+        matchedExact: bestMatch.term.toLowerCase() === lowerCaseQuery,
+      });
+
+      return acc;
+    }, []);
+
+    return filtered.sort((a, b) => {
+      if (a.matchedExact && !b.matchedExact) return -1;
+      if (!a.matchedExact && b.matchedExact) return 1;
+      return a.matchedTerm.toLowerCase().localeCompare(b.matchedTerm.toLowerCase());
     });
 
   }, [query, lang, dictionaryData, showVulgar, isListLocked, activeListSet, listShowVulgar]);
+
+  const selectedSearchMatch = useMemo(() => {
+    if (!selectedEntry) {
+      return null;
+    }
+    return searchResults.find(result => result.entry.id === selectedEntry.id) || null;
+  }, [selectedEntry, searchResults]);
 
   const suggestion = useMemo(() => {
     if (lang !== 'ES' || !query || searchResults.length > 0) {
@@ -237,16 +294,18 @@ const App: React.FC = () => {
   }, [query, lang, searchResults]);
 
   useEffect(() => {
-    if (query) {
-        if (searchResults.length > 0) {
-          if (!selectedEntry || !searchResults.find(r => r.id === selectedEntry.id)) {
-            setSelectedEntry(searchResults[0]);
-          }
-        } else {
-          setSelectedEntry(null);
-        }
+    if (!query) {
+      setSelectedEntry(null);
+      return;
+    }
+
+    if (searchResults.length > 0) {
+      const isSelectedEntryVisible = selectedEntry && searchResults.find(r => r.entry.id === selectedEntry.id);
+      if (!isSelectedEntryVisible) {
+        setSelectedEntry(searchResults[0].entry);
+      }
     } else {
-        setSelectedEntry(null);
+      setSelectedEntry(null);
     }
   }, [query, searchResults, selectedEntry]);
 
@@ -540,8 +599,11 @@ const App: React.FC = () => {
               <aside className="w-full md:w-1/3 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 overflow-y-auto">
                 <nav>
                   <ul>
-                    {searchResults.map(entry => {
-                      const primaryWord = lang === 'ES' ? entry.meanings[0].spanish.word : entry.meanings[0].english.word;
+                    {searchResults.map(({ entry, matchedMeaningIndex, matchedTerm }) => {
+                      const meaning = entry.meanings[matchedMeaningIndex] || entry.meanings[0];
+                      const primaryWord = lang === 'ES'
+                        ? meaning.spanish.word
+                        : meaning.english.word;
                       const isWordOnList = activeListSet.has(entry.id);
                       return (
                         <li key={entry.id}>
@@ -551,7 +613,7 @@ const App: React.FC = () => {
                               selectedEntry?.id === entry.id ? 'bg-indigo-600 text-white' : 'hover:bg-slate-100 dark:hover:bg-slate-700'
                             }`}
                           >
-                            <span className="font-semibold">{primaryWord}</span>
+                            <span className="font-semibold">{primaryWord === matchedTerm ? primaryWord : matchedTerm}</span>
                             <span className="flex items-center gap-1">
                                {activeListSet.size > 0 && <VerticalTriangleIcon filled={isWordOnList} className={`w-4 h-4 ${isWordOnList ? (isListLocked ? 'text-blue-400' : 'text-green-400') : 'text-slate-400 dark:text-slate-600'}`}/>}
                                {entry.starred && <StarIcon starred={true} className={`w-4 h-4 ${selectedEntry?.id === entry.id ? 'text-white' : 'text-yellow-400'}`}/>}
@@ -573,6 +635,7 @@ const App: React.FC = () => {
                     isWordOnList={activeListSet.has(selectedEntry.id)}
                     isListLocked={isListLocked}
                     onListIconClick={() => setModal({ type: 'listStatus' })}
+                    matchedTerm={selectedSearchMatch?.matchedTerm ?? null}
                   />
                 ) : query ? (
                   <div className="flex flex-col items-center justify-center h-full text-center p-8">
