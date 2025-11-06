@@ -23,22 +23,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     starred: false,
     meanings: [
       {
-        spanish: {
-          word: 'acabar',
-          pos: 'verb',
-          as_in: 'to be done with',
-          conjugations: {
-            indicative: {
-              present: { yo: 'acabo', tu: 'acabas', el: 'acaba', nosotros: 'acabamos', vosotros: 'acabáis', ellos: 'acaban' },
-              preterite: { yo: 'acabé', tu: 'acabaste', el: 'acabó', nosotros: 'acabamos', vosotros: 'acabasteis', ellos: 'acabaron' },
-              imperfect: { yo: 'acababa', tu: 'acababas', el: 'acababa', nosotros: 'acabábamos', vosotros: 'acababais', ellos: 'acababan' }
-            },
-            subjunctive: {
-              present: { yo: 'acabe', tu: 'acabes', el: 'acabe', nosotros: 'acabemos', vosotros: 'acabéis', ellos: 'acaben' },
-              imperfect: { yo: 'acabara', tu: 'acabaras', el: 'acabara', nosotros: 'acabáramos', vosotros: 'acabarais', ellos: 'acabaran' }
-            }
-          }
-        },
+        spanish: { word: 'acabar', pos: 'verb', as_in: 'to be done with' },
         english: { word: 'to end', pos: 'verb', as_in: 'to be done with' }
       },
       {
@@ -70,18 +55,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           word: 'nadar',
           pos: 'verb',
           region: 'LATAM',
-          as_in: 'to recreationally go in water',
-          conjugations: {
-            indicative: {
-              present: { yo: 'nado', tu: 'nadas', el: 'nada', nosotros: 'nadamos', vosotros: 'nadáis', ellos: 'nadan' },
-              preterite: { yo: 'nadé', tu: 'nadaste', el: 'nadó', nosotros: 'nadamos', vosotros: 'nadasteis', ellos: 'nadaron' },
-              imperfect: { yo: 'nadaba', tu: 'nadabas', el: 'nadaba', nosotros: 'nadábamos', vosotros: 'nadabais', ellos: 'nadaban' }
-            },
-            subjunctive: {
-              present: { yo: 'nade', tu: 'nades', el: 'nade', nosotros: 'nademos', vosotros: 'nadéis', ellos: 'naden' },
-              imperfect: { yo: 'nadara', tu: 'nadaras', el: 'nadara', nosotros: 'nadáramos', vosotros: 'nadarais', ellos: 'nadaran' }
-            }
-          }
+          as_in: 'to recreationally go in water'
         },
         english: { word: 'to swim', pos: 'verb', as_in: 'to recreationally go in water' }
       },
@@ -90,18 +64,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           word: 'bañar',
           pos: 'verb',
           region: 'SPAIN',
-          as_in: 'to recreationally go in water',
-          conjugations: {
-            indicative: {
-              present: { yo: 'baño', tu: 'bañas', el: 'baña', nosotros: 'bañamos', vosotros: 'bañáis', ellos: 'bañan' },
-              preterite: { yo: 'bañé', tu: 'bañaste', el: 'bañó', nosotros: 'bañamos', vosotros: 'bañasteis', ellos: 'bañaron' },
-              imperfect: { yo: 'bañaba', tu: 'bañabas', el: 'bañaba', nosotros: 'bañábamos', vosotros: 'bañabais', ellos: 'bañaban' }
-            },
-            subjunctive: {
-              present: { yo: 'bañe', tu: 'bañes', el: 'bañe', nosotros: 'bañemos', vosotros: 'bañéis', ellos: 'bañen' },
-              imperfect: { yo: 'bañara', tu: 'bañaras', el: 'bañara', nosotros: 'bañáramos', vosotros: 'bañarais', ellos: 'bañaran' }
-            }
-          }
+          as_in: 'to recreationally go in water'
         },
         english: { word: 'to swim', pos: 'verb', as_in: 'to recreationally go in water' }
       }
@@ -120,9 +83,8 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           as_in: 'you have an object',
           conjugations: {
             indicative: {
-              present: { yo: 'ten(go)', tu: 't((ie))nes', el: 't((ie))ne', nosotros: 'tenemos', vosotros: 'tenéis', ellos: 't((ie))nen' },
-              preterite: { yo: 'tuve', tu: 'tuviste', el: 'tuvo', nosotros: 'tuvimos', vosotros: 'tuvisteis', ellos: 'tuvieron'},
-              imperfect: { yo: 'tenía', tu: 'tenías', el: 'tenía', nosotros: 'teníamos', vosotros: 'teníais', ellos: 'tenían'}
+              present: { yo: 'ten(go)', tu: 't((ie))nes', el: 't((ie))ne', ellos: 't((ie))nen' },
+              preterite: { yo: 'tuve', tu: 'tuviste', el: 'tuvo', nosotros: 'tuvimos', vosotros: 'tuvisteis', ellos: 'tuvieron'}
             },
             subjunctive: {
               present: { yo: 'tenga', tu: 'tengas', el: 'tenga', nosotros: 'tengamos', vosotros: 'tengáis', ellos: 'tengan' },
@@ -149,18 +111,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           pos: 'verb',
           as_in: 'to clean yourself with water',
           reflexive: true,
-          tags: ['REFLEXIVE'],
-          conjugations: {
-            indicative: {
-              present: { yo: '(((me))) ducho', tu: '(((te))) duchas', el: '(((se))) ducha', nosotros: '(((nos))) duchamos', vosotros: '(((os))) ducháis', ellos: '(((se))) duchan' },
-              preterite: { yo: '(((me))) duché', tu: '(((te))) duchaste', el: '(((se))) duchó', nosotros: '(((nos))) duchamos', vosotros: '(((os))) duchasteis', ellos: '(((se))) ducharon' },
-              imperfect: { yo: '(((me))) duchaba', tu: '(((te))) duchabas', el: '(((se))) duchaba', nosotros: '(((nos))) duchábamos', vosotros: '(((os))) duchabais', ellos: '(((se))) duchaban' }
-            },
-            subjunctive: {
-                present: { yo: '(((me))) duche', tu: '(((te))) duches', el: '(((se))) duche', nosotros: '(((nos))) duchemos', vosotros: '(((os))) duchéis', ellos: '(((se))) duchan' },
-                imperfect: { yo: '(((me))) duchara', tu: '(((te))) ducharas', el: '(((se))) duchara', nosotros: '(((nos))) ducháramos', vosotros: '(((os))) ducharais', ellos: '(((se))) ducharan' }
-            }
-          }
+          tags: ['REFLEXIVE']
         },
         english: { word: 'to shower', pos: 'verb', as_in: 'to clean yourself with water' }
       }
@@ -211,22 +162,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     starred: false,
     meanings: [
       {
-        spanish: {
-          word: 'comer',
-          pos: 'verb',
-          as_in: 'to consume food',
-          conjugations: {
-            indicative: {
-              present: { yo: 'como', tu: 'comes', el: 'come', nosotros: 'comemos', vosotros: 'coméis', ellos: 'comen' },
-              preterite: { yo: 'comí', tu: 'comiste', el: 'comió', nosotros: 'comimos', vosotros: 'comisteis', ellos: 'comieron' },
-              imperfect: { yo: 'comía', tu: 'comías', el: 'comía', nosotros: 'comíamos', vosotros: 'comíais', ellos: 'comían' }
-            },
-            subjunctive: {
-                present: { yo: 'coma', tu: 'comas', el: 'coma', nosotros: 'comamos', vosotros: 'comáis', ellos: 'coman' },
-                imperfect: { yo: 'comiera', tu: 'comieras', el: 'comiera', nosotros: 'comiéramos', vosotros: 'comierais', ellos: 'comieran' }
-            }
-          }
-        },
+        spanish: { word: 'comer', pos: 'verb', as_in: 'to consume food' },
         english: { word: 'to eat', pos: 'verb', as_in: 'to consume food' }
       }
     ],

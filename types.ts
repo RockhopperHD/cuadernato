@@ -23,7 +23,7 @@ export interface SpanishSide {
   region?: Region;
   reflexive?: boolean;
   gender_map?: { [key: string]: Gender };
-  conjugations?: Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>>;
+  conjugations?: Partial<Record<Mood, Partial<Record<Tense, Partial<PronounConjugation>>>>>;
   tags?: TagType[];
   exceptions?: { type: string; pronoun: string; word: string }[];
 }
