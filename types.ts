@@ -25,6 +25,7 @@ export interface SpanishSide {
   gender_map?: { [key: string]: Gender };
   conjugations?: Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>>;
   tags?: TagType[];
+  exceptions?: { type: string; pronoun: string; word: string }[];
 }
 
 export interface EnglishSide {

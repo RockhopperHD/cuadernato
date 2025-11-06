@@ -140,7 +140,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                               </div>
                             )}
                             
-                            {spanish.conjugations && <ConjugationChart conjugations={spanish.conjugations} />}
+                            {spanish.conjugations && <ConjugationChart spanish={spanish} />}
                         </div>
                     );
                 })}
