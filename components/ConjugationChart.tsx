@@ -1,10 +1,11 @@
 
 import React, { useMemo, useState } from 'react';
-import { SpanishSide, Tense, Mood } from '../types';
+import { PartOfSpeech, SpanishSide, Tense, Mood } from '../types';
 import { generateConjugations, mergeConjugations } from '../utils/conjugation';
 
 interface ConjugationChartProps {
   spanish: SpanishSide;
+  pos: PartOfSpeech;
 }
 
 const TENSES: Tense[] = ['present', 'preterite', 'imperfect'];
@@ -29,12 +30,12 @@ const renderSpecialText = (text: string): React.ReactNode => {
   });
 };
 
-export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish }) => {
+export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos }) => {
   const [tense, setTense] = useState<Tense>('present');
   const [mood, setMood] = useState<Mood>('indicative');
   const { exceptions } = spanish;
 
-  const autoConjugations = useMemo(() => generateConjugations(spanish), [spanish]);
+  const autoConjugations = useMemo(() => generateConjugations(spanish, pos), [spanish, pos]);
   const conjugations = useMemo(
     () => mergeConjugations(autoConjugations, spanish.conjugations),
     [autoConjugations, spanish.conjugations]

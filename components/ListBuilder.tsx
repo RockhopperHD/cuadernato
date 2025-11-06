@@ -137,17 +137,17 @@ export const ListBuilder: React.FC<ListBuilderProps> = ({ setMode, dictionary, o
                 spanish,
                 english,
                 inDictionary,
-                selectedMeaningAsIn: ambiguousMeanings.length > 0 ? ambiguousMeanings[0].spanish.as_in : '',
+                selectedMeaningAsIn: ambiguousMeanings.length > 0 ? ambiguousMeanings[0].as_in : '',
                 ambiguousMeanings: ambiguousMeanings.length > 1 ? ambiguousMeanings : undefined,
             };
             
             if (newPair.ambiguousMeanings) {
                 const matchedMeaning = newPair.ambiguousMeanings.find(m => m.english.word.toLowerCase() === english.toLowerCase());
                 if (matchedMeaning) {
-                    newPair.selectedMeaningAsIn = matchedMeaning.spanish.as_in;
+                    newPair.selectedMeaningAsIn = matchedMeaning.as_in;
                 } else {
                     newPair.english = newPair.ambiguousMeanings[0].english.word;
-                    newPair.selectedMeaningAsIn = newPair.ambiguousMeanings[0].spanish.as_in;
+                    newPair.selectedMeaningAsIn = newPair.ambiguousMeanings[0].as_in;
                 }
             }
             
@@ -161,7 +161,7 @@ export const ListBuilder: React.FC<ListBuilderProps> = ({ setMode, dictionary, o
     const handleMeaningChange = (pairId: number, newAsIn: string) => {
         setWordPairs(currentPairs => currentPairs.map(p => {
             if (p.id === pairId && p.ambiguousMeanings) {
-                const newMeaning = p.ambiguousMeanings.find(m => m.spanish.as_in === newAsIn);
+                const newMeaning = p.ambiguousMeanings.find(m => m.as_in === newAsIn);
                 if (newMeaning) {
                     return { ...p, selectedMeaningAsIn: newAsIn, english: newMeaning.english.word };
                 }
@@ -209,7 +209,7 @@ export const ListBuilder: React.FC<ListBuilderProps> = ({ setMode, dictionary, o
                 spanish: p.spanish,
                 english: p.english,
                 inDictionary: doesPairExistInDictionary(p.spanish, p.english),
-                selectedMeaningAsIn: findAmbiguousMeanings(p.spanish).find(m => m.english.word === p.english)?.spanish.as_in || '',
+                selectedMeaningAsIn: findAmbiguousMeanings(p.spanish).find(m => m.english.word === p.english)?.as_in || '',
                 ambiguousMeanings: findAmbiguousMeanings(p.spanish).length > 1 ? findAmbiguousMeanings(p.spanish) : undefined,
             }));
             setListName(data.name);
@@ -261,7 +261,7 @@ export const ListBuilder: React.FC<ListBuilderProps> = ({ setMode, dictionary, o
         wordPairs.forEach(pair => {
             const entry = dictionary.find(e => e.meanings.some(m => m.spanish.word.toLowerCase() === pair.spanish.toLowerCase() && m.english.word.toLowerCase() === pair.english.toLowerCase()));
             if (entry && !seenIds.has(entry.id)) {
-                if (entry.meanings.some(m => m.spanish.pos === 'verb')) verbCount++;
+                if (entry.meanings.some(m => m.pos === 'verb')) verbCount++;
                 if (entry.meanings.some(m => m.spanish.tags?.includes('VULGAR'))) vulgarCount++;
                 seenIds.add(entry.id);
             }
@@ -364,7 +364,7 @@ export const ListBuilder: React.FC<ListBuilderProps> = ({ setMode, dictionary, o
                                     <div className="col-span-5 bg-yellow-200 dark:bg-yellow-800/50 text-yellow-900 dark:text-yellow-100 font-semibold p-3 rounded-lg text-lg truncate">{p.spanish}</div>
                                     {p.ambiguousMeanings ? (
                                         <select value={p.selectedMeaningAsIn} onChange={(e) => handleMeaningChange(p.id, e.target.value)} className="col-span-5 bg-sky-200 dark:bg-sky-800/50 text-sky-900 dark:text-sky-100 font-semibold p-3 rounded-lg text-lg truncate focus:outline-none focus:ring-2 focus:ring-sky-200">
-                                        {p.ambiguousMeanings.map(m => (<option key={m.spanish.as_in} value={m.spanish.as_in}>{m.english.word} ({m.spanish.as_in})</option>))}
+                                        {p.ambiguousMeanings.map(m => (<option key={m.as_in} value={m.as_in}>{m.english.word} ({m.as_in})</option>))}
                                         </select>
                                     ) : (
                                         <div className="col-span-5 bg-sky-200 dark:bg-sky-800/50 text-sky-900 dark:text-sky-100 font-semibold p-3 rounded-lg text-lg truncate">{p.english}</div>
