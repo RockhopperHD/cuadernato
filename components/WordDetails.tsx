@@ -76,12 +76,12 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
 
             <div className="space-y-6">
                 {sortedMeanings.map((meaning, index) => {
-                    const { spanish, english, note } = meaning;
+                    const { spanish, english, note, pos, as_in } = meaning;
                     const isES = lang === 'ES';
                     
                     const headerText = isES ? english.word : spanish.word;
-                    const headerPos = isES ? english.pos : spanish.pos;
-                    const asInText = isES ? english.as_in : spanish.as_in;
+                    const headerPos = pos;
+                    const asInText = as_in;
 
                     return (
                         <div key={index} className="pb-6 border-b border-slate-200 dark:border-slate-700 last:border-b-0">
@@ -140,7 +140,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                               </div>
                             )}
                             
-                            {spanish.pos === 'verb' && <ConjugationChart spanish={spanish} />}
+                            {pos === 'verb' && <ConjugationChart spanish={spanish} pos={pos} />}
                         </div>
                     );
                 })}
