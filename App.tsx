@@ -260,6 +260,13 @@ const App: React.FC = () => {
 
   }, [query, lang, dictionaryData, showVulgar, isListLocked, activeListSet, listShowVulgar]);
 
+  const selectedSearchMatch = useMemo(() => {
+    if (!selectedEntry) {
+      return null;
+    }
+    return searchResults.find(result => result.entry.id === selectedEntry.id) || null;
+  }, [selectedEntry, searchResults]);
+
   const suggestion = useMemo(() => {
     if (lang !== 'ES' || !query || searchResults.length > 0) {
       return null;
@@ -296,7 +303,7 @@ const App: React.FC = () => {
           setSelectedEntry(null);
         }
     } else {
-        setSelectedEntry(null);
+      setSelectedEntry(null);
     }
   }, [query, searchResults, selectedEntry]);
 
@@ -626,6 +633,7 @@ const App: React.FC = () => {
                     isWordOnList={activeListSet.has(selectedEntry.id)}
                     isListLocked={isListLocked}
                     onListIconClick={() => setModal({ type: 'listStatus' })}
+                    matchedTerm={selectedSearchMatch?.matchedTerm ?? null}
                   />
                 ) : query ? (
                   <div className="flex flex-col items-center justify-center h-full text-center p-8">

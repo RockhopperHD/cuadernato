@@ -14,6 +14,7 @@ interface WordDetailsProps {
   isWordOnList: boolean;
   isListLocked: boolean;
   onListIconClick: () => void;
+  matchedTerm?: string | null;
 }
 
 const renderGenderMap = (genderMap: SpanishSide['gender_map']) => {
@@ -32,7 +33,7 @@ const renderGenderMap = (genderMap: SpanishSide['gender_map']) => {
     );
 };
 
-export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, query, isWordOnList, isListLocked, onListIconClick }) => {
+export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, query, isWordOnList, isListLocked, onListIconClick, matchedTerm }) => {
     if (!entry) return null;
 
     if (isListLocked && isWordOnList) {
@@ -47,7 +48,37 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
         );
     }
 
-    const sortedMeanings = [...entry.meanings].sort((a, b) => {
+    const normalizedMatchedTerm = matchedTerm?.toLowerCase().trim() || null;
+
+    const filterMeaningsByMatch = (meanings: DictionaryEntry['meanings']) => {
+        if (!normalizedMatchedTerm) return meanings;
+
+        const filtered = meanings.filter(meaning => {
+            if (lang === 'ES') {
+                const baseWord = meaning.spanish.word.toLowerCase();
+                if (baseWord === normalizedMatchedTerm) {
+                    return true;
+                }
+
+                if (meaning.spanish.gender_map) {
+                    return Object.keys(meaning.spanish.gender_map).some(key => {
+                        const genderTerm = key.split('/')[0].trim().toLowerCase();
+                        return genderTerm === normalizedMatchedTerm;
+                    });
+                }
+
+                return false;
+            }
+
+            return meaning.english.word.toLowerCase() === normalizedMatchedTerm;
+        });
+
+        return filtered.length > 0 ? filtered : meanings;
+    };
+
+    const baseMeanings = filterMeaningsByMatch(entry.meanings);
+
+    const sortedMeanings = [...baseMeanings].sort((a, b) => {
         const lowerQuery = query.toLowerCase();
         if (lang === 'ES') {
             const aMatch = a.spanish.word.toLowerCase() === lowerQuery;
