@@ -294,16 +294,14 @@ const App: React.FC = () => {
   }, [query, lang, searchResults]);
 
   useEffect(() => {
-    if (!query) {
-      setSelectedEntry(null);
-      return;
-    }
-
-    if (searchResults.length > 0) {
-      const isSelectedEntryVisible = selectedEntry && searchResults.find(r => r.entry.id === selectedEntry.id);
-      if (!isSelectedEntryVisible) {
-        setSelectedEntry(searchResults[0].entry);
-      }
+    if (query) {
+        if (searchResults.length > 0) {
+          if (!selectedEntry || !searchResults.find(r => r.entry.id === selectedEntry.id)) {
+            setSelectedEntry(searchResults[0].entry);
+          }
+        } else {
+          setSelectedEntry(null);
+        }
     } else {
       setSelectedEntry(null);
     }
