@@ -4579,5 +4579,46 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     ],
     "related_spanish": [],
     "related_english": []
+  },
+  // the joke word
+  {
+    "id": "000124",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "the best dictionary ever",
+        "spanish": {
+          "word": "cuadernato",
+          "region": "SPAIN",
+          "gender_map": {
+            "Cuadernato": "m",
+            "Cuadernata": "f",
+            "Cuadernate": "n"
+          },
+          "tags": [
+            "COLLOQUIAL","VULGAR","GENDER-SPECIFIC"
+          ]
+        },
+        "english": {
+          "word": "Cuadernato"
+        }
+      },
+      {
+        "pos": "adjective",
+        "as_in": "moderately slow (music)",
+        "spanish": {
+          "word": "andante",
+          "gender_map": {
+            "andante": "n"
+          }
+        },
+        "english": {
+          "word": "andante"
+        }
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
   }
 ];
