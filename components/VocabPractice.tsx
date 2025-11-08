@@ -6,7 +6,7 @@ import { Modal } from './Modal';
 type PracticeDirection = 'ES_TO_EN' | 'EN_TO_ES' | 'BOTH';
 type MasteryResetScope = 'ALL' | 'STARRED' | 'ACTIVE_LIST';
 
-type WordSource = 'ACTIVE' | 'STARRED';
+type WordSource = 'ACTIVE' | 'STARRED' | 'ALL';
 
 type PracticeCard = {
   id: string;
@@ -187,7 +187,17 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
   activeList,
 }) => {
   const [direction, setDirection] = useState<PracticeDirection>('ES_TO_EN');
-  const [wordSource, setWordSource] = useState<WordSource>('ACTIVE');
+  const [wordSource, setWordSource] = useState<WordSource>(() => {
+    const hasActiveEntries = dictionaryData.some(entry => activeList.includes(entry.id));
+    if (hasActiveEntries) {
+      return 'ACTIVE';
+    }
+    const hasStarredEntries = dictionaryData.some(entry => entry.starred);
+    if (hasStarredEntries) {
+      return 'STARRED';
+    }
+    return 'ALL';
+  });
   const [strictSpelling, setStrictSpelling] = useState(false);
   const [requireAccents, setRequireAccents] = useState(false);
   const [retypeOnIncorrect, setRetypeOnIncorrect] = useState(true);
@@ -387,19 +397,41 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
   );
 
   useEffect(() => {
-    if (wordSource === 'ACTIVE' && activeEntries.length === 0 && starredEntries.length > 0) {
-      setWordSource('STARRED');
-    } else if (wordSource === 'STARRED' && starredEntries.length === 0 && activeEntries.length > 0) {
-      setWordSource('ACTIVE');
+    if (dictionaryData.length === 0) {
+      return;
     }
-  }, [wordSource, activeEntries.length, starredEntries.length]);
+
+    if (wordSource === 'ACTIVE' && activeEntries.length === 0) {
+      if (starredEntries.length > 0) {
+        setWordSource('STARRED');
+      } else {
+        setWordSource('ALL');
+      }
+    } else if (wordSource === 'STARRED' && starredEntries.length === 0) {
+      if (activeEntries.length > 0) {
+        setWordSource('ACTIVE');
+      } else {
+        setWordSource('ALL');
+      }
+    } else if (wordSource !== 'ALL' && activeEntries.length === 0 && starredEntries.length === 0) {
+      setWordSource('ALL');
+    }
+  }, [
+    wordSource,
+    activeEntries.length,
+    starredEntries.length,
+    dictionaryData.length,
+  ]);
 
   const wordSourceEntries = useMemo(() => {
     if (wordSource === 'ACTIVE') {
       return activeEntries;
     }
-    return starredEntries;
-  }, [wordSource, activeEntries, starredEntries]);
+    if (wordSource === 'STARRED') {
+      return starredEntries;
+    }
+    return dictionaryData;
+  }, [wordSource, activeEntries, starredEntries, dictionaryData]);
 
   const createCard = useCallback(
     (entry: DictionaryEntry, meaningIndex: number, cardDirection: Exclude<PracticeDirection, 'BOTH'>): PracticeCard => {
@@ -1041,7 +1073,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-2">Word list</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                       <button
                         onClick={() => setWordSource('ACTIVE')}
                         disabled={activeEntries.length === 0}
@@ -1068,6 +1100,20 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                         Starred words
                         <span className="block text-xs font-normal text-slate-400">
                           {starredEntries.length} saved picks
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => setWordSource('ALL')}
+                        disabled={dictionaryData.length === 0}
+                        className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
+                          wordSource === 'ALL'
+                            ? 'bg-indigo-600 text-white border-indigo-600'
+                            : 'bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200'
+                        } ${dictionaryData.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      >
+                        Whole dictionary
+                        <span className="block text-xs font-normal text-slate-400">
+                          {dictionaryData.length} total entries
                         </span>
                       </button>
                     </div>
