@@ -227,6 +227,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStage, setResetStage] = useState<{ view: 'options' } | { view: 'confirm'; scope: MasteryResetScope } | { view: 'confirm-all'; input: string } | null>(null);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [lastBatchCards, setLastBatchCards] = useState<PracticeCard[]>([]);
   const [newlyMasteredInBatch, setNewlyMasteredInBatch] = useState(0);
   const [settingWarning, setSettingWarning] = useState<{ apply: () => void; description: string } | null>(null);
@@ -515,6 +516,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
       return;
     }
 
+    const startingNewSession = phase === 'setup';
     const selection: PracticeCard[] = [];
     const seenIds = new Set<string>();
     const usedCarryover = new Set<string>();
@@ -561,13 +563,15 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
     setAccentHint(null);
     setPhase('active');
     setBatchId(prev => prev + 1);
-    setStreak(0);
-    setBestStreak(0);
+    if (startingNewSession) {
+      setStreak(0);
+      setBestStreak(0);
+    }
     setPendingOverride(null);
     setLastBatchCards(selection);
     setNewlyMasteredInBatch(0);
     setCarryoverCardIds(prev => prev.filter(id => !usedCarryover.has(id)));
-  }, [practicePool, carryoverCardIds, resetSessionState, preferredBatchSize]);
+  }, [practicePool, carryoverCardIds, resetSessionState, preferredBatchSize, phase]);
 
   useEffect(() => {
     if (!restartAfterSettings) {
@@ -584,6 +588,12 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
 
     setRestartAfterSettings(false);
   }, [restartAfterSettings, phase, resetSessionState, initializeBatch]);
+
+  useEffect(() => {
+    if (phase !== 'active') {
+      setShowSettingsModal(false);
+    }
+  }, [phase]);
 
   const currentCard = queue[0] ?? null;
 
@@ -605,6 +615,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
         strictSpelling,
       });
 
+      const hadPendingForCurrent = pendingOverride?.card.id === currentCard.id;
       setPendingOverride(null);
 
       if (isCorrect) {
@@ -632,11 +643,13 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
             expected: bestAnswer,
           },
         ]);
-        setStreak(prev => {
-          const next = prev + 1;
-          setBestStreak(current => Math.max(current, next));
-          return next;
-        });
+        if (!hadPendingForCurrent) {
+          setStreak(prev => {
+            const next = prev + 1;
+            setBestStreak(current => Math.max(current, next));
+            return next;
+          });
+        }
         setAnswerFlash('correct');
 
         setQueue(prev => {
@@ -681,9 +694,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
           typedValue: typed,
           previousStreak,
         });
-        if (!retypeOnIncorrect) {
-          setStreak(0);
-        }
+        setStreak(0);
 
         setQueue(prev => {
           if (prev.length === 0) return prev;
@@ -781,12 +792,65 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
     }
   }, [pendingOverride, correctSet, batchSize, onUpdateMastery]);
 
+  const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = event => {
+    if (event.key === 'Tab' && userInput) {
+      const lastChar = userInput.slice(-1);
+      const lower = lastChar.toLowerCase();
+      let replacement: string | null = null;
+
+      if (ACCENT_MAP[lower]) {
+        replacement = event.shiftKey ? UMLAUT_MAP[lower] : ACCENT_MAP[lower];
+        if (lastChar === lastChar.toUpperCase()) {
+          replacement = replacement.toUpperCase();
+        }
+      } else if (!event.shiftKey && lower === 'n') {
+        replacement = lastChar === lastChar.toUpperCase() ? 'Ñ' : 'ñ';
+      } else if (!event.shiftKey && INVERTED_PUNCTUATION[lastChar]) {
+        replacement = INVERTED_PUNCTUATION[lastChar];
+      }
+
+      if (replacement) {
+        event.preventDefault();
+        setUserInput(prev => prev.slice(0, -1) + replacement);
+        setAccentHint(null);
+      }
+      return;
+    }
+
+    if (event.key === '-') {
+      if (
+        userInput.length === 0 &&
+        pendingOverride &&
+        currentCard &&
+        pendingOverride.card.id === currentCard.id &&
+        !currentCard.prompt.includes('-') &&
+        !currentCard.displayAnswer.includes('-')
+      ) {
+        event.preventDefault();
+        handleOverride();
+        return;
+      }
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSubmit();
+    }
+  };
+
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       if (event.key !== '-' || !pendingOverride || phase !== 'active') {
         return;
       }
-      if (document.activeElement === inputRef.current) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      const card = pendingOverride.card;
+      if (card.prompt.includes('-') || card.displayAnswer.includes('-')) {
+        return;
+      }
+      if (document.activeElement === inputRef.current && userInput.length > 0) {
         return;
       }
       event.preventDefault();
@@ -794,7 +858,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
     };
     window.addEventListener('keydown', listener);
     return () => window.removeEventListener('keydown', listener);
-  }, [pendingOverride, phase, handleOverride]);
+  }, [pendingOverride, phase, handleOverride, userInput]);
 
   useEffect(() => {
     if (phase !== 'summary') {
@@ -863,34 +927,6 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
     setAccentHint(null);
   };
 
-  const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = event => {
-    if (event.key === 'Tab' && userInput) {
-      const lastChar = userInput.slice(-1);
-      const lower = lastChar.toLowerCase();
-      let replacement: string | null = null;
-
-      if (ACCENT_MAP[lower]) {
-        replacement = event.shiftKey ? UMLAUT_MAP[lower] : ACCENT_MAP[lower];
-        if (lastChar === lastChar.toUpperCase()) {
-          replacement = replacement.toUpperCase();
-        }
-      } else if (!event.shiftKey && lower === 'n') {
-        replacement = lastChar === lastChar.toUpperCase() ? 'Ñ' : 'ñ';
-      } else if (!event.shiftKey && INVERTED_PUNCTUATION[lastChar]) {
-        replacement = INVERTED_PUNCTUATION[lastChar];
-      }
-
-      if (replacement) {
-        event.preventDefault();
-        setUserInput(prev => prev.slice(0, -1) + replacement);
-        setAccentHint(null);
-      }
-    } else if (event.key === 'Enter') {
-      event.preventDefault();
-      handleSubmit();
-    }
-  };
-
   const headerTitle = direction === 'ES_TO_EN'
     ? 'Spanish → English'
     : direction === 'EN_TO_ES'
@@ -920,11 +956,16 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
     requestSettingUpdate('batch size', () => setPreferredBatchSize(clamped));
   };
   const streakIsActive = streak > 0;
-  const streakCardClassName = `rounded-xl p-4 flex flex-col justify-between transition-all duration-200 ${
+  const streakHighlightClass = streakHighlight
+    ? streakIsActive
+      ? 'ring-2 ring-amber-400/70 shadow-lg shadow-amber-200/50 scale-[1.02]'
+      : 'ring-2 ring-slate-300/70 shadow-lg scale-[1.01]'
+    : '';
+  const streakCardClassName = `rounded-xl p-4 flex flex-col justify-between transition-all duration-300 ${
     streakIsActive
       ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-200'
       : 'bg-slate-100 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400'
-  } ${streakHighlight ? 'ring-2 ring-amber-400/60 shadow-lg' : ''}`;
+  } ${streakHighlightClass}`;
   const renderPreferenceToggleList = () => (
     <div className="space-y-3 text-sm">
       <label className="flex items-start gap-3">
@@ -1044,7 +1085,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
 
       <main className="flex-grow w-full max-w-5xl mx-auto flex flex-col gap-6">
         {phase === 'setup' && (
-          <section className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr),minmax(0,0.9fr)]">
+          <section className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr),minmax(0,0.95fr)]">
             <div className="flex flex-col gap-4">
               <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 space-y-4">
                 <h2 className="text-lg font-semibold text-slate-700 dark:text-slate-200">Kick off a new session</h2>
@@ -1078,12 +1119,18 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                         disabled={activeEntries.length === 0}
                         className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
                           wordSource === 'ACTIVE'
-                            ? 'bg-indigo-600 text-white border-indigo-600'
-                            : 'bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200'
+                            ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-500'
+                            : 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-200 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/40'
                         } ${activeEntries.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}`}
                       >
                         Activated list
-                        <span className="block text-xs font-normal text-slate-400">
+                        <span
+                          className={`block text-xs font-normal ${
+                            wordSource === 'ACTIVE'
+                              ? 'text-emerald-50/90'
+                              : 'text-emerald-700/80 dark:text-emerald-200/80'
+                          }`}
+                        >
                           {activeEntries.length} entries ready
                         </span>
                       </button>
@@ -1092,12 +1139,18 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                         disabled={starredEntries.length === 0}
                         className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
                           wordSource === 'STARRED'
-                            ? 'bg-indigo-600 text-white border-indigo-600'
-                            : 'bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200'
+                            ? 'bg-amber-400 text-slate-900 border-amber-500 hover:bg-amber-300'
+                            : 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-200 hover:bg-amber-100/80 dark:hover:bg-amber-900/40'
                         } ${starredEntries.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}`}
                       >
                         Starred words
-                        <span className="block text-xs font-normal text-slate-400">
+                        <span
+                          className={`block text-xs font-normal ${
+                            wordSource === 'STARRED'
+                              ? 'text-slate-900/80'
+                              : 'text-amber-700/80 dark:text-amber-200/80'
+                          }`}
+                        >
                           {starredEntries.length} saved picks
                         </span>
                       </button>
@@ -1106,75 +1159,24 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                         disabled={dictionaryData.length === 0}
                         className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
                           wordSource === 'ALL'
-                            ? 'bg-indigo-600 text-white border-indigo-600'
-                            : 'bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200'
+                            ? 'bg-slate-600 text-white border-slate-600 hover:bg-slate-500'
+                            : 'bg-slate-100 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800'
                         } ${dictionaryData.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}`}
                       >
                         Whole dictionary
-                        <span className="block text-xs font-normal text-slate-400">
+                        <span
+                          className={`block text-xs font-normal ${
+                            wordSource === 'ALL'
+                              ? 'text-slate-200'
+                              : 'text-slate-500 dark:text-slate-400'
+                          }`}
+                        >
                           {dictionaryData.length} total entries
                         </span>
                       </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 flex flex-col gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Mastery snapshot</p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                    Reset anytime to restart from zero. Your mastery carries between sessions.
-                  </p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/80 dark:bg-indigo-900/30 p-4 text-slate-700 dark:text-slate-100">
-                    <p className="text-xs uppercase tracking-wide text-indigo-600 dark:text-indigo-300">Total tracked</p>
-                    <p className="text-2xl font-bold mt-1">{masteryBreakdown.totalTracked} / {masteryBreakdown.dictionaryTotal}</p>
-                    <p className="text-xs mt-1 text-indigo-700/80 dark:text-indigo-200/80">{masteryBreakdown.totalPercent}% of library</p>
-                  </div>
-                  <div className="rounded-xl border border-rose-200 dark:border-rose-800 bg-rose-50/80 dark:bg-rose-900/30 p-4 text-slate-700 dark:text-slate-100">
-                    <p className="text-xs uppercase tracking-wide text-rose-600 dark:text-rose-300">Starred words</p>
-                    <p className="text-2xl font-bold mt-1">{masteryBreakdown.starredTracked} / {masteryBreakdown.starredTotal}</p>
-                    <p className="text-xs mt-1 text-rose-700/80 dark:text-rose-200/80">{masteryBreakdown.starredPercent}% mastered</p>
-                  </div>
-                  <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50/80 dark:bg-sky-900/30 p-4 text-slate-700 dark:text-slate-100">
-                    <p className="text-xs uppercase tracking-wide text-sky-600 dark:text-sky-300">Active list</p>
-                    <p className="text-2xl font-bold mt-1">{masteryBreakdown.activeTracked} / {masteryBreakdown.activeTotal}</p>
-                    <p className="text-xs mt-1 text-sky-700/80 dark:text-sky-200/80">{masteryBreakdown.activePercent}% cleared</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 space-y-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Batches</p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">Master each card twice to retire it.</p>
-                  </div>
-                  <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">{preferredBatchSize} cards</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range"
-                    min={3}
-                    max={15}
-                    value={preferredBatchSize}
-                    onChange={event => handleBatchSizeChange(Number(event.target.value))}
-                    className="flex-1 accent-indigo-600"
-                  />
-                  <input
-                    type="number"
-                    min={3}
-                    max={15}
-                    value={preferredBatchSize}
-                    onChange={event => handleBatchSizeChange(Number(event.target.value))}
-                    className="w-16 rounded-lg border border-slate-200 bg-white px-2 py-1 text-center text-sm dark:border-slate-600 dark:bg-slate-900"
-                  />
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Missed prompts jump to the end of the batch so you can lock them in before moving on.
-                </p>
               </div>
               <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 space-y-4">
                 <div>
@@ -1202,6 +1204,72 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                     Start session
                   </button>
                 </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 flex flex-col gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Mastery snapshot</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    Reset anytime to restart from zero. Your mastery carries between sessions.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-900/40 p-4 text-slate-700 dark:text-slate-100">
+                    <p className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-300">Total tracked</p>
+                    <p className="text-2xl font-bold mt-1">{masteryBreakdown.totalTracked} / {masteryBreakdown.dictionaryTotal}</p>
+                    <p className="text-xs mt-1 text-slate-600/80 dark:text-slate-300/80">{masteryBreakdown.totalPercent}% of library</p>
+                  </div>
+                  <div className="rounded-xl border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/30 p-4 text-slate-700 dark:text-slate-100">
+                    <p className="text-xs uppercase tracking-wide text-amber-600 dark:text-amber-300">Starred words</p>
+                    <p className="text-2xl font-bold mt-1">{masteryBreakdown.starredTracked} / {masteryBreakdown.starredTotal}</p>
+                    <p className="text-xs mt-1 text-amber-700/80 dark:text-amber-200/80">{masteryBreakdown.starredPercent}% mastered</p>
+                  </div>
+                  <div className="rounded-xl border border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/30 p-4 text-slate-700 dark:text-slate-100">
+                    <p className="text-xs uppercase tracking-wide text-emerald-600 dark:text-emerald-300">Active list</p>
+                    <p className="text-2xl font-bold mt-1">{masteryBreakdown.activeTracked} / {masteryBreakdown.activeTotal}</p>
+                    <p className="text-xs mt-1 text-emerald-700/80 dark:text-emerald-200/80">{masteryBreakdown.activePercent}% cleared</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Batches</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Master each card twice to retire it.</p>
+                  </div>
+                  <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">{preferredBatchSize} cards</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleBatchSizeChange(preferredBatchSize - 1)}
+                    className="h-9 w-9 rounded-lg border border-slate-200 bg-slate-100 text-lg font-semibold text-slate-700 transition hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
+                    aria-label="Decrease batch size"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min={3}
+                    max={15}
+                    value={preferredBatchSize}
+                    onChange={event => handleBatchSizeChange(Number(event.target.value))}
+                    className="w-20 rounded-lg border border-slate-200 bg-white px-3 py-2 text-center text-sm font-semibold tracking-wide dark:border-slate-600 dark:bg-slate-900"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleBatchSizeChange(preferredBatchSize + 1)}
+                    className="h-9 w-9 rounded-lg border border-slate-200 bg-slate-100 text-lg font-semibold text-slate-700 transition hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
+                    aria-label="Increase batch size"
+                  >
+                    +
+                  </button>
+                  <span className="text-xs text-slate-400 dark:text-slate-500">Range: 3 – 15</span>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Missed prompts jump to the end of the batch so you can lock them in before moving on.
+                </p>
               </div>
             </div>
           </section>
@@ -1297,15 +1365,24 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                     </div>
                   )}
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Direction</p>
-                  <p className="text-lg font-semibold text-slate-700 dark:text-slate-200">
-                    {currentCard
-                      ? currentCard.direction === 'ES_TO_EN'
-                        ? 'Spanish → English'
-                        : 'English → Spanish'
-                      : headerTitle}
-                  </p>
+                <div className="flex flex-col items-end gap-2">
+                  <div className="text-right">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Direction</p>
+                    <p className="text-lg font-semibold text-slate-700 dark:text-slate-200">
+                      {currentCard
+                        ? currentCard.direction === 'ES_TO_EN'
+                          ? 'Spanish → English'
+                          : 'English → Spanish'
+                        : headerTitle}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowSettingsModal(true)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                  >
+                    Session settings
+                  </button>
                 </div>
               </div>
 
@@ -1352,7 +1429,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                     feedback.type === 'correct'
                       ? 'border border-emerald-300 bg-emerald-100/80 text-emerald-800 shadow-md dark:bg-emerald-900/30 dark:text-emerald-200'
                       : 'border border-rose-300 bg-rose-100/70 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200'
-                  } ${feedback.type === 'correct' && answerFlash ? 'ring-2 ring-emerald-400/60 shadow-lg scale-[1.01]' : ''}`}
+                  } ${feedback.type === 'correct' && answerFlash ? 'ring-4 ring-emerald-300/60 shadow-emerald-200/70 shadow-xl scale-[1.03]' : ''}`}
                 >
                   <p className="font-semibold">{feedback.message}</p>
                   <p className="text-sm mt-1">Answer: {feedback.answer}</p>
@@ -1374,36 +1451,6 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
               )}
             </section>
 
-            <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 space-y-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Session settings</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Updates take effect immediately and restart the current batch.
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Batch size</span>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="range"
-                      min={3}
-                      max={15}
-                      value={preferredBatchSize}
-                      onChange={event => handleBatchSizeChange(Number(event.target.value))}
-                      className="accent-indigo-600"
-                    />
-                    <span className="w-10 text-sm font-semibold text-indigo-600 dark:text-indigo-300 text-right">
-                      {preferredBatchSize}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              {renderPreferenceToggleList()}
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                If you have a streak running, we&apos;ll double-check before wiping it out.
-              </p>
-            </section>
           </>
         )}
 
@@ -1416,9 +1463,8 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                   alt="Nato celebrating your progress"
                   className="h-32 w-32 rounded-full object-contain sm:h-40 sm:w-40"
                 />
-                <div className="relative max-w-xs rounded-2xl bg-indigo-50 dark:bg-indigo-900/40 p-4 text-slate-700 dark:text-slate-200 shadow-inner">
+                <div className="max-w-xs rounded-2xl bg-indigo-50 dark:bg-indigo-900/40 p-4 text-slate-700 dark:text-slate-200 shadow-inner">
                   <p className="text-sm leading-relaxed">{summaryMessage}</p>
-                  <span className="absolute -left-3 top-8 h-6 w-6 rotate-45 rounded-sm bg-indigo-50 dark:bg-indigo-900/40"></span>
                 </div>
               </div>
               <div className="flex flex-col gap-6">
@@ -1446,7 +1492,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                 {reviewItems.length > 0 && (
                   <div>
                     <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Words to keep an eye on</h3>
-                    <ul className="grid max-h-60 overflow-y-auto gap-2 pr-1 text-sm text-slate-600 dark:text-slate-300">
+                    <ul className="grid h-60 overflow-y-auto gap-2 pr-1 text-sm text-slate-600 dark:text-slate-300">
                       {reviewItems.map((mistake, index) => (
                         <li
                           key={`${mistake.cardId}-review-${index}`}
@@ -1499,21 +1545,21 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
               </p>
               <div className="grid gap-3 text-left text-sm">
                 <button
-                  className="rounded-xl border border-sky-200 bg-sky-50/80 p-4 text-slate-700 transition hover:border-sky-300 hover:bg-sky-100 dark:border-sky-800 dark:bg-sky-900/30 dark:text-slate-100"
+                  className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-100 dark:border-emerald-700 dark:bg-emerald-900/30 dark:text-slate-100 dark:hover:bg-emerald-900/40"
                   onClick={() => setResetStage({ view: 'confirm', scope: 'ACTIVE_LIST' })}
                 >
-                  <span className="block text-base font-semibold text-sky-700 dark:text-sky-200">Active list</span>
+                  <span className="block text-base font-semibold text-emerald-700 dark:text-emerald-200">Active list</span>
                   <span className="block text-xs mt-1 text-slate-500 dark:text-slate-400">Only reset mastery for words in this session&apos;s active list.</span>
                 </button>
                 <button
-                  className="rounded-xl border border-rose-200 bg-rose-50/80 p-4 text-slate-700 transition hover:border-rose-300 hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-900/30 dark:text-slate-100"
+                  className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-slate-700 transition hover:border-amber-300 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-900/30 dark:text-slate-100 dark:hover:bg-amber-900/40"
                   onClick={() => setResetStage({ view: 'confirm', scope: 'STARRED' })}
                 >
-                  <span className="block text-base font-semibold text-rose-700 dark:text-rose-200">Starred words</span>
+                  <span className="block text-base font-semibold text-amber-700 dark:text-amber-200">Starred words</span>
                   <span className="block text-xs mt-1 text-slate-500 dark:text-slate-400">Clear mastery for every word you&apos;ve starred.</span>
                 </button>
                 <button
-                  className="rounded-xl border border-slate-300 bg-slate-100 p-4 text-slate-700 transition hover:border-slate-400 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                  className="rounded-xl border border-slate-300 bg-slate-100 p-4 text-slate-700 transition hover:border-slate-400 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700/80"
                   onClick={() => setResetStage({ view: 'confirm', scope: 'ALL' })}
                 >
                   <span className="block text-base font-semibold text-slate-800 dark:text-slate-100">Everything</span>
@@ -1529,7 +1575,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                   ? "You're clearing all mastery on your active list. Are you sure?"
                   : resetStage.scope === 'STARRED'
                     ? "You're clearing all mastery on your starred words. Are you sure?"
-                    : 'This will delete all of your mastery on EVERYTHING! Be seriously sure you want to do this.'}
+                    : 'This will wipe your progress everywhere. You will need to type CLEAR on the next step to continue.'}
               </p>
               <div className="flex justify-end gap-3">
                 <button
@@ -1542,8 +1588,10 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
                   onClick={() => proceedResetScope(resetStage.scope)}
                   className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
                     resetStage.scope === 'ALL'
-                      ? 'bg-amber-500 text-white hover:bg-amber-600'
-                      : 'bg-rose-600 text-white hover:bg-rose-700'
+                      ? 'bg-slate-700 text-white hover:bg-slate-800'
+                      : resetStage.scope === 'STARRED'
+                        ? 'bg-amber-400 text-slate-900 hover:bg-amber-300'
+                        : 'bg-emerald-600 text-white hover:bg-emerald-500'
                   }`}
                 >
                   {resetStage.scope === 'ALL' ? 'Continue' : 'Yes, reset it'}
@@ -1553,8 +1601,8 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
           )}
           {resetStage.view === 'confirm-all' && (
             <div className="space-y-4">
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                This will delete all of your mastery on EVERYTHING! Be seriously sure you want to do this.
+              <p className="text-sm font-semibold text-rose-600 dark:text-rose-300">
+                FINAL WARNING: This erases every mastery record across Cuadernato. Type CLEAR to confirm.
               </p>
               <label className="flex flex-col gap-2 text-sm text-slate-600 dark:text-slate-300">
                 Type <span className="font-semibold text-slate-800 dark:text-slate-100">CLEAR</span> to confirm.
@@ -1585,6 +1633,53 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
               </div>
             </div>
           )}
+        </Modal>
+      )}
+
+      {showSettingsModal && (
+        <Modal title="Session settings" onClose={() => setShowSettingsModal(false)} variant="gray">
+          <div className="space-y-5 text-sm text-slate-600 dark:text-slate-300">
+            <p>Updates take effect right away. We&apos;ll warn you if a change will restart the current batch.</p>
+            <div className="space-y-2">
+              <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Batch size</p>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleBatchSizeChange(preferredBatchSize - 1)}
+                  className="h-9 w-9 rounded-lg border border-slate-200 bg-slate-100 text-lg font-semibold text-slate-700 transition hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
+                  aria-label="Decrease batch size"
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  min={3}
+                  max={15}
+                  value={preferredBatchSize}
+                  onChange={event => handleBatchSizeChange(Number(event.target.value))}
+                  className="w-20 rounded-lg border border-slate-200 bg-white px-3 py-2 text-center text-sm font-semibold tracking-wide dark:border-slate-600 dark:bg-slate-900"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleBatchSizeChange(preferredBatchSize + 1)}
+                  className="h-9 w-9 rounded-lg border border-slate-200 bg-slate-100 text-lg font-semibold text-slate-700 transition hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
+                  aria-label="Increase batch size"
+                >
+                  +
+                </button>
+                <span className="text-xs text-slate-400 dark:text-slate-500">Range: 3 – 15</span>
+              </div>
+            </div>
+            <div className="space-y-3">{renderPreferenceToggleList()}</div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="px-4 py-2 rounded-lg bg-slate-800 text-white text-sm font-semibold hover:bg-slate-900 transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
         </Modal>
       )}
 
