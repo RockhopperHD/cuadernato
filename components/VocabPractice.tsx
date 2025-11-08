@@ -380,22 +380,6 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
   }, [streak]);
 
   useEffect(() => {
-    if (!restartAfterSettings) {
-      return;
-    }
-
-    if (phase === 'active') {
-      resetSessionState();
-      initializeBatch();
-    } else if (phase === 'summary') {
-      resetSessionState();
-      setPhase('setup');
-    }
-
-    setRestartAfterSettings(false);
-  }, [restartAfterSettings, phase, resetSessionState, initializeBatch]);
-
-  useEffect(() => {
     if (dictionaryData.length === 0) {
       return;
     }
@@ -584,6 +568,22 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
     setNewlyMasteredInBatch(0);
     setCarryoverCardIds(prev => prev.filter(id => !usedCarryover.has(id)));
   }, [practicePool, carryoverCardIds, resetSessionState, preferredBatchSize]);
+
+  useEffect(() => {
+    if (!restartAfterSettings) {
+      return;
+    }
+
+    if (phase === 'active') {
+      resetSessionState();
+      initializeBatch();
+    } else if (phase === 'summary') {
+      resetSessionState();
+      setPhase('setup');
+    }
+
+    setRestartAfterSettings(false);
+  }, [restartAfterSettings, phase, resetSessionState, initializeBatch]);
 
   const currentCard = queue[0] ?? null;
 
