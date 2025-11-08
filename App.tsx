@@ -134,6 +134,8 @@ const App: React.FC = () => {
       setModal(null);
   }
 
+  type MasteryResetScope = 'ALL' | 'STARRED' | 'ACTIVE_LIST';
+
   const handleUpdateMastery = (entryId: string, newValue: number) => {
     setVocabMastery(prev => {
       const next = { ...prev };
@@ -146,8 +148,30 @@ const App: React.FC = () => {
     });
   };
 
-  const handleResetMastery = () => {
-    setVocabMastery({});
+  const handleResetMastery = (scope: MasteryResetScope) => {
+    if (scope === 'ALL') {
+      setVocabMastery({});
+      return;
+    }
+
+    setVocabMastery(prev => {
+      const next = { ...prev } as Record<string, number>;
+      if (scope === 'STARRED') {
+        dictionaryData.forEach(entry => {
+          if (entry.starred) {
+            delete next[entry.id];
+          }
+        });
+        return next;
+      }
+
+      const activeSet = new Set(activeList);
+      activeSet.forEach(id => {
+        delete next[id];
+      });
+
+      return next;
+    });
   };
   
   const toggleLang = () => {
