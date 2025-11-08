@@ -239,6 +239,15 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const previousStreakRef = useRef(0);
   const activeListSet = useMemo(() => new Set(activeList), [activeList]);
+  const starredEntries = useMemo(
+    () => dictionaryData.filter(entry => entry.starred),
+    [dictionaryData]
+  );
+
+  const activeEntries = useMemo(
+    () => dictionaryData.filter(entry => activeListSet.has(entry.id)),
+    [dictionaryData, activeListSet]
+  );
 
   const totalAttempts = correctCount + incorrectCount;
   const accuracy = totalAttempts === 0 ? 1 : correctCount / totalAttempts;
@@ -385,16 +394,6 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
 
     setRestartAfterSettings(false);
   }, [restartAfterSettings, phase, resetSessionState, initializeBatch]);
-
-  const starredEntries = useMemo(
-    () => dictionaryData.filter(entry => entry.starred),
-    [dictionaryData]
-  );
-
-  const activeEntries = useMemo(
-    () => dictionaryData.filter(entry => activeListSet.has(entry.id)),
-    [dictionaryData, activeListSet]
-  );
 
   useEffect(() => {
     if (dictionaryData.length === 0) {
