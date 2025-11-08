@@ -4,6 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { DictionaryEntry } from '../types';
 import { BackIcon, StarIcon } from './icons';
 
+type MasteryResetScope = 'ALL' | 'STARRED' | 'ACTIVE_LIST';
+
 interface ViewWordsScreenProps {
     dictionaryData: DictionaryEntry[];
     activeListSet: Set<string>;
@@ -11,7 +13,7 @@ interface ViewWordsScreenProps {
     onSelectWord: (entry: DictionaryEntry) => void;
     onBack: () => void;
     mastery: Record<string, number>;
-    onResetMastery: () => void;
+    onResetMastery: (scope: MasteryResetScope) => void;
 }
 
 const MasteryIndicator: React.FC<{ value: number }> = ({ value }) => {
@@ -123,7 +125,7 @@ export const ViewWordsScreen: React.FC<ViewWordsScreenProps> = ({ dictionaryData
                     </div>
                 </div>
                 <button
-                    onClick={onResetMastery}
+                    onClick={() => onResetMastery('ALL')}
                     className="bg-rose-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-rose-700 transition-colors"
                 >
                     Reset Mastery
