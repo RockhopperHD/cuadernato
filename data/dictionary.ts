@@ -393,23 +393,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "meanings": [
       {
         "pos": "adjective",
-        "as_in": "not crooked or bent",
-        "spanish": {
-          "word": "derecha",
-          "tags": [
-            "GENDER-SPECIFIC"
-          ],
-          "gender_map": {
-            "derecha": "f"
-          }
-        },
-        "english": {
-          "word": "straight"
-        }
-      },
-      {
-        "pos": "noun",
-        "as_in": "the right side or direction",
+        "as_in": "the direction, the opposite of left",
         "spanish": {
           "word": "derecha",
           "tags": [
