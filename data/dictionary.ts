@@ -22,7 +22,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
                 }
               },
               preterite: {
-                general: 'tuvX'
+                general: 't(u)vX'
               }
             },
             subjunctive: {
@@ -89,15 +89,17 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
       },
       {
         pos: 'noun',
-        as_in: 'the bird (female)',
+        as_in: 'the bird',
         spanish: {
           word: 'pata',
+          tags: ['GENDER-SPECIFIC'],
           gender_map: {
+            pato: 'm',
             pata: 'f'
           }
         },
         english: {
-          word: 'duck (female)'
+          word: 'duck'
         }
       }
     ],
@@ -186,6 +188,11 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
   {
     id: '6',
     starred: false,
+    grand_note: {
+      title: 'Ser vs Estar',
+      description:
+        "'Ser' and 'Estar' both mean 'to be' but are used in different cases. 'Ser' is for permanent conditions, while 'estar' is for temporary states and location."
+    },
     meanings: [
       {
         pos: 'verb',
@@ -301,5 +308,93 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
       }
     ],
     related_spanish: ['7']
+  },
+  {
+    id: '9',
+    starred: false,
+    meanings: [
+      {
+        pos: 'verb',
+        as_in: 'to bring something to an end',
+        spanish: {
+          word: 'acabar'
+        },
+        english: {
+          word: 'to finish'
+        },
+        note: 'Often used with "de" to mean "to have just" completed something.'
+      }
+    ]
+  },
+  {
+    id: '10',
+    starred: false,
+    meanings: [
+      {
+        pos: 'verb',
+        as_in: 'you are consuming food',
+        spanish: {
+          word: 'comer'
+        },
+        english: {
+          word: 'to eat'
+        }
+      }
+    ]
+  },
+  {
+    id: '11',
+    starred: false,
+    meanings: [
+      {
+        pos: 'verb',
+        as_in: 'reside or be alive',
+        spanish: {
+          word: 'vivir'
+        },
+        english: {
+          word: 'to live'
+        }
+      }
+    ]
+  },
+  {
+    id: '12',
+    starred: true,
+    meanings: [
+      {
+        pos: 'verb',
+        as_in: 'to have the ability to do something',
+        spanish: {
+          word: 'poder',
+          conj_map: {
+            indicative: {
+              present: {
+                general: 'p((ue))dX',
+                exceptions: {
+                  nosotros: 'podemos',
+                  vosotros: 'podéis'
+                }
+              },
+              preterite: {
+                general: 'p(u)dX'
+              }
+            },
+            subjunctive: {
+              present: {
+                general: 'p(u)edX',
+                exceptions: {
+                  nosotros: 'podamos',
+                  vosotros: 'podáis'
+                }
+              }
+            }
+          }
+        },
+        english: {
+          word: 'to be able to'
+        }
+      }
+    ]
   }
 ];
