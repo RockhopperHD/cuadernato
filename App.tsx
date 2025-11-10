@@ -247,11 +247,13 @@ const App: React.FC = () => {
           const primaryTerm = meaning.spanish.word;
           const primaryLower = primaryTerm.toLowerCase();
           const normalizedPrimary = removeAccents(primaryLower);
+          const displayTerm = meaning.spanish.display_word ?? primaryTerm;
+          const aliasTerms = meaning.spanish.aliases ?? [];
 
           if (primaryLower.startsWith(lowerCaseQuery)) {
             matches.push({
               meaningIndex,
-              displayTerm: primaryTerm,
+              displayTerm,
               matchedTerm: primaryTerm,
               matchedExact: primaryLower === lowerCaseQuery,
               isPrimary: true,
@@ -264,7 +266,7 @@ const App: React.FC = () => {
           ) {
             matches.push({
               meaningIndex,
-              displayTerm: primaryTerm,
+              displayTerm,
               matchedTerm: primaryTerm,
               matchedExact: primaryLower === lowerCaseQuery,
               isPrimary: true,
@@ -286,13 +288,34 @@ const App: React.FC = () => {
 
               matches.push({
                 meaningIndex,
-                displayTerm: primaryTerm,
+                displayTerm,
                 matchedTerm: genderTerm,
                 matchedExact: genderLower === lowerCaseQuery,
                 isPrimary: genderLower === primaryLower,
               });
             });
           }
+
+          aliasTerms.forEach(alias => {
+            const aliasTerm = alias.trim();
+            if (!aliasTerm) {
+              return;
+            }
+            const aliasLower = aliasTerm.toLowerCase();
+            const normalizedAlias = removeAccents(aliasLower);
+
+            if (!aliasLower.startsWith(lowerCaseQuery) && !normalizedAlias.startsWith(normalizedQuery)) {
+              return;
+            }
+
+            matches.push({
+              meaningIndex,
+              displayTerm,
+              matchedTerm: aliasTerm,
+              matchedExact: aliasLower === lowerCaseQuery,
+              isPrimary: aliasLower === primaryLower,
+            });
+          });
         } else {
           const primaryTerm = meaning.english.word;
           if (primaryTerm.toLowerCase().startsWith(lowerCaseQuery)) {
@@ -724,7 +747,7 @@ const App: React.FC = () => {
                     {searchResults.map(({ entry, matchedMeaningIndex, matchedTerm }) => {
                       const meaning = entry.meanings[matchedMeaningIndex] || entry.meanings[0];
                       const primaryWord = lang === 'ES'
-                        ? meaning.spanish.word
+                        ? (meaning.spanish.display_word ?? meaning.spanish.word)
                         : meaning.english.word;
                       const isWordOnList = activeListSet.has(entry.id);
                       return (

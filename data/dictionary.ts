@@ -335,23 +335,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "starred": false,
     "meanings": [
       {
-        "pos": "adjective",
-        "as_in": "not crooked or bent",
-        "spanish": {
-          "word": "derecho",
-          "tags": [
-            "GENDER-SPECIFIC"
-          ],
-          "gender_map": {
-            "derecho": "m"
-          }
-        },
-        "english": {
-          "word": "straight"
-        },
-        "note": "As an adjective, it must match the gender of the noun it describes (e.g., \"un camino derecho\", \"una línea derecha\")."
-      },
-      {
         "pos": "noun",
         "as_in": "a legal or moral entitlement",
         "spanish": {
@@ -382,6 +365,23 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "english": {
           "word": "law"
         }
+      },
+      {
+        "pos": "adjective",
+        "as_in": "not crooked or bent",
+        "spanish": {
+          "word": "derecho",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
+          "gender_map": {
+            "derecho": "m"
+          }
+        },
+        "english": {
+          "word": "straight"
+        },
+        "note": "As an adjective, it must match the gender of the noun it describes (e.g., \"un camino derecho\", \"una línea derecha\")."
       }
     ],
     "related_spanish": [],
@@ -3138,7 +3138,11 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "pos": "interjection",
         "as_in": "an expression of warning",
         "spanish": {
-          "word": "¡Ojo!"
+          "word": "ojo",
+          "display_word": "¡Ojo!",
+          "aliases": [
+            "¡Ojo!"
+          ]
         },
         "english": {
           "word": "Watch out!"
@@ -3170,7 +3174,11 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "pos": "interjection",
         "as_in": "a toast",
         "spanish": {
-          "word": "¡Salud!"
+          "word": "salud",
+          "display_word": "¡Salud!",
+          "aliases": [
+            "¡Salud!"
+          ]
         },
         "english": {
           "word": "Cheers!"
