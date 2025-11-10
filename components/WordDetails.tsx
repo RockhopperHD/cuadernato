@@ -60,6 +60,15 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                     return true;
                 }
 
+                const displayWord = meaning.spanish.display_word?.toLowerCase();
+                if (displayWord && displayWord === normalizedMatchedTerm) {
+                    return true;
+                }
+
+                if (meaning.spanish.aliases?.some(alias => alias.toLowerCase() === normalizedMatchedTerm)) {
+                    return true;
+                }
+
                 if (meaning.spanish.gender_map) {
                     return Object.keys(meaning.spanish.gender_map).some(key => {
                         const genderTerm = key.split('/')[0].trim().toLowerCase();
@@ -81,8 +90,28 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
     const sortedMeanings = [...baseMeanings].sort((a, b) => {
         const lowerQuery = query.toLowerCase();
         if (lang === 'ES') {
-            const aMatch = a.spanish.word.toLowerCase() === lowerQuery;
-            const bMatch = b.spanish.word.toLowerCase() === lowerQuery;
+            const aSpanishMatches = [
+                a.spanish.word,
+                a.spanish.display_word,
+                ...(a.spanish.aliases ?? [])
+            ].reduce<string[]>((accum, term) => {
+                if (term) {
+                    accum.push(term.toLowerCase());
+                }
+                return accum;
+            }, []);
+            const bSpanishMatches = [
+                b.spanish.word,
+                b.spanish.display_word,
+                ...(b.spanish.aliases ?? [])
+            ].reduce<string[]>((accum, term) => {
+                if (term) {
+                    accum.push(term.toLowerCase());
+                }
+                return accum;
+            }, []);
+            const aMatch = aSpanishMatches.includes(lowerQuery);
+            const bMatch = bSpanishMatches.includes(lowerQuery);
             if (aMatch && !bMatch) return -1;
             if (!aMatch && bMatch) return 1;
         } else { // lang === 'EN'
@@ -110,7 +139,8 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                     const { spanish, english, note, pos, as_in } = meaning;
                     const isES = lang === 'ES';
                     
-                    const headerText = isES ? english.word : spanish.word;
+                    const spanishDisplay = spanish.display_word ?? spanish.word;
+                    const headerText = isES ? english.word : spanishDisplay;
                     const headerPos = pos;
                     const asInText = as_in;
 

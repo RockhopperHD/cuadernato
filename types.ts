@@ -1,5 +1,5 @@
 
-export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb';
+export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb' | 'interjection';
 export type Gender = 'm' | 'f' | 'n' | 'invalid';
 export type Region = 'LATAM' | 'SPAIN';
 export type TagType = 'VULGAR' | 'REFLEXIVE' | 'GENDER-SPECIFIC' | 'COLLOQUIAL';
@@ -18,6 +18,8 @@ export type PronounConjugation = {
 
 export interface SpanishSide {
   word: string;
+  display_word?: string;
+  aliases?: string[];
   region?: Region;
   reflexive?: boolean;
   gender_map?: { [key: string]: Gender };

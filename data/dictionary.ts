@@ -10,6 +10,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "as_in": "the bird",
         "spanish": {
           "word": "pato",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
           "gender_map": {
             "pato": "m",
             "pata": "f"
@@ -17,9 +20,16 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         },
         "english": {
           "word": "duck"
-        },
-        "note": "When female, pata can be a female duck or an animal paw."
-      },
+        }
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000125",
+    "starred": false,
+    "meanings": [
       {
         "pos": "noun",
         "as_in": "of an animal",
@@ -103,7 +113,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "english": {
           "word": "to swim"
         }
-      },
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000126",
+    "starred": true,
+    "meanings": [
       {
         "pos": "verb",
         "as_in": "to recreationally go in water",
@@ -317,24 +335,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "starred": false,
     "meanings": [
       {
-        "pos": "adjective",
-        "as_in": "not crooked or bent",
-        "spanish": {
-          "word": "derecho",
-          "tags": [
-            "GENDER-SPECIFIC"
-          ],
-          "gender_map": {
-            "derecho": "m",
-            "derecha": "f"
-          }
-        },
-        "english": {
-          "word": "straight"
-        },
-        "note": "As an adjective, it must match the gender of the noun it describes (e.g., \"un camino derecho\", \"una línea derecha\")."
-      },
-      {
         "pos": "noun",
         "as_in": "a legal or moral entitlement",
         "spanish": {
@@ -344,22 +344,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           ],
           "gender_map": {
             "derecho": "m"
-          }
-        },
-        "english": {
-          "word": "right"
-        }
-      },
-      {
-        "pos": "noun",
-        "as_in": "the right side or direction",
-        "spanish": {
-          "word": "derecha",
-          "tags": [
-            "GENDER-SPECIFIC"
-          ],
-          "gender_map": {
-            "derecha": "f"
           }
         },
         "english": {
@@ -380,6 +364,63 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         },
         "english": {
           "word": "law"
+        }
+      },
+      {
+        "pos": "adjective",
+        "as_in": "not crooked or bent",
+        "spanish": {
+          "word": "derecho",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
+          "gender_map": {
+            "derecho": "m"
+          }
+        },
+        "english": {
+          "word": "straight"
+        },
+        "note": "As an adjective, it must match the gender of the noun it describes (e.g., \"un camino derecho\", \"una línea derecha\")."
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000127",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "adjective",
+        "as_in": "not crooked or bent",
+        "spanish": {
+          "word": "derecha",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
+          "gender_map": {
+            "derecha": "f"
+          }
+        },
+        "english": {
+          "word": "straight"
+        }
+      },
+      {
+        "pos": "noun",
+        "as_in": "the right side or direction",
+        "spanish": {
+          "word": "derecha",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
+          "gender_map": {
+            "derecha": "f"
+          }
+        },
+        "english": {
+          "word": "right"
         }
       }
     ],
@@ -457,7 +498,19 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           "word": "to be"
         },
         "note": "Use `ser` for permanent or lasting attributes."
-      },
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000128",
+    "starred": true,
+    "grand_note": {
+      "title": "Split Word",
+      "description": "In English, 'to be' is a single verb. In Spanish, it's split into two: `ser` and `estar`. `Ser` is used for permanent or lasting attributes (identity, origin, characteristics). `Estar` is used for temporary states and locations."
+    },
+    "meanings": [
       {
         "pos": "verb",
         "as_in": "location, temporary state",
@@ -1071,7 +1124,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "english": {
           "word": "car"
         }
-      },
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000129",
+    "starred": false,
+    "meanings": [
       {
         "pos": "noun",
         "as_in": "a road vehicle",
@@ -1107,7 +1168,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "english": {
           "word": "computer"
         }
-      },
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000130",
+    "starred": false,
+    "meanings": [
       {
         "pos": "noun",
         "as_in": "an electronic device",
@@ -1950,7 +2019,19 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           "word": "to know"
         },
         "note": "Example: `Yo sé tu nombre.` (I know your name.)"
-      },
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000131",
+    "starred": true,
+    "grand_note": {
+      "title": "To Know: Saber vs. Conocer",
+      "description": "Spanish has two verbs for 'to know'. `Saber` is used for facts, information, and how to do something. `Conocer` is used for being familiar with a person, place, or thing."
+    },
+    "meanings": [
       {
         "pos": "verb",
         "as_in": "people, places, things",
@@ -3054,10 +3135,14 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         }
       },
       {
-        "pos": "adverb",
+        "pos": "interjection",
         "as_in": "an expression of warning",
         "spanish": {
-          "word": "¡Ojo!"
+          "word": "ojo",
+          "display_word": "¡Ojo!",
+          "aliases": [
+            "¡Ojo!"
+          ]
         },
         "english": {
           "word": "Watch out!"
@@ -3086,10 +3171,14 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         }
       },
       {
-        "pos": "adverb",
+        "pos": "interjection",
         "as_in": "a toast",
         "spanish": {
-          "word": "¡Salud!"
+          "word": "salud",
+          "display_word": "¡Salud!",
+          "aliases": [
+            "¡Salud!"
+          ]
         },
         "english": {
           "word": "Cheers!"
@@ -3121,19 +3210,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "pos": "noun",
         "as_in": "currency",
         "spanish": {
-          "word": "dinero",
-          "gender_map": {
-            "dinero": "m"
-          }
-        },
-        "english": {
-          "word": "money"
-        }
-      },
-      {
-        "pos": "noun",
-        "as_in": "currency",
-        "spanish": {
           "word": "plata",
           "region": "LATAM",
           "tags": [
@@ -3147,6 +3223,27 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           "word": "money"
         },
         "note": "`Plata` literally means silver, but it is a very common colloquial term for money in Latin America."
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000134",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "noun",
+        "as_in": "currency",
+        "spanish": {
+          "word": "dinero",
+          "gender_map": {
+            "dinero": "m"
+          }
+        },
+        "english": {
+          "word": "money"
+        }
       }
     ],
     "related_spanish": [],
@@ -3253,16 +3350,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "meanings": [
       {
         "pos": "adverb",
-        "as_in": "for what reason",
-        "spanish": {
-          "word": "¿por qué?"
-        },
-        "english": {
-          "word": "why?"
-        }
-      },
-      {
-        "pos": "adverb",
         "as_in": "for the reason that",
         "spanish": {
           "word": "porque"
@@ -3270,7 +3357,41 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "english": {
           "word": "because"
         }
-      },
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000135",
+    "starred": true,
+    "grand_note": {
+      "title": "Por qué, porque, porqué, por que",
+      "description": "These four forms are often confused. `¿Por qué?` is 'Why?'. `Porque` is 'Because'. `El porqué` is 'The reason'. `Por que` (two words, no accent) is less common and means 'for which'."
+    },
+    "meanings": [
+      {
+        "pos": "adverb",
+        "as_in": "for what reason",
+        "spanish": {
+          "word": "¿por qué?"
+        },
+        "english": {
+          "word": "why?"
+        }
+      }
+    ],
+    "related_spanish": [],
+    "related_english": []
+  },
+  {
+    "id": "000136",
+    "starred": true,
+    "grand_note": {
+      "title": "Por qué, porque, porqué, por que",
+      "description": "These four forms are often confused. `¿Por qué?` is 'Why?'. `Porque` is 'Because'. `El porqué` is 'The reason'. `Por que` (two words, no accent) is less common and means 'for which'."
+    },
+    "meanings": [
       {
         "pos": "noun",
         "as_in": "the cause",
@@ -4602,19 +4723,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         },
         "english": {
           "word": "Cuadernato"
-        }
-      },
-      {
-        "pos": "adjective",
-        "as_in": "moderately slow (music)",
-        "spanish": {
-          "word": "andante",
-          "gender_map": {
-            "andante": "n"
-          }
-        },
-        "english": {
-          "word": "andante"
         }
       }
     ],
