@@ -2,7 +2,7 @@
 
 
 // Temporary comment to refresh PR
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { DICTIONARY_DATA } from './data/dictionary';
 import { DictionaryEntry, AppMode, ModalType } from './types';
 import { SearchBar } from './components/SearchBar';
@@ -324,24 +324,6 @@ const App: React.FC = () => {
 
       const bestMatch = matches[0];
 
-      // Special handling for the 'ser'/'estar' entry
-      if (entry.id === '000013' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
-        const relevantMeaningIndex = entry.meanings.findIndex(m => m.spanish.word === lowerCaseQuery);
-        if (relevantMeaningIndex !== -1) {
-          acc.push({
-            entry: {
-              ...entry,
-              meanings: [entry.meanings[relevantMeaningIndex]],
-              grand_note: undefined,
-            },
-            matchedMeaningIndex: 0,
-            matchedTerm: entry.meanings[relevantMeaningIndex].spanish.word,
-            matchedExact: true,
-          });
-          return acc;
-        }
-      }
-
       acc.push({
         entry,
         matchedMeaningIndex: bestMatch.meaningIndex,
@@ -406,6 +388,39 @@ const App: React.FC = () => {
       setSelectedEntry(null);
     }
   }, [query, searchResults, selectedEntry]);
+
+  const resolveTrailingEntries = useCallback((targetEntry: DictionaryEntry | null) => {
+    if (!targetEntry?.trailing_spanish?.length) {
+      return [];
+    }
+
+    const seen = new Set<string>();
+    const results: DictionaryEntry[] = [];
+
+    targetEntry.trailing_spanish.forEach(trailingId => {
+      if (trailingId === targetEntry.id || seen.has(trailingId)) {
+        return;
+      }
+
+      seen.add(trailingId);
+      const found = dictionaryData.find(candidate => candidate.id === trailingId);
+      if (found) {
+        results.push(found);
+      }
+    });
+
+    return results;
+  }, [dictionaryData]);
+
+  const selectedTrailingEntries = useMemo(
+    () => resolveTrailingEntries(selectedEntry),
+    [selectedEntry, resolveTrailingEntries]
+  );
+
+  const viewingTrailingEntries = useMemo(
+    () => resolveTrailingEntries(viewingWordEntry),
+    [viewingWordEntry, resolveTrailingEntries]
+  );
 
   const renderSuggestion = (suggestionText: string) => {
     const queryWithoutAccents = removeAccents(query.toLowerCase());
@@ -623,6 +638,7 @@ const App: React.FC = () => {
                             setViewingWordEntry(null);
                             setModal({ type: 'listStatus' });
                           }}
+                          trailingEntries={viewingTrailingEntries}
                     />
                 </div>
             </Modal>
@@ -648,9 +664,9 @@ const App: React.FC = () => {
           <Modal title="Word Details" onClose={() => setViewingWordEntry(null)}>
               <div className="max-h-[70vh] overflow-y-auto -m-6">
                   <WordDetails
-                        entry={viewingWordEntry} 
+                        entry={viewingWordEntry}
                         lang={'EN'} // Default to EN view for simplicity, as query isn't available
-                        onStar={toggleStar} 
+                        onStar={toggleStar}
                         query={''}
                         isWordOnList={activeListSet.has(viewingWordEntry.id)}
                         isListLocked={isListLocked}
@@ -658,6 +674,7 @@ const App: React.FC = () => {
                           setViewingWordEntry(null);
                           setModal({ type: 'listStatus' });
                         }}
+                        trailingEntries={viewingTrailingEntries}
                   />
               </div>
           </Modal>
@@ -752,15 +769,16 @@ const App: React.FC = () => {
               </aside>
               <main className="w-full md:w-2/3 bg-slate-50 dark:bg-[#181f33] flex-grow overflow-y-auto">
                 {selectedEntry ? (
-                  <WordDetails 
-                    entry={selectedEntry} 
-                    lang={lang} 
-                    onStar={toggleStar} 
+                  <WordDetails
+                    entry={selectedEntry}
+                    lang={lang}
+                    onStar={toggleStar}
                     query={query}
                     isWordOnList={activeListSet.has(selectedEntry.id)}
                     isListLocked={isListLocked}
                     onListIconClick={() => setModal({ type: 'listStatus' })}
                     matchedTerm={selectedSearchMatch?.matchedTerm ?? null}
+                    trailingEntries={selectedTrailingEntries}
                   />
                 ) : query ? (
                   <div className="flex flex-col items-center justify-center h-full text-center p-8">

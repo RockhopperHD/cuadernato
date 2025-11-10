@@ -15,6 +15,7 @@ interface WordDetailsProps {
   isListLocked: boolean;
   onListIconClick: () => void;
   matchedTerm?: string | null;
+  trailingEntries?: DictionaryEntry[];
 }
 
 const renderGenderMap = (genderMap: SpanishSide['gender_map']) => {
@@ -33,7 +34,7 @@ const renderGenderMap = (genderMap: SpanishSide['gender_map']) => {
     );
 };
 
-export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, query, isWordOnList, isListLocked, onListIconClick, matchedTerm }) => {
+export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, query, isWordOnList, isListLocked, onListIconClick, matchedTerm, trailingEntries = [] }) => {
     if (!entry) return null;
 
     if (isListLocked && isWordOnList) {
@@ -50,51 +51,166 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
 
     const normalizedMatchedTerm = matchedTerm?.toLowerCase().trim() || null;
 
-    const filterMeaningsByMatch = (meanings: DictionaryEntry['meanings']) => {
-        if (!normalizedMatchedTerm) return meanings;
+    const filterMeaningsByMatch = (targetEntry: DictionaryEntry, normalizedTerm: string | null) => {
+        if (!normalizedTerm) return targetEntry.meanings;
 
-        const filtered = meanings.filter(meaning => {
+        const filtered = targetEntry.meanings.filter(meaning => {
             if (lang === 'ES') {
                 const baseWord = meaning.spanish.word.toLowerCase();
-                if (baseWord === normalizedMatchedTerm) {
+                if (baseWord === normalizedTerm) {
                     return true;
                 }
 
                 if (meaning.spanish.gender_map) {
                     return Object.keys(meaning.spanish.gender_map).some(key => {
                         const genderTerm = key.split('/')[0].trim().toLowerCase();
-                        return genderTerm === normalizedMatchedTerm;
+                        return genderTerm === normalizedTerm;
                     });
                 }
 
                 return false;
             }
 
-            return meaning.english.word.toLowerCase() === normalizedMatchedTerm;
+            return meaning.english.word.toLowerCase() === normalizedTerm;
         });
 
-        return filtered.length > 0 ? filtered : meanings;
+        return filtered.length > 0 ? filtered : targetEntry.meanings;
     };
 
-    const baseMeanings = filterMeaningsByMatch(entry.meanings);
+    const sortMeaningsForEntry = (meanings: DictionaryEntry['meanings'], entryQuery: string) => {
+        if (!entryQuery) return meanings;
 
-    const sortedMeanings = [...baseMeanings].sort((a, b) => {
-        const lowerQuery = query.toLowerCase();
-        if (lang === 'ES') {
-            const aMatch = a.spanish.word.toLowerCase() === lowerQuery;
-            const bMatch = b.spanish.word.toLowerCase() === lowerQuery;
-            if (aMatch && !bMatch) return -1;
-            if (!aMatch && bMatch) return 1;
-        } else { // lang === 'EN'
-            const aMatch = a.english.word.toLowerCase() === lowerQuery;
-            const bMatch = b.english.word.toLowerCase() === lowerQuery;
-            if (aMatch && !bMatch) return -1;
-            if (!aMatch && bMatch) return 1;
-        }
-        return 0;
-    });
+        const lowerQuery = entryQuery.toLowerCase();
 
+        return [...meanings].sort((a, b) => {
+            if (lang === 'ES') {
+                const aMatch = a.spanish.word.toLowerCase() === lowerQuery;
+                const bMatch = b.spanish.word.toLowerCase() === lowerQuery;
+                if (aMatch && !bMatch) return -1;
+                if (!aMatch && bMatch) return 1;
+            } else {
+                const aMatch = a.english.word.toLowerCase() === lowerQuery;
+                const bMatch = b.english.word.toLowerCase() === lowerQuery;
+                if (aMatch && !bMatch) return -1;
+                if (!aMatch && bMatch) return 1;
+            }
+            return 0;
+        });
+    };
+
+    const entriesToRender = [entry, ...trailingEntries.filter(trailing => trailing.id !== entry.id)];
     const listIconColor = isListLocked ? 'text-blue-500' : 'text-green-500';
+
+    const renderEntrySection = (targetEntry: DictionaryEntry, isPrimary: boolean) => {
+        const meaningsForEntry = filterMeaningsByMatch(targetEntry, isPrimary ? normalizedMatchedTerm : null);
+        const sortedMeanings = sortMeaningsForEntry(meaningsForEntry, isPrimary ? query : '');
+        const firstMeaning = targetEntry.meanings[0];
+
+        return (
+            <section
+                key={targetEntry.id}
+                className={isPrimary ? '' : 'pt-6 mt-6 border-t border-slate-200 dark:border-slate-700'}
+            >
+                {!isPrimary && firstMeaning && (
+                    <div className="mb-6">
+                        <span className="text-xs font-bold tracking-wide text-slate-500 dark:text-slate-400 uppercase">
+                            Connected word
+                        </span>
+                        <div className="mt-2 flex items-baseline gap-3">
+                            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
+                                {lang === 'ES' ? firstMeaning.spanish.word : firstMeaning.english.word}
+                            </h2>
+                            <span className="text-slate-500 dark:text-slate-400">{firstMeaning.pos}</span>
+                        </div>
+                    </div>
+                )}
+
+                <div className="space-y-6">
+                    {sortedMeanings.map((meaning, index) => {
+                        const { spanish, english, note, pos, as_in } = meaning;
+                        const isES = lang === 'ES';
+
+                        const headerText = isES ? english.word : spanish.word;
+                        const headerPos = pos;
+                        const asInText = as_in;
+
+                        return (
+                            <div
+                                key={`${targetEntry.id}-${index}`}
+                                className="pb-6 border-b border-slate-200 dark:border-slate-700 last:border-b-0"
+                            >
+                                <div className="flex justify-between items-start gap-4">
+                                    <div>
+                                        <div className="flex items-baseline gap-3">
+                                            <h2 className={`text-4xl font-extrabold ${index === 0 ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>
+                                                {headerText}
+                                            </h2>
+                                            <span className="text-slate-500 dark:text-slate-400">{headerPos}</span>
+                                            {!isES && (
+                                                <div className="flex items-center gap-2">
+                                                    {spanish.region && <Tag type={spanish.region} />}
+                                                    {spanish.tags?.map(t => <Tag key={t} type={t} />)}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="mt-2">
+                                            <span className="text-xs font-bold px-2 py-1 rounded text-yellow-600 dark:text-yellow-500 bg-yellow-200 dark:bg-yellow-900/50">
+                                                AS IN
+                                            </span>
+                                            <span className="ml-2 text-slate-600 dark:text-slate-300 italic">{asInText}</span>
+                                        </div>
+                                    </div>
+
+                                    {isPrimary && index === 0 && (
+                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                            <button
+                                                onClick={onListIconClick}
+                                                className={`${listIconColor} hover:opacity-80 transition-opacity p-2`}
+                                                aria-label="List status"
+                                            >
+                                                <VerticalTriangleIcon filled={isWordOnList} className="w-8 h-8"/>
+                                            </button>
+                                            <button
+                                                onClick={() => onStar(entry.id)}
+                                                className="text-yellow-400 hover:text-yellow-300 transition-colors p-2"
+                                                aria-label={entry.starred ? 'Unstar word' : 'Star word'}
+                                            >
+                                                <StarIcon starred={entry.starred} className="w-8 h-8"/>
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {note && (
+                                    <div className="mt-4 pl-4 border-l-2 border-indigo-400/50 text-slate-500 dark:text-slate-400 italic">
+                                        {note}
+                                    </div>
+                                )}
+
+                                {renderGenderMap(spanish.gender_map)}
+
+                                {isES && (
+                                    <div className="flex items-center gap-2 mt-3">
+                                        {spanish.region && <Tag type={spanish.region} />}
+                                        {spanish.tags?.map(t => <Tag key={t} type={t} />)}
+                                    </div>
+                                )}
+
+                                {pos === 'verb' && (
+                                    <ConjugationChart
+                                        infinitive={spanish.word}
+                                        conjMap={spanish.conj_map}
+                                        tags={spanish.tags}
+                                        exceptions={spanish.exceptions}
+                                    />
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            </section>
+        );
+    };
 
     return (
         <div className="p-6 md:p-8 overflow-y-auto h-full">
@@ -105,84 +221,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                 </div>
             )}
 
-            <div className="space-y-6">
-                {sortedMeanings.map((meaning, index) => {
-                    const { spanish, english, note, pos, as_in } = meaning;
-                    const isES = lang === 'ES';
-                    
-                    const headerText = isES ? english.word : spanish.word;
-                    const headerPos = pos;
-                    const asInText = as_in;
-
-                    return (
-                        <div key={index} className="pb-6 border-b border-slate-200 dark:border-slate-700 last:border-b-0">
-                            <div className="flex justify-between items-start gap-4">
-                                <div>
-                                    <div className="flex items-baseline gap-3">
-                                        <h2 className={`text-4xl font-extrabold ${index === 0 ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'}`}>{headerText}</h2>
-                                        <span className="text-slate-500 dark:text-slate-400">{headerPos}</span>
-                                        {!isES && (
-                                        <div className="flex items-center gap-2">
-                                            {spanish.region && <Tag type={spanish.region} />}
-                                            {spanish.tags?.map(t => <Tag key={t} type={t} />)}
-                                        </div>
-                                        )}
-                                    </div>
-                                    <div className="mt-2">
-                                        <span className="text-xs font-bold px-2 py-1 rounded text-yellow-600 dark:text-yellow-500 bg-yellow-200 dark:bg-yellow-900/50">
-                                            AS IN
-                                        </span>
-                                        <span className="ml-2 text-slate-600 dark:text-slate-300 italic">{asInText}</span>
-                                    </div>
-                                </div>
-                                
-                                {index === 0 && (
-                                    <div className="flex items-center gap-2 flex-shrink-0">
-                                        <button 
-                                            onClick={onListIconClick}
-                                            className={`${listIconColor} hover:opacity-80 transition-opacity p-2`}
-                                            aria-label="List status"
-                                        >
-                                            <VerticalTriangleIcon filled={isWordOnList} className="w-8 h-8"/>
-                                        </button>
-                                        <button 
-                                            onClick={() => onStar(entry.id)} 
-                                            className="text-yellow-400 hover:text-yellow-300 transition-colors p-2"
-                                            aria-label={entry.starred ? 'Unstar word' : 'Star word'}
-                                        >
-                                            <StarIcon starred={entry.starred} className="w-8 h-8"/>
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            {note && (
-                              <div className="mt-4 pl-4 border-l-2 border-indigo-400/50 text-slate-500 dark:text-slate-400 italic">
-                                {note}
-                              </div>
-                            )}
-
-                            {renderGenderMap(spanish.gender_map)}
-                            
-                            {isES && (
-                              <div className="flex items-center gap-2 mt-3">
-                                {spanish.region && <Tag type={spanish.region} />}
-                                {spanish.tags?.map(t => <Tag key={t} type={t} />)}
-                              </div>
-                            )}
-                            
-                            {pos === 'verb' && (
-                              <ConjugationChart
-                                infinitive={spanish.word}
-                                conjMap={spanish.conj_map}
-                                tags={spanish.tags}
-                                exceptions={spanish.exceptions}
-                              />
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
+            {entriesToRender.map((targetEntry, index) => renderEntrySection(targetEntry, index === 0))}
         </div>
     );
 };

@@ -183,7 +183,8 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         note: "Use 'ser' for permanent or lasting attributes."
       }
     ],
-    related_spanish: ['6']
+    related_spanish: ['6'],
+    trailing_spanish: ['6']
   },
   {
     id: '6',
@@ -236,7 +237,8 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         note: 'Use \"estar\" for temporary states and locations.'
       }
     ],
-    related_spanish: ['5']
+    related_spanish: ['5'],
+    trailing_spanish: ['5']
   },
   {
     id: '7',

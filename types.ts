@@ -55,6 +55,7 @@ export interface IntelligentDictionaryEntry {
   meanings: IntelligentMeaning[];
   related_spanish?: string[];
   related_english?: string[];
+  trailing_spanish?: string[];
 }
 
 export type DictionaryEntry = IntelligentDictionaryEntry;
