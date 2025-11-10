@@ -247,8 +247,7 @@ const App: React.FC = () => {
           const primaryTerm = meaning.spanish.word;
           const primaryLower = primaryTerm.toLowerCase();
           const normalizedPrimary = removeAccents(primaryLower);
-          const displayTerm = meaning.spanish.display_word ?? primaryTerm;
-          const aliasTerms = meaning.spanish.aliases ?? [];
+          const displayTerm = primaryTerm;
 
           if (primaryLower.startsWith(lowerCaseQuery)) {
             matches.push({
@@ -262,7 +261,7 @@ const App: React.FC = () => {
 
           if (
             !matches.some(match => match.meaningIndex === meaningIndex && match.isPrimary) &&
-            normalizedQuery.startsWith(normalizedPrimary)
+            normalizedPrimary.startsWith(normalizedQuery)
           ) {
             matches.push({
               meaningIndex,
@@ -296,26 +295,7 @@ const App: React.FC = () => {
             });
           }
 
-          aliasTerms.forEach(alias => {
-            const aliasTerm = alias.trim();
-            if (!aliasTerm) {
-              return;
-            }
-            const aliasLower = aliasTerm.toLowerCase();
-            const normalizedAlias = removeAccents(aliasLower);
-
-            if (!aliasLower.startsWith(lowerCaseQuery) && !normalizedAlias.startsWith(normalizedQuery)) {
-              return;
-            }
-
-            matches.push({
-              meaningIndex,
-              displayTerm,
-              matchedTerm: aliasTerm,
-              matchedExact: aliasLower === lowerCaseQuery,
-              isPrimary: aliasLower === primaryLower,
-            });
-          });
+          // Gender-specific variants handled separately above
         } else {
           const primaryTerm = meaning.english.word;
           if (primaryTerm.toLowerCase().startsWith(lowerCaseQuery)) {
@@ -747,7 +727,7 @@ const App: React.FC = () => {
                     {searchResults.map(({ entry, matchedMeaningIndex, matchedTerm }) => {
                       const meaning = entry.meanings[matchedMeaningIndex] || entry.meanings[0];
                       const primaryWord = lang === 'ES'
-                        ? (meaning.spanish.display_word ?? meaning.spanish.word)
+                        ? meaning.spanish.word
                         : meaning.english.word;
                       const isWordOnList = activeListSet.has(entry.id);
                       return (

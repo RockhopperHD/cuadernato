@@ -1,53 +1,65 @@
-
-export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb' | 'interjection';
+export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb';
 export type Gender = 'm' | 'f' | 'n' | 'invalid';
 export type Region = 'LATAM' | 'SPAIN';
 export type TagType = 'VULGAR' | 'REFLEXIVE' | 'GENDER-SPECIFIC' | 'COLLOQUIAL';
 
-export type Tense = 'present' | 'preterite' | 'imperfect';
 export type Mood = 'indicative' | 'subjunctive';
+export type Tense = 'present' | 'preterite' | 'imperfect';
+export type Pronoun = 'yo' | 'tu' | 'el' | 'nosotros' | 'vosotros' | 'ellos';
 
-export type PronounConjugation = {
-  yo: string;
-  tu: string;
-  el: string;
-  nosotros: string;
-  vosotros: string;
-  ellos: string;
-};
+export type PronounConjugation = Record<Pronoun, string>;
+export type FullConjugationObject = Record<Mood, Record<Tense, PronounConjugation>>;
 
-export interface SpanishSide {
+export interface CommandException {
+  type: string;
+  pronoun: string;
   word: string;
-  display_word?: string;
-  aliases?: string[];
+}
+
+export interface TenseConjugation {
+  general?: string;
+  exceptions?: Partial<Record<Pronoun, string>>;
+}
+
+export type ConjugationMap = Partial<Record<Mood, Partial<Record<Tense, TenseConjugation>>>>;
+
+export interface IntelligentSpanishSide {
+  word: string;
+  note?: string;
   region?: Region;
-  reflexive?: boolean;
-  gender_map?: { [key: string]: Gender };
-  conjugations?: Partial<Record<Mood, Partial<Record<Tense, Partial<PronounConjugation>>>>>;
   tags?: TagType[];
-  exceptions?: { type: string; pronoun: string; word: string }[];
+  gender_map?: { [key: string]: Gender };
+  conj_map?: ConjugationMap;
+  exceptions?: CommandException[];
 }
 
 export interface EnglishSide {
   word: string;
 }
 
-export interface Meaning {
+export interface IntelligentMeaning {
   pos: PartOfSpeech;
   as_in: string;
-  spanish: SpanishSide;
+  spanish: IntelligentSpanishSide;
   english: EnglishSide;
   note?: string;
 }
 
-export interface DictionaryEntry {
+export interface IntelligentDictionaryEntry {
   id: string;
   starred: boolean;
-  meanings: Meaning[];
-  related_spanish: string[];
-  related_english: string[];
-  grand_note?: { title: string; description: string };
+  grand_note?: {
+    title: string;
+    description: string;
+  };
+  meanings: IntelligentMeaning[];
+  related_spanish?: string[];
+  related_english?: string[];
 }
+
+export type DictionaryEntry = IntelligentDictionaryEntry;
+export type Meaning = IntelligentMeaning;
+export type SpanishSide = IntelligentSpanishSide;
 
 export type CustomListPayload = {
     name: string;
