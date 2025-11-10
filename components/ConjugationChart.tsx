@@ -1,15 +1,25 @@
-
 import React, { useMemo, useState } from 'react';
-import { PartOfSpeech, SpanishSide, Tense, Mood } from '../types';
-import { generateConjugations, mergeConjugations } from '../utils/conjugation';
-
-interface ConjugationChartProps {
-  spanish: SpanishSide;
-  pos: PartOfSpeech;
-}
+import { CommandException, ConjugationMap, Mood, Pronoun, TagType, Tense } from '../types';
+import { getFullConjugation } from '../utils/conjugation';
 
 const TENSES: Tense[] = ['present', 'preterite', 'imperfect'];
 const MOODS: Mood[] = ['indicative', 'subjunctive'];
+
+const REFLEXIVE_PRONOUNS: Record<Pronoun, string> = {
+  yo: 'me',
+  tu: 'te',
+  el: 'se',
+  nosotros: 'nos',
+  vosotros: 'os',
+  ellos: 'se'
+};
+
+type ConjugationChartProps = {
+  infinitive: string;
+  conjMap?: ConjugationMap;
+  tags?: TagType[];
+  exceptions?: CommandException[];
+};
 
 const renderSpecialText = (text: string): React.ReactNode => {
   const parts = text.split(/(\(\(\(.*?\)\)\)|\(\(.*?\)\)|\(.*?\))/g);
@@ -18,28 +28,41 @@ const renderSpecialText = (text: string): React.ReactNode => {
     if (!part) return null;
 
     if (part.startsWith('(((') && part.endsWith(')))')) {
-      return <span key={index} className="text-green-400 font-bold">{part.slice(3, -3)}</span>;
+      return (
+        <span key={index} className="text-green-400 font-bold">
+          {part.slice(3, -3)}
+        </span>
+      );
     }
-    else if (part.startsWith('((') && part.endsWith('))')) {
-      return <span key={index} className="text-blue-400 font-bold">{part.slice(2, -2)}</span>;
+    if (part.startsWith('((') && part.endsWith('))')) {
+      return (
+        <span key={index} className="text-blue-400 font-bold">
+          {part.slice(2, -2)}
+        </span>
+      );
     }
-    else if (part.startsWith('(') && part.endsWith(')')) {
-      return <span key={index} className="text-red-400 font-bold">{part.slice(1, -1)}</span>;
+    if (part.startsWith('(') && part.endsWith(')')) {
+      return (
+        <span key={index} className="text-red-400 font-bold">
+          {part.slice(1, -1)}
+        </span>
+      );
     }
     return part;
   });
 };
 
-export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos }) => {
+export const ConjugationChart: React.FC<ConjugationChartProps> = ({ infinitive, conjMap, tags, exceptions }) => {
   const [tense, setTense] = useState<Tense>('present');
   const [mood, setMood] = useState<Mood>('indicative');
-  const { exceptions } = spanish;
 
-  const autoConjugations = useMemo(() => generateConjugations(spanish, pos), [spanish, pos]);
   const conjugations = useMemo(
-    () => mergeConjugations(autoConjugations, spanish.conjugations),
-    [autoConjugations, spanish.conjugations]
+    () => getFullConjugation(infinitive, conjMap ?? {}),
+    [infinitive, conjMap]
   );
+
+  const isReflexive = tags?.includes('REFLEXIVE') ?? false;
+  const currentConjugation = conjugations[mood]?.[tense];
 
   const cycleTense = () => {
     const currentIndex = TENSES.indexOf(tense);
@@ -51,56 +74,85 @@ export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos
     setMood(MOODS[(currentIndex + 1) % MOODS.length]);
   };
 
-  const currentConjugation = conjugations?.[mood]?.[tense];
+  const renderVerbForm = (pronoun: Pronoun, verb: string) => {
+    if (!isReflexive) {
+      return renderSpecialText(verb);
+    }
 
-  const renderCell = (pronoun: string, verb: string) => (
+    return (
+      <span className="flex items-baseline gap-2">
+        <span className="text-green-400 font-semibold">{REFLEXIVE_PRONOUNS[pronoun]}</span>
+        <span>{renderSpecialText(verb)}</span>
+      </span>
+    );
+  };
+
+  const renderCell = (label: string, pronoun: Pronoun, verb: string) => (
     <div className="p-3 relative h-full">
-      <div className="text-sm text-slate-500 dark:text-slate-400">{pronoun}</div>
-      <div className="text-lg font-semibold text-yellow-500 dark:text-yellow-300">{renderSpecialText(verb)}</div>
+      <div className="text-sm text-slate-500 dark:text-slate-400">{label}</div>
+      <div className="text-lg font-semibold text-yellow-500 dark:text-yellow-300">
+        {renderVerbForm(pronoun, verb)}
+      </div>
     </div>
   );
 
   return (
     <div className="mt-4">
-        <div className="flex items-center gap-2 mb-2">
-            <button 
-                onClick={cycleTense}
-                className="px-2 py-1 text-xs font-semibold bg-slate-200 dark:bg-slate-700 rounded hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors capitalize"
-            >
-                {tense}
-            </button>
-            <button 
-                onClick={cycleMood}
-                className="px-2 py-1 text-xs font-semibold bg-slate-200 dark:bg-slate-700 rounded hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors capitalize"
-            >
-                {mood}
-            </button>
-        </div>
+      <div className="flex items-center gap-2 mb-2">
+        <button
+          onClick={cycleTense}
+          className="px-2 py-1 text-xs font-semibold bg-slate-200 dark:bg-slate-700 rounded hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors capitalize"
+        >
+          {tense}
+        </button>
+        <button
+          onClick={cycleMood}
+          className="px-2 py-1 text-xs font-semibold bg-slate-200 dark:bg-slate-700 rounded hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors capitalize"
+        >
+          {mood}
+        </button>
+      </div>
       <div className="grid grid-cols-2 border border-yellow-500/50 rounded-md min-h-[218px]">
         {currentConjugation ? (
-            <>
-                <div className="border-r border-b border-yellow-500/50">{renderCell("yo", currentConjugation.yo)}</div>
-                <div className="border-b border-yellow-500/50">{renderCell("nosotros", currentConjugation.nosotros)}</div>
-                <div className="border-r border-b border-yellow-500/50">{renderCell("tú", currentConjugation.tu)}</div>
-                <div className="border-b border-yellow-500/50">{renderCell("vosotros", currentConjugation.vosotros)}</div>
-                <div className="border-r border-yellow-500/50">{renderCell("él/ella/ud.", currentConjugation.el)}</div>
-                <div>{renderCell("ellos/ellas/uds.", currentConjugation.ellos)}</div>
-            </>
-        ) : (
-            <div className="col-span-2 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-4">
-                <div className="text-5xl font-bold text-yellow-500/50">?</div>
-                <div className="mt-2 text-center text-sm">This verb form is not available in the dictionary.</div>
+          <>
+            <div className="border-r border-b border-yellow-500/50">
+              {renderCell('yo', 'yo', currentConjugation.yo)}
             </div>
+            <div className="border-b border-yellow-500/50">
+              {renderCell('nosotros', 'nosotros', currentConjugation.nosotros)}
+            </div>
+            <div className="border-r border-b border-yellow-500/50">
+              {renderCell('tú', 'tu', currentConjugation.tu)}
+            </div>
+            <div className="border-b border-yellow-500/50">
+              {renderCell('vosotros', 'vosotros', currentConjugation.vosotros)}
+            </div>
+            <div className="border-r border-yellow-500/50">
+              {renderCell('él/ella/ud.', 'el', currentConjugation.el)}
+            </div>
+            <div>{renderCell('ellos/ellas/uds.', 'ellos', currentConjugation.ellos)}</div>
+          </>
+        ) : (
+          <div className="col-span-2 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-4">
+            <div className="text-5xl font-bold text-yellow-500/50">?</div>
+            <div className="mt-2 text-center text-sm">This verb form is not available in the dictionary.</div>
+          </div>
         )}
       </div>
-       {exceptions && exceptions.length > 0 && (
+      {exceptions && exceptions.length > 0 && (
         <div className="mt-3 p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-md border border-indigo-200 dark:border-indigo-800/50">
-          <h4 className="font-bold text-sm uppercase tracking-wider text-indigo-800 dark:text-indigo-200 mb-2">Exceptions & Irregular Forms</h4>
+          <h4 className="font-bold text-sm uppercase tracking-wider text-indigo-800 dark:text-indigo-200 mb-2">
+            Exceptions & Irregular Forms
+          </h4>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {exceptions.map((ex, index) => (
               <div key={index} className="flex items-baseline gap-2">
-                <span className="font-semibold text-indigo-700 dark:text-indigo-300 capitalize">{ex.type} ({ex.pronoun}):</span>
-                <span className="font-mono text-lg font-bold text-indigo-500 dark:text-indigo-400">{renderSpecialText(ex.word)}</span>
+                <span className="font-semibold text-indigo-700 dark:text-indigo-300 capitalize">
+                  {ex.type} ({ex.pronoun}):
+                </span>
+                <span className="font-mono text-lg font-bold text-indigo-500 dark:text-indigo-400">
+                  {renderSpecialText(ex.word)}
+                </span>
               </div>
             ))}
           </div>

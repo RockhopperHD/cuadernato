@@ -1,10 +1,11 @@
-import { Mood, PartOfSpeech, PronounConjugation, SpanishSide, Tense } from '../types';
+import { ConjugationMap, FullConjugationObject, Mood, Pronoun, PronounConjugation, Tense } from '../types';
 
-const PRONOUNS: (keyof PronounConjugation)[] = ['yo', 'tu', 'el', 'nosotros', 'vosotros', 'ellos'];
+const PRONOUNS: Pronoun[] = ['yo', 'tu', 'el', 'nosotros', 'vosotros', 'ellos'];
+const MOODS: Mood[] = ['indicative', 'subjunctive'];
 
 type ConjugationEndings = {
   [M in Mood]: {
-    [T in Tense]?: {
+    [T in Tense]: {
       ar: PronounConjugation;
       er: PronounConjugation;
       ir: PronounConjugation;
@@ -12,7 +13,7 @@ type ConjugationEndings = {
   };
 };
 
-const CONJUGATION_ENDINGS: ConjugationEndings = {
+const REGULAR_ENDINGS: ConjugationEndings = {
   indicative: {
     present: {
       ar: { yo: 'o', tu: 'as', el: 'a', nosotros: 'amos', vosotros: 'áis', ellos: 'an' },
@@ -44,123 +45,87 @@ const CONJUGATION_ENDINGS: ConjugationEndings = {
   }
 };
 
-const REFLEXIVE_PRONOUNS: Record<keyof PronounConjugation, string> = {
-  yo: '(((me)))',
-  tu: '(((te)))',
-  el: '(((se)))',
-  nosotros: '(((nos)))',
-  vosotros: '(((os)))',
-  ellos: '(((se)))'
+const removeAccents = (value: string): string => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+const stripReflexive = (infinitive: string): string => {
+  const trimmed = infinitive.trim().toLowerCase();
+  return trimmed.endsWith('se') ? trimmed.slice(0, -2) : trimmed;
 };
 
-const sanitizeVerb = (word: string): string => word.trim().toLowerCase();
+const getVerbInfo = (infinitive: string): { stem: string; type: 'ar' | 'er' | 'ir' } => {
+  const cleanInfinitive = stripReflexive(infinitive);
+  const ending = cleanInfinitive.slice(-2);
+  const normalizedEnding = removeAccents(ending) as 'ar' | 'er' | 'ir';
 
-const getVerbBase = (word: string, explicitReflexive?: boolean) => {
-  const clean = sanitizeVerb(word);
-  const inferredReflexive = clean.endsWith('se');
-  const reflexive = explicitReflexive ?? inferredReflexive;
-  const infinitive = reflexive && inferredReflexive ? clean.slice(0, -2) : clean;
-  const ending = infinitive.slice(-2);
-  const stem = infinitive.slice(0, -2);
-
-  if (!['ar', 'er', 'ir'].includes(ending)) {
-    return null;
+  if (normalizedEnding !== 'ar' && normalizedEnding !== 'er' && normalizedEnding !== 'ir') {
+    return {
+      stem: cleanInfinitive.slice(0, Math.max(0, cleanInfinitive.length - 2)),
+      type: 'ar'
+    };
   }
 
-  return { stem, ending: ending as 'ar' | 'er' | 'ir', reflexive };
+  return {
+    stem: cleanInfinitive.slice(0, -2),
+    type: normalizedEnding
+  };
 };
 
-const buildForm = (stem: string, ending: string, pronoun: keyof PronounConjugation, reflexive: boolean) => {
-  const base = `${stem}${ending}`;
-  if (!reflexive) {
-    return base;
+const applyTemplate = (template: string, ending: string | undefined, fallback: string): string => {
+  if (!template) {
+    return fallback;
   }
-  return `${REFLEXIVE_PRONOUNS[pronoun]} ${base}`;
+
+  if (template.includes('X')) {
+    if (!ending) {
+      return template.replace(/X/g, '');
+    }
+    return template.replace(/X/g, ending);
+  }
+
+  return template;
 };
 
-export const generateConjugations = (
-  spanish: SpanishSide,
-  pos: PartOfSpeech
-): Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>> => {
-  if (pos !== 'verb') {
-    return {};
-  }
+export function getFullConjugation(infinitive: string, conjMap: ConjugationMap = {}): FullConjugationObject {
+  const { stem, type } = getVerbInfo(infinitive);
+  const result = {} as FullConjugationObject;
 
-  const details = getVerbBase(spanish.word, spanish.reflexive);
-  if (!details) {
-    return {};
-  }
+  MOODS.forEach((mood) => {
+    result[mood] = {} as Record<Tense, PronounConjugation>;
 
-  const { stem, ending, reflexive } = details;
+    const baseTenses = Object.keys(REGULAR_ENDINGS[mood]) as Tense[];
+    const irregularTenses = conjMap?.[mood] ? (Object.keys(conjMap[mood]!) as Tense[]) : [];
+    const tenses = Array.from(new Set<Tense>([...baseTenses, ...irregularTenses]));
 
-  const result: Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>> = {};
-
-  (Object.keys(CONJUGATION_ENDINGS) as Mood[]).forEach((mood) => {
-    const moodEndings = CONJUGATION_ENDINGS[mood];
-    const tenses = Object.keys(moodEndings) as Tense[];
     tenses.forEach((tense) => {
-      const tenseEndings = moodEndings[tense];
-      if (!tenseEndings) return;
-      const pronounEndings = tenseEndings[ending];
-      const forms: PronounConjugation = PRONOUNS.reduce((acc, pronoun) => {
-        acc[pronoun] = buildForm(stem, pronounEndings[pronoun], pronoun, reflexive);
+      const tenseEndings = REGULAR_ENDINGS[mood][tense];
+      const endings = tenseEndings?.[type];
+      const rule = conjMap?.[mood]?.[tense];
+
+      if (!endings && !rule) {
+        return;
+      }
+
+      const forms = PRONOUNS.reduce((acc, pronoun) => {
+        const baseEnding = endings?.[pronoun];
+        const regularForm = baseEnding ? `${stem}${baseEnding}` : '—';
+
+        if (rule?.exceptions?.[pronoun]) {
+          acc[pronoun] = rule.exceptions[pronoun] as string;
+          return acc;
+        }
+
+        if (rule?.general) {
+          acc[pronoun] = applyTemplate(rule.general, baseEnding, regularForm);
+          return acc;
+        }
+
+        acc[pronoun] = regularForm;
         return acc;
       }, {} as PronounConjugation);
 
-      if (!result[mood]) {
-        result[mood] = {};
-      }
-      result[mood]![tense] = forms;
+      result[mood][tense] = forms;
     });
   });
 
   return result;
-};
-
-export const mergeConjugations = (
-  base: Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>>,
-  overrides?: Partial<Record<Mood, Partial<Record<Tense, Partial<PronounConjugation>>>>> 
-): Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>> => {
-  if (!overrides) {
-    return base;
-  }
-
-  const merged: Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>> = {};
-
-  const moods = new Set<Mood>([
-    ...(Object.keys(base) as Mood[]),
-    ...(Object.keys(overrides) as Mood[])
-  ]);
-
-  moods.forEach((mood) => {
-    const baseMood = base[mood] ?? {};
-    const overrideMood = overrides[mood] ?? {};
-    const tenses = new Set<Tense>([
-      ...(Object.keys(baseMood) as Tense[]),
-      ...(Object.keys(overrideMood) as Tense[])
-    ]);
-
-    tenses.forEach((tense) => {
-      const baseTense = baseMood[tense];
-      const overrideTense = overrideMood[tense];
-      if (!baseTense && !overrideTense) {
-        return;
-      }
-
-      const mergedTense: PronounConjugation = PRONOUNS.reduce((acc, pronoun) => {
-        const overrideForm = overrideTense?.[pronoun];
-        const baseForm = baseTense?.[pronoun];
-        acc[pronoun] = overrideForm ?? baseForm ?? '—';
-        return acc;
-      }, {} as PronounConjugation);
-
-      if (!merged[mood]) {
-        merged[mood] = {};
-      }
-      merged[mood]![tense] = mergedTense;
-    });
-  });
-
-  return merged;
-};
-
+}

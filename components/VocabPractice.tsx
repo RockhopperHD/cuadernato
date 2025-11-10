@@ -424,7 +424,6 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
 
       if (cardDirection === 'ES_TO_EN') {
         const baseSpanishWord = meaning.spanish.word;
-        const displaySpanishWord = meaning.spanish.display_word ?? baseSpanishWord;
         const relatedMeanings = entry.meanings.filter(m => m.spanish.word === baseSpanishWord);
         const englishAnswers = unique([
           meaning.english.word,
@@ -437,7 +436,7 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
           meaningIndex,
           direction: 'ES_TO_EN',
           promptLanguage: 'SPANISH',
-          prompt: displaySpanishWord,
+          prompt: baseSpanishWord,
           displayAnswer: meaning.english.word,
           answers: englishAnswers.length > 0 ? englishAnswers : [meaning.english.word],
         };
@@ -447,16 +446,6 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
       const spanishForms = entry.meanings.flatMap(currentMeaning => {
         const baseForm = currentMeaning.spanish.word;
         const forms = [baseForm];
-        if (currentMeaning.spanish.display_word) {
-          forms.push(currentMeaning.spanish.display_word);
-        }
-        if (currentMeaning.spanish.aliases) {
-          currentMeaning.spanish.aliases.forEach(alias => {
-            if (alias) {
-              forms.push(alias);
-            }
-          });
-        }
         if (currentMeaning.spanish.gender_map) {
           Object.keys(currentMeaning.spanish.gender_map).forEach(term => {
             const cleanTerm = term.split('/')[0].trim();
@@ -477,8 +466,8 @@ export const VocabPractice: React.FC<VocabPracticeProps> = ({
         direction: 'EN_TO_ES',
         promptLanguage: 'ENGLISH',
         prompt: englishWord,
-        displayAnswer: meaning.spanish.display_word ?? meaning.spanish.word,
-        answers: uniqueForms.length > 0 ? uniqueForms : [meaning.spanish.display_word ?? meaning.spanish.word],
+        displayAnswer: meaning.spanish.word,
+        answers: uniqueForms.length > 0 ? uniqueForms : [meaning.spanish.word],
       };
     },
     []

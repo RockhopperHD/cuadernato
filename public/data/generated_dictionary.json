@@ -1,662 +1,548 @@
 [
   {
-    "id": "100001",
+    "id": "1",
     "starred": false,
-    "frequency": 24459038,
-    "grand_note": null,
     "meanings": [
       {
-        "pos": "preposition",
-        "as_in": "of",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+        "pos": "verb",
+        "as_in": "you have an object",
+      "spanish": {
+        "word": "tener",
+        "note": "Using 'que' after 'tener' turns it into 'have to'.",
+        "conj_map": {
+          "indicative": {
+            "present": {
+              "general": "t((ie))nX",
+              "exceptions": {
+                "yo": "ten(go)",
+                "nosotros": "tenemos",
+                "vosotros": "tenéis"
+              }
+            },
+            "preterite": {
+              "general": "t(u)vX",
+              "exceptions": {
+                "yo": "t(u)ve",
+                "tu": "t(u)viste",
+                "el": "t(u)vo",
+                "nosotros": "t(u)vimos",
+                "vosotros": "t(u)visteis",
+                "ellos": "t(u)vieron"
+              }
+            }
+          },
+            "subjunctive": {
+              "present": {
+                "general": "tengX"
+              },
+              "imperfect": {
+                "general": "tuvierX"
+              }
+            }
+          },
+          "exceptions": [
+            {
+              "type": "affirmative command",
+              "pronoun": "tú",
+              "word": "ten"
+            }
+          ]
         },
         "english": {
-          "word": "of"
-        },
-        "note": "Indicates possession, origin, material, or part of something."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "from",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "from"
-        },
-        "note": "Indicates origin or departure."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "about",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "about"
-        },
-        "note": "Used with verbs expressing opinion or knowledge, e.g., 'hablar de' (to talk about)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "with",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "with"
-        },
-        "note": "Indicates characteristic or manner, e.g., 'un hombre de negocios' (a man of business)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "out of",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "out of"
-        },
-        "note": "Indicates movement from within, e.g., 'salir de la casa' (to go out of the house)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "by",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "by"
-        },
-        "note": "Indicates means or agent, e.g., 'hecho de mano' (handmade)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "in",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "in"
-        },
-        "note": "Used with certain time expressions, e.g., 'de noche' (at night)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "for",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "for"
-        },
-        "note": "Used to indicate purpose or duration in some contexts, e.g., 'un viaje de una semana' (a trip for a week)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "to",
-        "spanish": {
-          "word": "de",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "to"
-        },
-        "note": "Used in certain constructions, e.g., 'tener ganas de' (to feel like)."
+          "word": "to have"
+        }
       }
-    ],
-    "related_spanish": [],
-    "related_english": []
+    ]
   },
   {
-    "id": "100002",
+    "id": "2",
     "starred": false,
-    "frequency": 19102844,
-    "grand_note": null,
     "meanings": [
       {
-        "pos": "conjunction",
-        "as_in": "that, which, who",
+        "pos": "noun",
+        "as_in": "the bird",
         "spanish": {
-          "word": "que",
+          "word": "pato",
           "tags": [
-            "relative pronoun",
-            "subordinating conjunction"
+            "GENDER-SPECIFIC"
           ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "gender_map": {
+            "pato": "m",
+            "pata": "f"
+          }
         },
         "english": {
-          "word": "that"
-        }
-      },
-      {
-        "pos": "conjunction",
-        "as_in": "than",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "comparative conjunction"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "than"
-        }
-      },
-      {
-        "pos": "interjection",
-        "as_in": "what?!",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "interrogative",
-            "informal"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "what"
-        }
-      },
-      {
-        "pos": "adverb",
-        "as_in": "how",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "exclamatory"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "how"
-        },
-        "note": "Used in exclamations, often with adjectives/adverbs. Similar to 'cuán'."
-      },
-      {
-        "pos": "pronoun",
-        "as_in": "what",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "interrogative pronoun"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "what"
-        },
-        "note": "Used in indirect questions."
-      },
-      {
-        "pos": "conjunction",
-        "as_in": "so that",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "purpose clause"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "so that"
-        }
-      },
-      {
-        "pos": "conjunction",
-        "as_in": "because",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "causal conjunction",
-            "COLLOQUIAL"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "because"
-        },
-        "note": "Often used colloquially in place of 'porque' when introducing a subordinate clause of cause."
-      },
-      {
-        "pos": "pronoun",
-        "as_in": "which",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "relative pronoun"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "which"
-        }
-      },
-      {
-        "pos": "pronoun",
-        "as_in": "who",
-        "spanish": {
-          "word": "que",
-          "tags": [
-            "relative pronoun"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "who"
+          "word": "duck"
         }
       }
     ],
-    "related_spanish": [],
-    "related_english": []
+    "related_spanish": [
+      "3"
+    ]
   },
   {
-    "id": "100003",
+    "id": "3",
     "starred": false,
-    "frequency": 15403031,
-    "grand_note": null,
     "meanings": [
       {
-        "pos": "article",
-        "as_in": "the (feminine singular definite article)",
+        "pos": "noun",
+        "as_in": "of an animal",
         "spanish": {
-          "word": "la",
+          "word": "pata",
           "gender_map": {
-            "la": "f"
-          },
-          "tags": [
-            "definite",
-            "article",
-            "feminine",
-            "singular"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+            "pata": "f"
+          }
         },
         "english": {
-          "word": "the"
+          "word": "paw"
         }
-      },
-      {
-        "pos": "pronoun",
-        "as_in": "her/it/you (direct object, feminine singular pronoun)",
-        "spanish": {
-          "word": "la",
-          "gender_map": {
-            "la": "f"
-          },
-          "tags": [
-            "direct object",
-            "pronoun",
-            "feminine",
-            "singular"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "her"
-        }
-      },
-      {
-        "pos": "pronoun",
-        "as_in": "her/it/you (indirect object, feminine singular pronoun)",
-        "spanish": {
-          "word": "la",
-          "gender_map": {
-            "la": "f"
-          },
-          "tags": [
-            "indirect object",
-            "pronoun",
-            "feminine",
-            "singular"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "her"
-        },
-        "note": "Used with 'le' to form 'se la', but can also stand alone in some constructions."
-      }
-    ],
-    "related_spanish": [],
-    "related_english": []
-  },
-  {
-    "id": "100004",
-    "starred": false,
-    "frequency": 13845008,
-    "grand_note": null,
-    "meanings": [
-      {
-        "pos": "adverb",
-        "as_in": "negation",
-        "spanish": {
-          "word": "no",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "no"
-        }
-      },
-      {
-        "pos": "adverb",
-        "as_in": "refusal",
-        "spanish": {
-          "word": "no",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "no"
-        }
-      },
-      {
-        "pos": "adverb",
-        "as_in": "prohibition",
-        "spanish": {
-          "word": "no",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "don't"
-        },
-        "note": "Used before a verb in the imperative to form the negative."
       },
       {
         "pos": "noun",
-        "as_in": "a negative answer",
+        "as_in": "the bird",
         "spanish": {
-          "word": "no",
+          "word": "pata",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
           "gender_map": {
-            "no": "n"
-          },
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+            "pato": "m",
+            "pata": "f"
+          }
         },
         "english": {
-          "word": "no"
+          "word": "duck"
         }
-      },
-      {
-        "pos": "adverb",
-        "as_in": "used to indicate lack of something",
-        "spanish": {
-          "word": "no",
-          "tags": [
-            "common"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "not"
-        },
-        "note": "Often precedes the verb."
       }
     ],
-    "related_spanish": [],
-    "related_english": []
+    "related_spanish": [
+      "2"
+    ]
   },
   {
-    "id": "100005",
-    "starred": false,
-    "frequency": 12810585,
-    "grand_note": null,
+    "id": "4",
+    "starred": true,
     "meanings": [
       {
-        "pos": "preposition",
-        "as_in": "direction towards",
+        "pos": "verb",
+        "as_in": "to clean yourself with water",
         "spanish": {
-          "word": "a",
+          "word": "ducharse",
           "tags": [
-            "preposition"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+            "REFLEXIVE"
+          ]
         },
         "english": {
-          "word": "to"
+          "word": "to shower"
         }
-      },
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "starred": true,
+    "grand_note": {
+      "title": "Ser vs Estar",
+      "description": "'Ser' and 'Estar' both mean 'to be' but are used in different cases. 'Ser' is for permanent conditions, while 'estar' is for temporary states and location."
+    },
+    "meanings": [
       {
-        "pos": "preposition",
-        "as_in": "time of day",
+        "pos": "verb",
+        "as_in": "essence, identity",
         "spanish": {
-          "word": "a",
-          "tags": [
-            "preposition"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "word": "ser",
+          "note": "Use for permanent conditions (Description, Occupation, Nationality, Time).",
+          "conj_map": {
+            "indicative": {
+              "present": {
+                "exceptions": {
+                  "yo": "(soy)",
+                  "tu": "(eres)",
+                  "el": "(es)",
+                  "nosotros": "somos",
+                  "vosotros": "sois",
+                  "ellos": "(son)"
+                }
+              },
+              "preterite": {
+                "general": "fuX",
+                "exceptions": {
+                  "el": "fue"
+                }
+              },
+              "imperfect": {
+                "general": "erX",
+                "exceptions": {
+                  "nosotros": "éramos"
+                }
+              }
+            },
+            "subjunctive": {
+              "present": {
+                "general": "seX"
+              },
+              "imperfect": {
+                "general": "fuerX"
+              }
+            }
+          },
+          "exceptions": [
+            {
+              "type": "affirmative command",
+              "pronoun": "tú",
+              "word": "sé"
+            }
+          ]
         },
         "english": {
-          "word": "at"
+          "word": "to be"
         },
-        "note": "Used before specific times, e.g., 'a las dos'."
-      },
+        "note": "Use 'ser' for permanent or lasting attributes."
+      }
+    ],
+    "related_spanish": [
+      "6"
+    ],
+    "trailing_spanish": [
+      "6"
+    ]
+  },
+  {
+    "id": "6",
+    "starred": false,
+    "grand_note": {
+      "title": "Ser vs Estar",
+      "description": "'Ser' and 'Estar' both mean 'to be' but are used in different cases. 'Ser' is for permanent conditions, while 'estar' is for temporary states and location."
+    },
+    "meanings": [
       {
-        "pos": "preposition",
-        "as_in": "manner or way",
+        "pos": "verb",
+        "as_in": "location, temporary state",
         "spanish": {
-          "word": "a",
-          "tags": [
-            "preposition"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "word": "estar",
+          "conj_map": {
+            "indicative": {
+              "present": {
+                "general": "estX",
+                "exceptions": {
+                  "yo": "est(oy)",
+                  "tu": "estás",
+                  "el": "está",
+                  "ellos": "están"
+                }
+              },
+              "preterite": {
+                "general": "estuvX"
+              }
+            },
+            "subjunctive": {
+              "present": {
+                "general": "estX",
+                "exceptions": {
+                  "yo": "esté",
+                  "tu": "estés",
+                  "el": "esté",
+                  "ellos": "estén"
+                }
+              },
+              "imperfect": {
+                "general": "estuvierX"
+              }
+            }
+          }
         },
         "english": {
-          "word": "in"
+          "word": "to be"
         },
-        "note": "e.g., 'a mano' (by hand)."
-      },
+        "note": "Use \"estar\" for temporary states and locations."
+      }
+    ],
+    "related_spanish": [
+      "5"
+    ],
+    "trailing_spanish": [
+      "5"
+    ]
+  },
+  {
+    "id": "7",
+    "starred": false,
+    "meanings": [
       {
-        "pos": "preposition",
-        "as_in": "rate or price",
+        "pos": "adjective",
+        "as_in": "not crooked or bent",
         "spanish": {
-          "word": "a",
+          "word": "derecho",
           "tags": [
-            "preposition"
+            "GENDER-SPECIFIC"
           ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "gender_map": {
+            "derecho": "m",
+            "derecha": "f"
+          }
         },
         "english": {
-          "word": "at"
-        },
-        "note": "e.g., 'a cien kilómetros por hora' (at one hundred kilometers per hour)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "recipient of an action",
-        "spanish": {
-          "word": "a",
-          "tags": [
-            "preposition",
-            "personal a"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "to"
-        },
-        "note": "Used before the indirect object, e.g., 'Le di el libro a Juan' (I gave the book to Juan). Also used with direct objects referring to people or pets: 'Vi a María' (I saw María)."
-      },
-      {
-        "pos": "preposition",
-        "as_in": "movement or destination",
-        "spanish": {
-          "word": "a",
-          "tags": [
-            "preposition"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "to"
+          "word": "straight"
         }
-      },
-      {
-        "pos": "preposition",
-        "as_in": "purpose or intention",
-        "spanish": {
-          "word": "a",
-          "tags": [
-            "preposition"
-          ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
-        },
-        "english": {
-          "word": "to"
-        },
-        "note": "Often used with infinitives to express purpose, e.g., 'Vengo a ayudarte' (I come to help you)."
       },
       {
         "pos": "noun",
-        "as_in": "the letter A",
+        "as_in": "a legal or moral entitlement",
         "spanish": {
-          "word": "a",
-          "gender_map": {
-            "a": "f"
-          },
+          "word": "derecho",
           "tags": [
-            "letter"
+            "GENDER-SPECIFIC"
           ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "gender_map": {
+            "derecho": "m"
+          }
         },
         "english": {
-          "word": "A"
+          "word": "right"
         }
       },
       {
-        "pos": "preposition",
-        "as_in": "when followed by 'lo'",
+        "pos": "noun",
+        "as_in": "the field of study",
         "spanish": {
-          "word": "a lo",
+          "word": "derecho",
           "tags": [
-            "preposition",
-            "idiomatic"
+            "GENDER-SPECIFIC"
           ],
-          "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "gender_map": {
+            "derecho": "m"
+          }
         },
         "english": {
-          "word": "as"
-        },
-        "note": "e.g., 'Lo hice a lo grande' (I did it in a big way)."
+          "word": "law"
+        }
       }
     ],
-    "related_spanish": [],
-    "related_english": []
+    "related_spanish": [
+      "8"
+    ]
+  },
+  {
+    "id": "8",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "noun",
+        "as_in": "the right side or direction",
+        "spanish": {
+          "word": "derecha",
+          "tags": [
+            "GENDER-SPECIFIC"
+          ],
+          "gender_map": {
+            "derecha": "f"
+          }
+        },
+        "english": {
+          "word": "right"
+        }
+      }
+    ],
+    "related_spanish": [
+      "7"
+    ]
+  },
+  {
+    "id": "9",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "to bring something to an end",
+        "spanish": {
+          "word": "acabar"
+        },
+        "english": {
+          "word": "to finish"
+        },
+        "note": "Often used with \"de\" to mean \"to have just\" completed something."
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "you are consuming food",
+        "spanish": {
+          "word": "comer"
+        },
+        "english": {
+          "word": "to eat"
+        }
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "reside or be alive",
+        "spanish": {
+          "word": "vivir"
+        },
+        "english": {
+          "word": "to live"
+        }
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "starred": true,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "to have the ability to do something",
+        "spanish": {
+          "word": "poder",
+          "conj_map": {
+            "indicative": {
+              "present": {
+                "general": "p((ue))dX",
+                "exceptions": {
+                  "nosotros": "podemos",
+                  "vosotros": "podéis"
+                }
+              },
+              "preterite": {
+                "general": "p(u)dX"
+              }
+            },
+            "subjunctive": {
+              "present": {
+                "general": "p(u)edX",
+                "exceptions": {
+                  "nosotros": "podamos",
+                  "vosotros": "podáis"
+                }
+              }
+            }
+          }
+        },
+        "english": {
+          "word": "to be able to"
+        }
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "to think or form an opinion",
+        "spanish": {
+          "word": "pensar",
+          "conj_map": {
+            "indicative": {
+              "present": {
+                "general": "p((ie))nsX",
+                "exceptions": {
+                  "nosotros": "pensamos",
+                  "vosotros": "pensáis"
+                }
+              }
+            },
+            "subjunctive": {
+              "present": {
+                "general": "p((ie))nsX",
+                "exceptions": {
+                  "nosotros": "pensemos",
+                  "vosotros": "penséis"
+                }
+              }
+            }
+          }
+        },
+        "english": {
+          "word": "to think"
+        }
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "to play a sport or game",
+        "spanish": {
+          "word": "jugar",
+          "conj_map": {
+            "indicative": {
+              "present": {
+                "general": "j((ue))gX",
+                "exceptions": {
+                  "nosotros": "jugamos",
+                  "vosotros": "jugáis"
+                }
+              }
+            },
+            "subjunctive": {
+              "present": {
+                "general": "j((ue))gX",
+                "exceptions": {
+                  "nosotros": "juguemos",
+                  "vosotros": "juguéis"
+                }
+              }
+            }
+          }
+        },
+        "english": {
+          "word": "to play"
+        }
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "starred": false,
+    "meanings": [
+      {
+        "pos": "verb",
+        "as_in": "to leave a place",
+        "spanish": {
+          "word": "salir",
+          "conj_map": {
+            "indicative": {
+              "present": {
+                "exceptions": {
+                  "yo": "sal(go)"
+                }
+              },
+              "preterite": {
+                "general": "salX",
+                "exceptions": {
+                  "yo": "salí",
+                  "el": "salió"
+                }
+              }
+            },
+            "subjunctive": {
+              "present": {
+                "general": "salgX"
+              }
+            }
+          }
+        },
+        "english": {
+          "word": "to leave"
+        },
+        "note": "Commonly used for leaving a location or going out socially."
+      }
+    ]
   }
 ]
