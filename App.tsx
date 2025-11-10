@@ -72,6 +72,16 @@ const App: React.FC = () => {
   const [vocabMastery, setVocabMastery] = useLocalStorage<Record<string, number>>('vocabMastery', {});
   const activeListSet = useMemo(() => new Set(activeList), [activeList]);
 
+  const spanishHeadwordSet = useMemo(() => {
+    const set = new Set<string>();
+    dictionaryData.forEach(entry => {
+      entry.meanings.forEach(meaning => {
+        set.add(meaning.spanish.word.toLowerCase());
+      });
+    });
+    return set;
+  }, [dictionaryData]);
+
   // Settings state
   const [showVulgar, setShowVulgar] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -215,6 +225,7 @@ const App: React.FC = () => {
 
     if (!query) return [];
     const lowerCaseQuery = query.toLowerCase();
+    const normalizedQuery = removeAccents(lowerCaseQuery);
 
     const filtered = visibleData.reduce<SearchResult[]>((acc, entry) => {
       if (isListLocked && activeListSet.has(entry.id)) {
@@ -223,7 +234,10 @@ const App: React.FC = () => {
 
       type CandidateMatch = {
         meaningIndex: number;
-        term: string;
+        displayTerm: string;
+        matchedTerm: string;
+        matchedExact: boolean;
+        isPrimary: boolean;
       };
 
       const matches: CandidateMatch[] = [];
@@ -231,22 +245,64 @@ const App: React.FC = () => {
       entry.meanings.forEach((meaning, meaningIndex) => {
         if (lang === 'ES') {
           const primaryTerm = meaning.spanish.word;
-          if (primaryTerm.toLowerCase().startsWith(lowerCaseQuery)) {
-            matches.push({ meaningIndex, term: primaryTerm });
+          const primaryLower = primaryTerm.toLowerCase();
+          const normalizedPrimary = removeAccents(primaryLower);
+
+          if (primaryLower.startsWith(lowerCaseQuery)) {
+            matches.push({
+              meaningIndex,
+              displayTerm: primaryTerm,
+              matchedTerm: primaryTerm,
+              matchedExact: primaryLower === lowerCaseQuery,
+              isPrimary: true,
+            });
+          }
+
+          if (
+            !matches.some(match => match.meaningIndex === meaningIndex && match.isPrimary) &&
+            normalizedQuery.startsWith(normalizedPrimary)
+          ) {
+            matches.push({
+              meaningIndex,
+              displayTerm: primaryTerm,
+              matchedTerm: primaryTerm,
+              matchedExact: primaryLower === lowerCaseQuery,
+              isPrimary: true,
+            });
           }
 
           if (meaning.spanish.gender_map) {
             Object.keys(meaning.spanish.gender_map).forEach(key => {
               const genderTerm = key.split('/')[0].trim();
-              if (genderTerm.toLowerCase().startsWith(lowerCaseQuery)) {
-                matches.push({ meaningIndex, term: genderTerm });
+              if (!genderTerm) return;
+              const genderLower = genderTerm.toLowerCase();
+              if (!genderLower.startsWith(lowerCaseQuery)) {
+                return;
               }
+
+              if (genderLower !== primaryLower && spanishHeadwordSet.has(genderLower)) {
+                return;
+              }
+
+              matches.push({
+                meaningIndex,
+                displayTerm: primaryTerm,
+                matchedTerm: genderTerm,
+                matchedExact: genderLower === lowerCaseQuery,
+                isPrimary: genderLower === primaryLower,
+              });
             });
           }
         } else {
           const primaryTerm = meaning.english.word;
           if (primaryTerm.toLowerCase().startsWith(lowerCaseQuery)) {
-            matches.push({ meaningIndex, term: primaryTerm });
+            matches.push({
+              meaningIndex,
+              displayTerm: primaryTerm,
+              matchedTerm: primaryTerm,
+              matchedExact: primaryTerm.toLowerCase() === lowerCaseQuery,
+              isPrimary: true,
+            });
           }
         }
       });
@@ -256,13 +312,11 @@ const App: React.FC = () => {
       }
 
       matches.sort((a, b) => {
-        const aLower = a.term.toLowerCase();
-        const bLower = b.term.toLowerCase();
-        const aExact = aLower === lowerCaseQuery;
-        const bExact = bLower === lowerCaseQuery;
-        if (aExact && !bExact) return -1;
-        if (!aExact && bExact) return 1;
-        return aLower.localeCompare(bLower);
+        if (a.matchedExact && !b.matchedExact) return -1;
+        if (!a.matchedExact && b.matchedExact) return 1;
+        if (a.isPrimary && !b.isPrimary) return -1;
+        if (!a.isPrimary && b.isPrimary) return 1;
+        return a.matchedTerm.toLowerCase().localeCompare(b.matchedTerm.toLowerCase());
       });
 
       const bestMatch = matches[0];
@@ -288,8 +342,8 @@ const App: React.FC = () => {
       acc.push({
         entry,
         matchedMeaningIndex: bestMatch.meaningIndex,
-        matchedTerm: bestMatch.term,
-        matchedExact: bestMatch.term.toLowerCase() === lowerCaseQuery,
+        matchedTerm: bestMatch.displayTerm,
+        matchedExact: bestMatch.matchedExact,
       });
 
       return acc;
@@ -301,7 +355,7 @@ const App: React.FC = () => {
       return a.matchedTerm.toLowerCase().localeCompare(b.matchedTerm.toLowerCase());
     });
 
-  }, [query, lang, dictionaryData, showVulgar, isListLocked, activeListSet, listShowVulgar]);
+  }, [query, lang, dictionaryData, showVulgar, isListLocked, activeListSet, listShowVulgar, spanishHeadwordSet]);
 
   const selectedSearchMatch = useMemo(() => {
     if (!selectedEntry) {

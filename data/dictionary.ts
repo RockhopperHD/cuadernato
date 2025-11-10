@@ -20,8 +20,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         },
         "english": {
           "word": "duck"
-        },
-        "note": "Use the form 'pata' when referring to a female duck."
+        }
       }
     ],
     "related_spanish": [],
@@ -3134,17 +3133,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "english": {
           "word": "eye"
         }
-      }
-    ],
-    "related_spanish": [],
-    "related_english": []
-  },
-  {
-    "id": "000132",
-    "starred": false,
-    "meanings": [
+      },
       {
-        "pos": "adverb",
+        "pos": "interjection",
         "as_in": "an expression of warning",
         "spanish": {
           "word": "¡Ojo!"
@@ -3174,17 +3165,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "english": {
           "word": "health"
         }
-      }
-    ],
-    "related_spanish": [],
-    "related_english": []
-  },
-  {
-    "id": "000133",
-    "starred": false,
-    "meanings": [
+      },
       {
-        "pos": "adverb",
+        "pos": "interjection",
         "as_in": "a toast",
         "spanish": {
           "word": "¡Salud!"
