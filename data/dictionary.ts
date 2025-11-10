@@ -255,6 +255,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         as_in: 'a legal or moral entitlement',
         spanish: {
           word: 'derecho',
+          tags: ['GENDER-SPECIFIC'],
           gender_map: {
             derecho: 'm'
           }
@@ -268,6 +269,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         as_in: 'the field of study',
         spanish: {
           word: 'derecho',
+          tags: ['GENDER-SPECIFIC'],
           gender_map: {
             derecho: 'm'
           }
@@ -288,6 +290,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         as_in: 'the right side or direction',
         spanish: {
           word: 'derecha',
+          tags: ['GENDER-SPECIFIC'],
           gender_map: {
             derecha: 'f'
           }

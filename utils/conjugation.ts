@@ -2,7 +2,6 @@ import { ConjugationMap, FullConjugationObject, Mood, Pronoun, PronounConjugatio
 
 const PRONOUNS: Pronoun[] = ['yo', 'tu', 'el', 'nosotros', 'vosotros', 'ellos'];
 const MOODS: Mood[] = ['indicative', 'subjunctive'];
-const TENSES: Tense[] = ['present', 'preterite', 'imperfect'];
 
 type ConjugationEndings = {
   [M in Mood]: {
@@ -71,12 +70,15 @@ const getVerbInfo = (infinitive: string): { stem: string; type: 'ar' | 'er' | 'i
   };
 };
 
-const applyTemplate = (template: string, ending: string, fallback: string): string => {
+const applyTemplate = (template: string, ending: string | undefined, fallback: string): string => {
   if (!template) {
     return fallback;
   }
 
   if (template.includes('X')) {
+    if (!ending) {
+      return template.replace(/X/g, '');
+    }
     return template.replace(/X/g, ending);
   }
 
@@ -90,13 +92,22 @@ export function getFullConjugation(infinitive: string, conjMap: ConjugationMap =
   MOODS.forEach((mood) => {
     result[mood] = {} as Record<Tense, PronounConjugation>;
 
-    TENSES.forEach((tense) => {
-      const endings = REGULAR_ENDINGS[mood][tense][type];
+    const baseTenses = Object.keys(REGULAR_ENDINGS[mood]) as Tense[];
+    const irregularTenses = conjMap?.[mood] ? (Object.keys(conjMap[mood]!) as Tense[]) : [];
+    const tenses = Array.from(new Set<Tense>([...baseTenses, ...irregularTenses]));
+
+    tenses.forEach((tense) => {
+      const tenseEndings = REGULAR_ENDINGS[mood][tense];
+      const endings = tenseEndings?.[type];
       const rule = conjMap?.[mood]?.[tense];
 
+      if (!endings && !rule) {
+        return;
+      }
+
       const forms = PRONOUNS.reduce((acc, pronoun) => {
-        const baseEnding = endings[pronoun];
-        const regularForm = `${stem}${baseEnding}`;
+        const baseEnding = endings?.[pronoun];
+        const regularForm = baseEnding ? `${stem}${baseEnding}` : '—';
 
         if (rule?.exceptions?.[pronoun]) {
           acc[pronoun] = rule.exceptions[pronoun] as string;
