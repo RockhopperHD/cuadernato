@@ -22,7 +22,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
                 }
               },
               preterite: {
-                general: 't(u)vX'
+                general: 't(u)vX',
+                exceptions: {
+                  yo: 't(u)ve',
+                  tu: 't(u)viste',
+                  el: 't(u)vo',
+                  nosotros: 't(u)vimos',
+                  vosotros: 't(u)visteis',
+                  ellos: 't(u)vieron'
+                }
               }
             },
             subjunctive: {
@@ -396,6 +404,116 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         english: {
           word: 'to be able to'
         }
+      }
+    ]
+  },
+  {
+    id: '13',
+    starred: false,
+    meanings: [
+      {
+        pos: 'verb',
+        as_in: 'to think or form an opinion',
+        spanish: {
+          word: 'pensar',
+          conj_map: {
+            indicative: {
+              present: {
+                general: 'p((ie))nsX',
+                exceptions: {
+                  nosotros: 'pensamos',
+                  vosotros: 'pensáis'
+                }
+              }
+            },
+            subjunctive: {
+              present: {
+                general: 'p((ie))nsX',
+                exceptions: {
+                  nosotros: 'pensemos',
+                  vosotros: 'penséis'
+                }
+              }
+            }
+          }
+        },
+        english: {
+          word: 'to think'
+        }
+      }
+    ]
+  },
+  {
+    id: '14',
+    starred: false,
+    meanings: [
+      {
+        pos: 'verb',
+        as_in: 'to play a sport or game',
+        spanish: {
+          word: 'jugar',
+          conj_map: {
+            indicative: {
+              present: {
+                general: 'j((ue))gX',
+                exceptions: {
+                  nosotros: 'jugamos',
+                  vosotros: 'jugáis'
+                }
+              }
+            },
+            subjunctive: {
+              present: {
+                general: 'j((ue))gX',
+                exceptions: {
+                  nosotros: 'juguemos',
+                  vosotros: 'juguéis'
+                }
+              }
+            }
+          }
+        },
+        english: {
+          word: 'to play'
+        }
+      }
+    ]
+  },
+  {
+    id: '15',
+    starred: false,
+    meanings: [
+      {
+        pos: 'verb',
+        as_in: 'to leave a place',
+        spanish: {
+          word: 'salir',
+          conj_map: {
+            indicative: {
+              present: {
+                exceptions: {
+                  yo: 'sal(go)'
+                }
+              },
+              preterite: {
+                general: 'salX',
+                exceptions: {
+                  yo: 'salí',
+                  el: 'salió'
+                }
+              }
+            },
+            subjunctive: {
+              present: {
+                general: 'salgX'
+              }
+            }
+          }
+        },
+        english: {
+          word: 'to leave'
+        },
+        note: 'Commonly used for leaving a location or going out socially.'
       }
     ]
   }
