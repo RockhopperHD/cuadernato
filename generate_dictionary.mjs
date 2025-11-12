@@ -105,7 +105,6 @@ async function buildDictionary() {
             region: m.region,
             conjugations: null,
             exceptions: null,
-            reflexive: false,
           },
           english: {
             word: m.english_word,

@@ -206,11 +206,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         "pos": "verb",
         "as_in": "to clean yourself with water",
         "spanish": {
-          "word": "ducharse",
-          "reflexive": true,
-          "tags": [
-            "REFLEXIVE"
-          ]
+          "word": "ducharse"
         },
         "english": {
           "word": "to shower"

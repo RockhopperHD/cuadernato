@@ -138,8 +138,15 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                 {sortedMeanings.map((meaning, index) => {
                     const { spanish, english, note, pos, as_in } = meaning;
                     const isES = lang === 'ES';
-                    
+
                     const spanishDisplay = spanish.display_word ?? spanish.word;
+                    const normalizedSpanishWord = spanish.word.trim().toLowerCase();
+                    const isReflexiveVerb = pos === 'verb' && normalizedSpanishWord.endsWith('se');
+                    const combinedTags = [
+                        ...(spanish.tags ?? []),
+                        ...(isReflexiveVerb ? ['REFLEXIVE'] : [])
+                    ];
+                    const tags = Array.from(new Set(combinedTags));
                     const headerText = isES ? english.word : spanishDisplay;
                     const headerPos = pos;
                     const asInText = as_in;
@@ -154,7 +161,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                                         {!isES && (
                                         <div className="flex items-center gap-2">
                                             {spanish.region && <Tag type={spanish.region} />}
-                                            {spanish.tags?.map(t => <Tag key={t} type={t} />)}
+                                            {tags.map(t => <Tag key={t} type={t} />)}
                                         </div>
                                         )}
                                     </div>
@@ -197,10 +204,10 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                             {isES && (
                               <div className="flex items-center gap-2 mt-3">
                                 {spanish.region && <Tag type={spanish.region} />}
-                                {spanish.tags?.map(t => <Tag key={t} type={t} />)}
+                                {tags.map(t => <Tag key={t} type={t} />)}
                               </div>
                             )}
-                            
+
                             {pos === 'verb' && <ConjugationChart spanish={spanish} pos={pos} />}
                         </div>
                     );
