@@ -56,5 +56,5 @@ export type CustomListPayload = {
     showVulgar?: boolean;
 };
 
-export type AppMode = 'title' | 'dictionary' | 'listBuilder' | 'viewWords' | 'vocabPractice';
+export type AppMode = 'title' | 'dictionary' | 'listBuilder' | 'viewWords' | 'vocabPractice' | 'entryTester';
 export type ModalType = 'listStatus';

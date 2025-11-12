@@ -9,6 +9,7 @@ interface TitleScreenProps {
 
 export const TitleScreen: React.FC<TitleScreenProps> = ({ setMode }) => {
   const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [isShiftHeld, setIsShiftHeld] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem('cuadernato_animated') !== 'true') {
@@ -16,6 +17,35 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ setMode }) => {
       sessionStorage.setItem('cuadernato_animated', 'true');
     }
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        setIsShiftHeld(true);
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        setIsShiftHeld(false);
+      }
+    };
+
+    const handleBlur = () => setIsShiftHeld(false);
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', handleBlur);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur);
+    };
+  }, []);
+
+  const secondaryButtonLabel = isShiftHeld ? 'Entry Tester' : 'View Words';
+  const secondaryButtonMode = isShiftHeld ? 'entryTester' : 'viewWords';
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full text-center">
@@ -58,12 +88,13 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ setMode }) => {
                 List Builder
               </button>
               <button
-                onClick={() => setMode('viewWords')}
+                onClick={() => setMode(secondaryButtonMode)}
                 className="flex-1 bg-slate-600 text-white font-bold py-3 px-4 rounded-lg text-md hover:bg-slate-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-slate-300"
               >
-                View Words
+                {secondaryButtonLabel}
               </button>
           </div>
+          <p className="text-xs text-slate-400 dark:text-slate-500">Hold Shift to open the Entry Tester.</p>
         </div>
        <footer className="absolute bottom-4 left-0 right-0 text-center py-4">
         <p className="text-xs text-slate-400 dark:text-slate-500">

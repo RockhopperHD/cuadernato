@@ -16,6 +16,7 @@ import { AccentPalette } from './components/AccentPalette';
 import { ListBuilder } from './components/ListBuilder';
 import { ViewWordsScreen } from './components/ViewWordsScreen';
 import { VocabPractice } from './components/VocabPractice';
+import { EntryTester } from './components/EntryTester';
 
 // Helper to remove accents from a string for comparison
 const removeAccents = (str: string): string => {
@@ -647,6 +648,18 @@ const App: React.FC = () => {
                 </div>
             </Modal>
         )}
+        <AccentPalette />
+      </>
+    );
+  }
+
+  if (mode === 'entryTester') {
+    return (
+      <>
+        <EntryTester
+          dictionaryData={dictionaryData}
+          onBack={() => setMode('title')}
+        />
         <AccentPalette />
       </>
     );
