@@ -55,11 +55,10 @@ const REFLEXIVE_PRONOUNS: Record<keyof PronounConjugation, string> = {
 
 const sanitizeVerb = (word: string): string => word.trim().toLowerCase();
 
-const getVerbBase = (word: string, explicitReflexive?: boolean) => {
+const getVerbBase = (word: string) => {
   const clean = sanitizeVerb(word);
-  const inferredReflexive = clean.endsWith('se');
-  const reflexive = explicitReflexive ?? inferredReflexive;
-  const infinitive = reflexive && inferredReflexive ? clean.slice(0, -2) : clean;
+  const reflexive = clean.endsWith('se');
+  const infinitive = reflexive ? clean.slice(0, -2) : clean;
   const ending = infinitive.slice(-2);
   const stem = infinitive.slice(0, -2);
 
@@ -86,7 +85,7 @@ export const generateConjugations = (
     return {};
   }
 
-  const details = getVerbBase(spanish.word, spanish.reflexive);
+  const details = getVerbBase(spanish.word);
   if (!details) {
     return {};
   }

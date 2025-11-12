@@ -14,8 +14,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "of"
@@ -31,8 +30,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "from"
@@ -48,8 +46,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "about"
@@ -65,8 +62,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "with"
@@ -82,8 +78,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "out of"
@@ -99,8 +94,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "by"
@@ -116,8 +110,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "in"
@@ -133,8 +126,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "for"
@@ -150,8 +142,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "to"
@@ -178,8 +169,7 @@
             "subordinating conjunction"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "that"
@@ -194,8 +184,7 @@
             "comparative conjunction"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "than"
@@ -211,8 +200,7 @@
             "informal"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "what"
@@ -227,8 +215,7 @@
             "exclamatory"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "how"
@@ -244,8 +231,7 @@
             "interrogative pronoun"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "what"
@@ -261,8 +247,7 @@
             "purpose clause"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "so that"
@@ -278,8 +263,7 @@
             "COLLOQUIAL"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "because"
@@ -295,8 +279,7 @@
             "relative pronoun"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "which"
@@ -311,8 +294,7 @@
             "relative pronoun"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "who"
@@ -343,8 +325,7 @@
             "singular"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "the"
@@ -365,8 +346,7 @@
             "singular"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "her"
@@ -387,8 +367,7 @@
             "singular"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "her"
@@ -414,8 +393,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "no"
@@ -430,8 +408,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "no"
@@ -446,8 +423,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "don't"
@@ -466,8 +442,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "no"
@@ -482,8 +457,7 @@
             "common"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "not"
@@ -509,8 +483,7 @@
             "preposition"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "to"
@@ -525,8 +498,7 @@
             "preposition"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "at"
@@ -542,8 +514,7 @@
             "preposition"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "in"
@@ -559,8 +530,7 @@
             "preposition"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "at"
@@ -577,8 +547,7 @@
             "personal a"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "to"
@@ -594,8 +563,7 @@
             "preposition"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "to"
@@ -610,8 +578,7 @@
             "preposition"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "to"
@@ -630,8 +597,7 @@
             "letter"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "A"
@@ -647,8 +613,7 @@
             "idiomatic"
           ],
           "conjugations": null,
-          "exceptions": null,
-          "reflexive": false
+          "exceptions": null
         },
         "english": {
           "word": "as"
