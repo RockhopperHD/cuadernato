@@ -2,7 +2,7 @@
 
 
 // Temporary comment to refresh PR
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { DICTIONARY_DATA } from './data/dictionary';
 import { DictionaryEntry, AppMode, ModalType } from './types';
 import { SearchBar } from './components/SearchBar';
@@ -82,6 +82,16 @@ const App: React.FC = () => {
     });
     return set;
   }, [dictionaryData]);
+
+  const entryLookup = useMemo(() => {
+    const map = new Map<string, DictionaryEntry>();
+    dictionaryData.forEach(item => {
+      map.set(item.id, item);
+    });
+    return map;
+  }, [dictionaryData]);
+
+  const lookupEntryById = useCallback((id: string) => entryLookup.get(id) ?? null, [entryLookup]);
 
   // Settings state
   const [showVulgar, setShowVulgar] = useState(true);
@@ -644,6 +654,7 @@ const App: React.FC = () => {
                             setViewingWordEntry(null);
                             setModal({ type: 'listStatus' });
                           }}
+                          lookupEntryById={lookupEntryById}
                     />
                 </div>
             </Modal>
@@ -681,9 +692,9 @@ const App: React.FC = () => {
           <Modal title="Word Details" onClose={() => setViewingWordEntry(null)}>
               <div className="max-h-[70vh] overflow-y-auto -m-6">
                   <WordDetails
-                        entry={viewingWordEntry} 
+                        entry={viewingWordEntry}
                         lang={'EN'} // Default to EN view for simplicity, as query isn't available
-                        onStar={toggleStar} 
+                        onStar={toggleStar}
                         query={''}
                         isWordOnList={activeListSet.has(viewingWordEntry.id)}
                         isListLocked={isListLocked}
@@ -691,6 +702,7 @@ const App: React.FC = () => {
                           setViewingWordEntry(null);
                           setModal({ type: 'listStatus' });
                         }}
+                        lookupEntryById={lookupEntryById}
                   />
               </div>
           </Modal>
@@ -785,15 +797,16 @@ const App: React.FC = () => {
               </aside>
               <main className="w-full md:w-2/3 bg-slate-50 dark:bg-[#181f33] flex-grow overflow-y-auto">
                 {selectedEntry ? (
-                  <WordDetails 
-                    entry={selectedEntry} 
-                    lang={lang} 
-                    onStar={toggleStar} 
+                  <WordDetails
+                    entry={selectedEntry}
+                    lang={lang}
+                    onStar={toggleStar}
                     query={query}
                     isWordOnList={activeListSet.has(selectedEntry.id)}
                     isListLocked={isListLocked}
                     onListIconClick={() => setModal({ type: 'listStatus' })}
                     matchedTerm={selectedSearchMatch?.matchedTerm ?? null}
+                    lookupEntryById={lookupEntryById}
                   />
                 ) : query ? (
                   <div className="flex flex-col items-center justify-center h-full text-center p-8">

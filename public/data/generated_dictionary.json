@@ -20,7 +20,8 @@
       }
     ],
     "related_spanish": [],
-    "related_english": []
+    "related_english": [],
+    "connected": []
   },
   {
     "id": "100002",
@@ -57,6 +58,7 @@
       }
     ],
     "related_spanish": [],
-    "related_english": []
+    "related_english": [],
+    "connected": []
   }
 ]

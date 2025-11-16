@@ -222,6 +222,7 @@ export const EntryTester: React.FC<EntryTesterProps> = ({ dictionaryData, onBack
                   isWordOnList={false}
                   isListLocked={false}
                   onListIconClick={() => {}}
+                  lookupEntryById={(id) => dictionaryData.find(entry => entry.id === id) ?? null}
                 />
               ) : (
                 <div className="h-full flex items-center justify-center p-12 text-center text-slate-500 dark:text-slate-400">

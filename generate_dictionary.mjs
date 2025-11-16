@@ -121,6 +121,7 @@ async function buildDictionary() {
         })),
         related_spanish: [],
         related_english: [],
+        connected: [],
       };
       generatedEntries.push(newEntry);
     } catch (e) {

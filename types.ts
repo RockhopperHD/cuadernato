@@ -85,6 +85,7 @@ export interface DictionaryEntry {
   meanings: Meaning[];
   related_spanish: string[];
   related_english: string[];
+  connected?: string[];
   grand_note?: { title: string; description: string };
 }
 
