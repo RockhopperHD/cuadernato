@@ -9,7 +9,12 @@ const TAG_STYLES: Record<string, { label: string; bg: string; text: string; tool
   REFL: { label: 'REFL', bg: 'bg-green-500', text: 'text-white', tooltip: 'This verb is reflexive, so the action reflects back on the subject.' },
   LATAM: { label: 'LATAM', bg: 'bg-sky-500', text: 'text-white', tooltip: 'This usage is specific to or most common in Latin America.' },
   SPAIN: { label: 'SPAIN', bg: 'bg-amber-500', text: 'text-white', tooltip: 'This usage is specific to or most common in Spain.' },
-  GS: { label: 'GS', bg: 'bg-purple-600', text: 'text-white', tooltip: 'Changing this word’s gender (for example, -o to -a) changes the meaning.' },
+  GS: {
+    label: 'GENDER-SPECIFIC',
+    bg: 'bg-purple-600',
+    text: 'text-white',
+    tooltip: 'Changing this word’s gender (for example, -o to -a) changes the meaning.',
+  },
   COLLOQUIAL: { label: 'COLLOQUIAL', bg: 'bg-cyan-500', text: 'text-white', tooltip: 'This is a colloquial or informal term.' },
   IMPERSONAL: { label: 'IMPERSONAL', bg: 'bg-indigo-500', text: 'text-white', tooltip: 'This verb is only used impersonally (for example, “hay”).' },
   article_m_override: {

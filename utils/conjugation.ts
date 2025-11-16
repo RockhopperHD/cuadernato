@@ -85,6 +85,29 @@ const splitReflexive = (value: string) => {
   return { prefix: '', core: value };
 };
 
+const removeDiacritics = (value: string) => value.normalize('NFD').replace(/[̀-ͯ]/g, '');
+const ACCENT_CHAR_PATTERN = /[áéíóúÁÉÍÓÚñÑüÜ]/g;
+
+const highlightIrregularValue = (base: string, irregular: string) => {
+  if (!irregular) {
+    return irregular;
+  }
+
+  if (base) {
+    const basePlain = removeDiacritics(base);
+    const irregularPlain = removeDiacritics(irregular);
+
+    if (basePlain === irregularPlain) {
+      const accentOnly = irregular.replace(ACCENT_CHAR_PATTERN, match => `(${match})`);
+      if (accentOnly !== irregular) {
+        return accentOnly;
+      }
+    }
+  }
+
+  return `(${irregular})`;
+};
+
 type ConjugationTable = Partial<Record<Mood, Partial<Record<Tense, PronounConjugation>>>>;
 
 const buildBaseConjugations = (
@@ -366,8 +389,9 @@ const applyIrregularOverrides = (
     targets.forEach((pronoun) => {
       const form = block[pronoun];
       if (!form) return;
-      const { prefix } = splitReflexive(form);
-      block[pronoun] = `${prefix}(${override.value})`;
+      const { prefix, core } = splitReflexive(form);
+      const highlighted = highlightIrregularValue(core, override.value);
+      block[pronoun] = `${prefix}${highlighted}`;
     });
   });
 };

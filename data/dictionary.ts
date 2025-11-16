@@ -2,13 +2,9 @@ import { DictionaryEntry } from '../types';
 
 export const DICTIONARY_DATA: DictionaryEntry[] = [
   {
-    id: '000001',
+    id: '1',
     starred: false,
-    connected: ['000002'],
-    grand_note: {
-      title: 'Gender with Animals',
-      description: 'When pato refers to the bird, swapping -o for -a changes the animal entirely.',
-    },
+    connected: ['2'],
     meanings: [
       {
         pos: 'noun',
@@ -26,16 +22,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         tags: {
           visible: ['GS'],
         },
-        trailing_words: ['pato salvaje'],
       },
     ],
     related_spanish: ['pata'],
     related_english: ['duckling'],
   },
   {
-    id: '000002',
+    id: '2',
     starred: false,
-    connected: ['000001'],
+    connected: ['1'],
     meanings: [
       {
         pos: 'noun',
@@ -55,9 +50,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: [],
   },
   {
-    id: '000003',
+    id: '3',
     starred: false,
-    connected: ['000012'],
+    connected: ['12'],
     meanings: [
       {
         pos: 'noun',
@@ -81,7 +76,7 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: [],
   },
   {
-    id: '000004',
+    id: '4',
     starred: true,
     meanings: [
       {
@@ -106,9 +101,14 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: [],
   },
   {
-    id: '000005',
+    id: '5',
     starred: true,
-    connected: ['000007', '000008'],
+    connected: ['7', '8'],
+    grand_note: {
+      title: 'Tener is everywhere',
+      description:
+        'This verb expresses possession, age, physical sensations, and obligations like “tener que + infinitivo”.',
+    },
     meanings: [
       {
         pos: 'verb',
@@ -146,16 +146,16 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
             'irreg(subj_impf, ellos)=tuvieran',
           ],
         },
-        trailing_words: ['tener que', 'tener hambre', 'tener frío'],
+        trailing_words: ['tener que + infinitivo'],
       },
     ],
     related_spanish: ['mantener'],
     related_english: ['to own'],
   },
   {
-    id: '000006',
+    id: '6',
     starred: false,
-    connected: ['000009'],
+    connected: ['9'],
     meanings: [
       {
         pos: 'verb',
@@ -170,7 +170,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           visible: ['REFL'],
           region: 'LATAM',
         },
-        trailing_words: ['bañarse en la playa'],
       },
       {
         pos: 'verb',
@@ -191,9 +190,13 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: [],
   },
   {
-    id: '000007',
+    id: '7',
     starred: true,
-    connected: ['000008', '000005'],
+    connected: ['8', '5'],
+    grand_note: {
+      title: 'Ser vs. estar',
+      description: 'Use ser for identity, time, and origin. Switch to estar for changing states or locations.',
+    },
     meanings: [
       {
         pos: 'verb',
@@ -247,9 +250,13 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: [],
   },
   {
-    id: '000008',
+    id: '8',
     starred: true,
-    connected: ['000007', '000005'],
+    connected: ['7', '5'],
+    grand_note: {
+      title: 'Ser vs. estar',
+      description: 'Use estar for emotions, health, and temporary locations while ser handles permanent traits.',
+    },
     meanings: [
       {
         pos: 'verb',
@@ -290,23 +297,22 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
             'irreg(subj_impf, ellos)=estuvieran',
           ],
         },
-        trailing_words: ['estar en casa', 'estar cansado'],
+        trailing_words: ['estar + gerundio'],
       },
     ],
     related_spanish: ['ser'],
     related_english: ['to feel'],
   },
   {
-    id: '000009',
+    id: '9',
     starred: false,
-    connected: ['000006', '000010'],
+    connected: ['6', '10'],
     meanings: [
       {
         pos: 'verb',
         as_in: 'to sleep',
         spanish: {
           word: 'dormir',
-          note: 'Common stem-changing -ir verb.',
         },
         english: {
           word: 'to sleep',
@@ -314,16 +320,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         tags: {
           invisible: ['o>ue', 'slip_o>u', 'irreg(gerund)=durmiendo'],
         },
-        trailing_words: ['dormir la siesta', 'dormir profundamente'],
       },
     ],
     related_spanish: ['descansar'],
     related_english: ['to nap'],
   },
   {
-    id: '000010',
+    id: '10',
     starred: false,
-    connected: ['000009', '000013'],
+    connected: ['9', '13'],
     meanings: [
       {
         pos: 'adjective',
@@ -341,7 +346,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         tags: {
           visible: ['GS'],
         },
-        trailing_words: ['un tren rápido'],
       },
       {
         pos: 'adverb',
@@ -362,16 +366,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: ['swift'],
   },
   {
-    id: '000011',
+    id: '11',
     starred: false,
-    connected: ['000012', '000013'],
+    connected: ['12', '13'],
     meanings: [
       {
         pos: 'verb',
         as_in: 'to yap endlessly',
         spanish: {
           word: 'yapear',
-          note: 'Demo verb for the UI overhaul; expect goofy slang contexts.',
         },
         english: {
           word: 'to yap',
@@ -382,14 +385,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           invisible: ['e>ie', 'go', 'irreg(imper_affirm, tú)=yapea', 'irreg(gerund)=yapeando'],
           region: 'LATAM',
         },
-        trailing_words: ['yapear sin parar', 'yapear de algo insignificante'],
       },
       {
         pos: 'verb',
         as_in: 'to yap at yourself',
         spanish: {
           word: 'yapearse',
-          note: 'Reflexive flavor for when someone gets themselves worked up.',
         },
         english: {
           word: 'to yap at yourself',
@@ -404,9 +405,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     related_english: [],
   },
   {
-    id: '000012',
+    id: '12',
     starred: false,
-    connected: ['000011', '000013', '000003'],
+    connected: ['11', '13', '3'],
     meanings: [
       {
         pos: 'noun',
@@ -427,16 +428,15 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
           visible: ['VULGAR', 'GS', 'article_m_override'],
           region: 'SPAIN',
         },
-        trailing_words: ['tu yourmom-o favorita'],
       },
     ],
     related_spanish: [],
     related_english: [],
   },
   {
-    id: '000013',
+    id: '13',
     starred: true,
-    connected: ['000011', '000012', '000010'],
+    connected: ['11', '12', '10'],
     meanings: [
       {
         pos: 'adjective',
@@ -452,7 +452,6 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
         tags: {
           visible: ['COLLOQUIAL', 'unisex'],
         },
-        trailing_words: ['una vibra epicsauca'],
       },
       {
         pos: 'noun',

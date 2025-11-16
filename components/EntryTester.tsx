@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { DictionaryEntry } from '../types';
 import { WordDetails } from './WordDetails';
 import { BackIcon } from './icons';
+import { formatEntryId, normalizeEntryId } from '../utils/entryIds';
 
 type EntryTesterProps = {
   dictionaryData: DictionaryEntry[];
@@ -88,7 +89,12 @@ export const EntryTester: React.FC<EntryTesterProps> = ({ dictionaryData, onBack
       return null;
     }
 
-    return dictionaryData.find(entry => entry.id === parseResult.entry?.id) ?? null;
+    const normalized = normalizeEntryId(parseResult.entry.id);
+    if (!normalized) {
+      return null;
+    }
+
+    return dictionaryData.find(entry => entry.id === normalized) ?? null;
   }, [dictionaryData, parseResult.entry]);
 
   const handleLookup = () => {
@@ -98,14 +104,20 @@ export const EntryTester: React.FC<EntryTesterProps> = ({ dictionaryData, onBack
       return;
     }
 
-    const existing = dictionaryData.find(entry => entry.id === trimmed);
+    if (!/^\d+$/.test(trimmed)) {
+      setLookupFeedback('Entry ids can only contain digits.');
+      return;
+    }
+
+    const normalizedId = normalizeEntryId(trimmed);
+    const existing = dictionaryData.find(entry => entry.id === normalizedId);
     if (!existing) {
-      setLookupFeedback(`No dictionary entry found with id ${trimmed}.`);
+      setLookupFeedback(`No dictionary entry found with id ${formatEntryId(trimmed)}.`);
       return;
     }
 
     setEntryText(JSON.stringify(existing, null, 2));
-    setLookupFeedback(`Loaded entry ${trimmed} from the dictionary.`);
+    setLookupFeedback(`Loaded entry ${formatEntryId(trimmed)} from the dictionary.`);
   };
 
   const renderFeedback = () => {
@@ -173,7 +185,7 @@ export const EntryTester: React.FC<EntryTesterProps> = ({ dictionaryData, onBack
                     type="text"
                     value={dictionaryLookupId}
                     onChange={event => setDictionaryLookupId(event.target.value)}
-                    placeholder="Entry id (e.g. 000001)"
+                    placeholder="Entry id (e.g. 00001)"
                     className="w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </label>
@@ -202,13 +214,19 @@ export const EntryTester: React.FC<EntryTesterProps> = ({ dictionaryData, onBack
               <h2 className="text-lg font-semibold">Rendered Preview</h2>
               {parseResult.error ? (
                 <p className="text-sm text-red-600 dark:text-red-400 mt-1">{parseResult.error}</p>
-              ) : matchedDictionaryEntry ? (
-                <p className="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
-                  Entry id {parseResult.entry?.id} exists in the dictionary.
-                </p>
+              ) : parseResult.entry ? (
+                matchedDictionaryEntry ? (
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
+                    Entry id {formatEntryId(parseResult.entry.id)} exists in the dictionary.
+                  </p>
+                ) : (
+                  <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">
+                    Entry id {formatEntryId(parseResult.entry.id)} was not found in the loaded dictionary.
+                  </p>
+                )
               ) : (
-                <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">
-                  Entry id {parseResult.entry?.id} was not found in the loaded dictionary.
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                  Provide a dictionary entry JSON to preview it below.
                 </p>
               )}
             </div>

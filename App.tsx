@@ -356,7 +356,7 @@ const App: React.FC = () => {
       const bestMatch = matches[0];
 
       // Special handling for the 'ser'/'estar' entry
-      if (entry.id === '000013' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
+      if (entry.id === '13' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
         const relevantMeaningIndex = entry.meanings.findIndex(m => m.spanish.word === lowerCaseQuery);
         if (relevantMeaningIndex !== -1) {
           acc.push({

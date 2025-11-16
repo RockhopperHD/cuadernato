@@ -5,6 +5,7 @@ import { DictionaryEntry, SpanishSide } from '../types';
 import { ConjugationChart } from './ConjugationChart';
 import { StarIcon, GenderIcon, VerticalTriangleIcon } from './icons';
 import { Tag } from './Tag';
+import { formatEntryId } from '../utils/entryIds';
 
 interface WordDetailsProps {
   entry: DictionaryEntry;
@@ -137,28 +138,34 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
 
     const renderMeaningSections = (
         targetEntry: DictionaryEntry,
-        options: { showControls: boolean; applyMatchFilter: boolean; accentLabel?: string; isWordOnList?: boolean }
+        options: {
+            showControls: boolean;
+            applyMatchFilter: boolean;
+            accentLabel?: string;
+            isWordOnList?: boolean;
+            isConnectedCard?: boolean;
+            queryLabel?: string | null;
+        }
     ) => {
-        const { showControls, applyMatchFilter, accentLabel, isWordOnList: sectionWordOnList } = options;
+        const { showControls, applyMatchFilter, accentLabel, isWordOnList: sectionWordOnList, isConnectedCard, queryLabel } = options;
         const baseMeanings = applyMatchFilter ? filterMeaningsByMatch(targetEntry.meanings) : targetEntry.meanings;
         const sortedMeanings = sortMeanings(baseMeanings);
         const listIconColor = isListLocked ? 'text-blue-500' : 'text-green-500';
 
-        return (
-            <article key={targetEntry.id} className="rounded-2xl bg-white dark:bg-slate-900/80 shadow border border-slate-200 dark:border-slate-800 overflow-hidden">
-                {accentLabel && (
-                    <div className="px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-200 dark:border-slate-800">
-                        {accentLabel}
+        const sectionBody = (
+            <div className={isConnectedCard ? 'p-6 md:p-8' : ''}>
+                {targetEntry.grand_note && (
+                    <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/30">
+                        <h3 className="text-xl font-bold text-center mb-2 text-slate-900 dark:text-yellow-100">{targetEntry.grand_note.title}</h3>
+                        <p className="text-slate-900 dark:text-yellow-200">{targetEntry.grand_note.description}</p>
                     </div>
                 )}
-                <div className="p-6 md:p-8">
-                    {targetEntry.grand_note && (
-                        <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/30">
-                            <h3 className="text-xl font-bold text-center mb-2 text-slate-900 dark:text-yellow-100">{targetEntry.grand_note.title}</h3>
-                            <p className="text-slate-900 dark:text-yellow-200">{targetEntry.grand_note.description}</p>
-                        </div>
-                    )}
-                    <div className="space-y-6">
+                {queryLabel && !isConnectedCard && (
+                    <p className="mb-3 text-left text-xs text-slate-500 dark:text-slate-400 lowercase tracking-wide">
+                        {queryLabel}
+                    </p>
+                )}
+                <div className="space-y-6">
                         {sortedMeanings.map((meaning, index) => {
                             const { spanish, english, pos, as_in } = meaning;
                             const isES = lang === 'ES';
@@ -251,8 +258,29 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
                             );
                         })}
                     </div>
-                </div>
-            </article>
+            </div>
+        );
+
+        if (isConnectedCard) {
+            return (
+                <article
+                    key={targetEntry.id}
+                    className="rounded-2xl bg-white dark:bg-slate-900/80 shadow border border-slate-200 dark:border-slate-800 overflow-hidden"
+                >
+                    {accentLabel && (
+                        <div className="px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-200 dark:border-slate-800">
+                            {accentLabel}
+                        </div>
+                    )}
+                    {sectionBody}
+                </article>
+            );
+        }
+
+        return (
+            <div key={targetEntry.id}>
+                {sectionBody}
+            </div>
         );
     };
 
@@ -267,9 +295,18 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
         return acc;
     }, []);
 
+    const trimmedQuery = query.trim();
+    const queryLabel = trimmedQuery ? `${trimmedQuery.toLowerCase()} means` : null;
+
     return (
         <div className="p-4 md:p-6 lg:p-8 overflow-y-auto h-full space-y-10">
-            {renderMeaningSections(entry, { showControls: true, applyMatchFilter: true, isWordOnList })}
+            {renderMeaningSections(entry, {
+                showControls: true,
+                applyMatchFilter: true,
+                isWordOnList,
+                isConnectedCard: false,
+                queryLabel,
+            })}
 
             {uniqueConnectedEntries.length > 0 && (
                 <section>
@@ -282,7 +319,8 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
                             renderMeaningSections(connectedEntry, {
                                 showControls: false,
                                 applyMatchFilter: false,
-                                accentLabel: `Entry #${connectedEntry.id}`,
+                                accentLabel: `Entry #${formatEntryId(connectedEntry.id)}`,
+                                isConnectedCard: true,
                             })
                         )}
                     </div>

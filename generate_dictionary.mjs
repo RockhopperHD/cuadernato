@@ -40,6 +40,13 @@ async function buildDictionary() {
   }
   console.log(`Found ${goldWords.size} words in dictionary.ts to skip.`);
 
+  const idMatches = [...goldData.matchAll(/id:\s*'([0-9]+)'/g)];
+  let nextId = idMatches.reduce((max, match) => {
+    const numeric = parseInt(match[1], 10);
+    return Number.isNaN(numeric) ? max : Math.max(max, numeric);
+  }, 0);
+  nextId += 1;
+
   // 3. Read your 50k word list
   console.log('Reading es_merged_50k.txt...');
   const wordListText = fs.readFileSync('es_merged_50k.txt', 'utf8');
@@ -51,7 +58,6 @@ async function buildDictionary() {
 
   // 4. Start processing
   const generatedEntries = [];
-  let nextId = 100001;
   let wordsToProcess = allWords;
 
   if (TEST_MODE) {
@@ -100,7 +106,7 @@ async function buildDictionary() {
       const llmData = JSON.parse(jsonString);
 
       const newEntry = {
-        id: String(nextId++).padStart(6, '0'),
+        id: String(nextId++),
         starred: false,
         frequency: frequency,
         grand_note: null,
