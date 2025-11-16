@@ -136,17 +136,12 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
 
             <div className="space-y-6">
                 {sortedMeanings.map((meaning, index) => {
-                    const { spanish, english, note, pos, as_in } = meaning;
+                    const { spanish, english, pos, as_in } = meaning;
                     const isES = lang === 'ES';
 
                     const spanishDisplay = spanish.display_word ?? spanish.word;
-                    const normalizedSpanishWord = spanish.word.trim().toLowerCase();
-                    const isReflexiveVerb = pos === 'verb' && normalizedSpanishWord.endsWith('se');
-                    const combinedTags = [
-                        ...(spanish.tags ?? []),
-                        ...(isReflexiveVerb ? ['REFLEXIVE'] : [])
-                    ];
-                    const tags = Array.from(new Set(combinedTags));
+                    const tags = meaning.tags?.visible ?? [];
+                    const region = meaning.tags?.region;
                     const headerText = isES ? english.word : spanishDisplay;
                     const headerPos = pos;
                     const asInText = as_in;
@@ -160,7 +155,7 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                                         <span className="text-slate-500 dark:text-slate-400">{headerPos}</span>
                                         {!isES && (
                                         <div className="flex items-center gap-2">
-                                            {spanish.region && <Tag type={spanish.region} />}
+                                            {region && <Tag type={region} />}
                                             {tags.map(t => <Tag key={t} type={t} />)}
                                         </div>
                                         )}
@@ -193,9 +188,17 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                                 )}
                             </div>
 
-                            {note && (
-                              <div className="mt-4 pl-4 border-l-2 border-indigo-400/50 text-slate-500 dark:text-slate-400 italic">
-                                {note}
+                            {spanish.note && (
+                              <div className="mt-4 pl-4 border-l-2 border-sky-400/50 text-slate-600 dark:text-slate-300">
+                                <p className="text-sm font-semibold uppercase tracking-wide text-sky-600 dark:text-sky-300">Spanish Note</p>
+                                <p className="text-sm mt-1">{spanish.note}</p>
+                              </div>
+                            )}
+
+                            {english.note && (
+                              <div className="mt-4 pl-4 border-l-2 border-emerald-400/50 text-slate-600 dark:text-slate-300">
+                                <p className="text-sm font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">English Note</p>
+                                <p className="text-sm mt-1">{english.note}</p>
                               </div>
                             )}
 
@@ -203,12 +206,23 @@ export const WordDetails: React.FC<WordDetailsProps> = ({ entry, lang, onStar, q
                             
                             {isES && (
                               <div className="flex items-center gap-2 mt-3">
-                                {spanish.region && <Tag type={spanish.region} />}
+                                {region && <Tag type={region} />}
                                 {tags.map(t => <Tag key={t} type={t} />)}
                               </div>
                             )}
 
-                            {pos === 'verb' && <ConjugationChart spanish={spanish} pos={pos} />}
+                            {meaning.trailing_words && meaning.trailing_words.length > 0 && (
+                              <div className="mt-4">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Trailing Words</p>
+                                <ul className="mt-1 list-disc list-inside text-slate-600 dark:text-slate-300">
+                                  {meaning.trailing_words.map((trail, idx) => (
+                                    <li key={idx}>{trail}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {pos === 'verb' && <ConjugationChart spanish={spanish} pos={pos} tags={meaning.tags} />}
                         </div>
                     );
                 })}

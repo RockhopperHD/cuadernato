@@ -1,11 +1,12 @@
 
 import React, { useMemo, useState } from 'react';
-import { PartOfSpeech, SpanishSide, Tense, Mood } from '../types';
-import { generateConjugations, mergeConjugations } from '../utils/conjugation';
+import { PartOfSpeech, SpanishSide, Tense, Mood, MeaningTags } from '../types';
+import { generateConjugations } from '../utils/conjugation';
 
 interface ConjugationChartProps {
   spanish: SpanishSide;
   pos: PartOfSpeech;
+  tags?: MeaningTags;
 }
 
 const TENSES: Tense[] = ['present', 'preterite', 'imperfect'];
@@ -30,16 +31,11 @@ const renderSpecialText = (text: string): React.ReactNode => {
   });
 };
 
-export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos }) => {
+export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos, tags }) => {
   const [tense, setTense] = useState<Tense>('present');
   const [mood, setMood] = useState<Mood>('indicative');
-  const { exceptions } = spanish;
 
-  const autoConjugations = useMemo(() => generateConjugations(spanish, pos), [spanish, pos]);
-  const conjugations = useMemo(
-    () => mergeConjugations(autoConjugations, spanish.conjugations),
-    [autoConjugations, spanish.conjugations]
-  );
+  const conjugations = useMemo(() => generateConjugations(spanish, pos, tags), [spanish, pos, tags]);
 
   const cycleTense = () => {
     const currentIndex = TENSES.indexOf(tense);
@@ -93,19 +89,6 @@ export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos
             </div>
         )}
       </div>
-       {exceptions && exceptions.length > 0 && (
-        <div className="mt-3 p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-md border border-indigo-200 dark:border-indigo-800/50">
-          <h4 className="font-bold text-sm uppercase tracking-wider text-indigo-800 dark:text-indigo-200 mb-2">Exceptions & Irregular Forms</h4>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            {exceptions.map((ex, index) => (
-              <div key={index} className="flex items-baseline gap-2">
-                <span className="font-semibold text-indigo-700 dark:text-indigo-300 capitalize">{ex.type} ({ex.pronoun}):</span>
-                <span className="font-mono text-lg font-bold text-indigo-500 dark:text-indigo-400">{renderSpecialText(ex.word)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

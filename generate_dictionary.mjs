@@ -67,18 +67,27 @@ async function buildDictionary() {
 
     const prompt = `
       You are a linguistic API. For the Spanish word "${word}", generate a JSON object for its meanings.
-      
-      The JSON must follow this TypeScript interface:
-      { "meanings": { "pos": string, "as_in": string, "spanish_word": string, "english_word": string, "note"?: string, "gender_map"?: Record<string, "m" | "f" | "n">, "tags"?: string[], "region"?: string }[] }
 
-      - pos: Part of speech (noun, verb, adjective, adverb).
-      - as_in: A brief English disambiguation (e.g., "the animal").
-      - spanish_word: The Spanish word itself.
-      - english_word: The primary English translation.
-      - gender_map: (For nouns/adjectives) e.g., {"chico": "m", "chica": "f"}. If gender-neutral, use {"${word}": "n"}.
-      - tags: (e.g., "VULGAR", "COLLOQUIAL").
-      
-      Do NOT include conjugations.
+      The JSON must follow this TypeScript interface:
+      {
+        "meanings": {
+          "pos": string,
+          "as_in": string,
+          "spanish": { "word": string, "note"?: string, "gender_map"?: Record<string, "m" | "f" | "n"> },
+          "english": { "word": string, "note"?: string },
+          "tags"?: { "visible"?: string[], "invisible"?: string[], "region"?: "LATAM" | "SPAIN" },
+          "trailing_words"?: string[]
+        }[]
+      }
+
+      - pos: Part of speech (noun, verb, adjective, adverb, preposition).
+      - as_in: A brief English disambiguation.
+      - spanish/english note: optional usage notes.
+      - gender_map: provide if the word changes for masculine/feminine.
+      - tags.visible: list of pills such as "VULGAR", "REFL", "GS".
+      - tags.invisible: internal behavior tags such as "e>ie" or "irreg(ind_pret, yo)=tuv".
+
+      Do NOT include conjugation tables.
       Return *only* the valid JSON object.
     `;
 
@@ -99,17 +108,16 @@ async function buildDictionary() {
           pos: m.pos,
           as_in: m.as_in,
           spanish: {
-            word: m.spanish_word,
-            gender_map: m.gender_map,
-            tags: m.tags,
-            region: m.region,
-            conjugations: null,
-            exceptions: null,
+            word: m.spanish?.word ?? word,
+            note: m.spanish?.note,
+            gender_map: m.spanish?.gender_map,
           },
           english: {
-            word: m.english_word,
+            word: m.english?.word ?? '',
+            note: m.english?.note,
           },
-          note: m.note,
+          tags: m.tags,
+          trailing_words: m.trailing_words,
         })),
         related_spanish: [],
         related_english: [],

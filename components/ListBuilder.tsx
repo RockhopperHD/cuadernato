@@ -262,7 +262,7 @@ export const ListBuilder: React.FC<ListBuilderProps> = ({ setMode, dictionary, o
             const entry = dictionary.find(e => e.meanings.some(m => m.spanish.word.toLowerCase() === pair.spanish.toLowerCase() && m.english.word.toLowerCase() === pair.english.toLowerCase()));
             if (entry && !seenIds.has(entry.id)) {
                 if (entry.meanings.some(m => m.pos === 'verb')) verbCount++;
-                if (entry.meanings.some(m => m.spanish.tags?.includes('VULGAR'))) vulgarCount++;
+                if (entry.meanings.some(m => m.tags?.visible?.includes('VULGAR'))) vulgarCount++;
                 seenIds.add(entry.id);
             }
         });

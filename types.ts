@@ -1,8 +1,49 @@
 
-export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb' | 'interjection';
+export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb' | 'preposition' | 'interjection';
 export type Gender = 'm' | 'f' | 'n' | 'invalid';
 export type Region = 'LATAM' | 'SPAIN';
-export type TagType = 'VULGAR' | 'REFLEXIVE' | 'GENDER-SPECIFIC' | 'COLLOQUIAL';
+
+export type VisibleTag =
+  | 'GS'
+  | 'COLLOQUIAL'
+  | 'VULGAR'
+  | 'IMPERSONAL'
+  | 'REFL'
+  | 'article_m_override'
+  | 'plural_only'
+  | 'singular_only'
+  | 'unisex'
+  | 'indeclinable';
+
+export type SimpleInvisibleTag =
+  | 'e>ie'
+  | 'o>ue'
+  | 'u>ue'
+  | 'e>i'
+  | 'i>ie'
+  | 'slip_e>i'
+  | 'slip_o>u'
+  | 'go'
+  | 'zco'
+  | 'jo'
+  | 'igo'
+  | 'c>qu'
+  | 'g>gu'
+  | 'z>c'
+  | 'gu>g'
+  | 'g>j'
+  | 'defective=3rd_only'
+  | 'aux=haber'
+  | 'enclitic_ok';
+
+export type IrregularInvisibleTag = `irreg(${string})=${string}`;
+export type InvisibleTag = SimpleInvisibleTag | IrregularInvisibleTag;
+
+export interface MeaningTags {
+  visible?: VisibleTag[];
+  invisible?: InvisibleTag[];
+  region?: Region | null;
+}
 
 export type Tense = 'present' | 'preterite' | 'imperfect';
 export type Mood = 'indicative' | 'subjunctive';
@@ -20,15 +61,13 @@ export interface SpanishSide {
   word: string;
   display_word?: string;
   aliases?: string[];
-  region?: Region;
+  note?: string;
   gender_map?: { [key: string]: Gender };
-  conjugations?: Partial<Record<Mood, Partial<Record<Tense, Partial<PronounConjugation>>>>>;
-  tags?: TagType[];
-  exceptions?: { type: string; pronoun: string; word: string }[];
 }
 
 export interface EnglishSide {
   word: string;
+  note?: string;
 }
 
 export interface Meaning {
@@ -36,7 +75,8 @@ export interface Meaning {
   as_in: string;
   spanish: SpanishSide;
   english: EnglishSide;
-  note?: string;
+  tags?: MeaningTags;
+  trailing_words?: string[];
 }
 
 export interface DictionaryEntry {

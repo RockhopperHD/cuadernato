@@ -219,8 +219,8 @@ const App: React.FC = () => {
       : !showVulgar;
 
     if (isVulgarFilterActive) {
-        visibleData = dictionaryData.filter(entry => 
-            !entry.meanings.some(m => m.spanish.tags?.includes('VULGAR'))
+        visibleData = dictionaryData.filter(entry =>
+            !entry.meanings.some(m => m.tags?.visible?.includes('VULGAR'))
         );
     }
 
