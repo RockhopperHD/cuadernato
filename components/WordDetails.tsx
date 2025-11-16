@@ -5,6 +5,7 @@ import { DictionaryEntry, SpanishSide } from '../types';
 import { ConjugationChart } from './ConjugationChart';
 import { StarIcon, GenderIcon, VerticalTriangleIcon } from './icons';
 import { Tag } from './Tag';
+import { HoverInfo } from './HoverInfo';
 import { formatEntryId } from '../utils/entryIds';
 
 interface WordDetailsProps {
@@ -34,6 +35,19 @@ const renderGenderMap = (genderMap: SpanishSide['gender_map']) => {
         </div>
     );
 };
+
+const TRAILING_WORD_TOOLTIPS: Record<string, string> = {
+    infinitivo:
+        'Infinitives usually end in -ar, -er, or -ir and translate to “to” + an action. You conjugate infinitives to match pronouns in real sentences.',
+    gerundio:
+        'Gerunds end in -ando, -iendo, or -yendo and show an action in progress, often combined with “estar”.',
+    gerundo:
+        'Gerunds end in -ando, -iendo, or -yendo and show an action in progress, often combined with “estar”.',
+};
+
+const getTrailingTooltip = (term: string) =>
+    TRAILING_WORD_TOOLTIPS[term.toLowerCase()] ||
+    'This grammar label describes how the preceding expression behaves in context.';
 
 export const WordDetails: React.FC<WordDetailsProps> = ({
   entry,
@@ -161,8 +175,9 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
                     </div>
                 )}
                 {queryLabel && !isConnectedCard && (
-                    <p className="mb-3 text-left text-xs text-slate-500 dark:text-slate-400 lowercase tracking-wide">
-                        {queryLabel}
+                    <p className="mb-4 text-left text-sm text-slate-600 dark:text-slate-300 lowercase">
+                        <span className="font-bold text-base text-slate-900 dark:text-white">{queryLabel}</span>
+                        <span className="ml-2 font-semibold text-slate-600 dark:text-slate-300">means</span>
                     </p>
                 )}
                 <div className="space-y-6">
@@ -246,9 +261,21 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
                                         <div className="mt-4">
                                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Trailing Words</p>
                                             <ul className="mt-1 list-disc list-inside text-slate-600 dark:text-slate-300">
-                                                {meaning.trailing_words.map((trail, idx) => (
-                                                    <li key={idx}>{trail}</li>
-                                                ))}
+                                                {meaning.trailing_words.map((trail, idx) => {
+                                                    const parts = trail.split('+');
+                                                    if (parts.length < 2) {
+                                                        return <li key={idx}>{trail}</li>;
+                                                    }
+                                                    const descriptor = parts.pop()?.trim() || '';
+                                                    const before = parts.join('+').trim();
+                                                    return (
+                                                        <li key={idx}>
+                                                            {before}
+                                                            <span className="mx-1">+</span>
+                                                            <HoverInfo label={descriptor} tooltip={getTrailingTooltip(descriptor)} />
+                                                        </li>
+                                                    );
+                                                })}
                                             </ul>
                                         </div>
                                     )}
@@ -296,7 +323,15 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
     }, []);
 
     const trimmedQuery = query.trim();
-    const queryLabel = trimmedQuery ? `${trimmedQuery.toLowerCase()} means` : null;
+    const labelBaseMeanings = filterMeaningsByMatch(entry.meanings);
+    const sortedLabelMeanings = sortMeanings(labelBaseMeanings);
+    const labelMeaning = sortedLabelMeanings[0] ?? entry.meanings[0];
+    const queryLabel =
+        trimmedQuery && labelMeaning
+            ? lang === 'ES'
+                ? labelMeaning.spanish.display_word ?? labelMeaning.spanish.word
+                : labelMeaning.english.word
+            : null;
 
     return (
         <div className="p-4 md:p-6 lg:p-8 overflow-y-auto h-full space-y-10">
