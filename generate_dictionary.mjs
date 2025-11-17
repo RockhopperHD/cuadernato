@@ -40,6 +40,13 @@ async function buildDictionary() {
   }
   console.log(`Found ${goldWords.size} words in dictionary.ts to skip.`);
 
+  const idMatches = [...goldData.matchAll(/id:\s*'([0-9]+)'/g)];
+  let nextId = idMatches.reduce((max, match) => {
+    const numeric = parseInt(match[1], 10);
+    return Number.isNaN(numeric) ? max : Math.max(max, numeric);
+  }, 0);
+  nextId += 1;
+
   // 3. Read your 50k word list
   console.log('Reading es_merged_50k.txt...');
   const wordListText = fs.readFileSync('es_merged_50k.txt', 'utf8');
@@ -51,7 +58,6 @@ async function buildDictionary() {
 
   // 4. Start processing
   const generatedEntries = [];
-  let nextId = 100001;
   let wordsToProcess = allWords;
 
   if (TEST_MODE) {
@@ -67,18 +73,27 @@ async function buildDictionary() {
 
     const prompt = `
       You are a linguistic API. For the Spanish word "${word}", generate a JSON object for its meanings.
-      
-      The JSON must follow this TypeScript interface:
-      { "meanings": { "pos": string, "as_in": string, "spanish_word": string, "english_word": string, "note"?: string, "gender_map"?: Record<string, "m" | "f" | "n">, "tags"?: string[], "region"?: string }[] }
 
-      - pos: Part of speech (noun, verb, adjective, adverb).
-      - as_in: A brief English disambiguation (e.g., "the animal").
-      - spanish_word: The Spanish word itself.
-      - english_word: The primary English translation.
-      - gender_map: (For nouns/adjectives) e.g., {"chico": "m", "chica": "f"}. If gender-neutral, use {"${word}": "n"}.
-      - tags: (e.g., "VULGAR", "COLLOQUIAL").
-      
-      Do NOT include conjugations.
+      The JSON must follow this TypeScript interface:
+      {
+        "meanings": {
+          "pos": string,
+          "as_in": string,
+          "spanish": { "word": string, "note"?: string, "gender_map"?: Record<string, "m" | "f" | "n"> },
+          "english": { "word": string, "note"?: string },
+          "tags"?: { "visible"?: string[], "invisible"?: string[], "region"?: "LATAM" | "SPAIN" },
+          "trailing_words"?: string[]
+        }[]
+      }
+
+      - pos: Part of speech (noun, verb, adjective, adverb, preposition).
+      - as_in: A brief English disambiguation.
+      - spanish/english note: optional usage notes.
+      - gender_map: provide if the word changes for masculine/feminine.
+      - tags.visible: list of pills such as "VULGAR", "REFL", "GS".
+      - tags.invisible: internal behavior tags such as "e>ie" or "irreg(ind_pret, yo)=tuv".
+
+      Do NOT include conjugation tables.
       Return *only* the valid JSON object.
     `;
 
@@ -91,7 +106,7 @@ async function buildDictionary() {
       const llmData = JSON.parse(jsonString);
 
       const newEntry = {
-        id: String(nextId++).padStart(6, '0'),
+        id: String(nextId++),
         starred: false,
         frequency: frequency,
         grand_note: null,
@@ -99,20 +114,20 @@ async function buildDictionary() {
           pos: m.pos,
           as_in: m.as_in,
           spanish: {
-            word: m.spanish_word,
-            gender_map: m.gender_map,
-            tags: m.tags,
-            region: m.region,
-            conjugations: null,
-            exceptions: null,
+            word: m.spanish?.word ?? word,
+            note: m.spanish?.note,
+            gender_map: m.spanish?.gender_map,
           },
           english: {
-            word: m.english_word,
+            word: m.english?.word ?? '',
+            note: m.english?.note,
           },
-          note: m.note,
+          tags: m.tags,
+          trailing_words: m.trailing_words,
         })),
         related_spanish: [],
         related_english: [],
+        connected: [],
       };
       generatedEntries.push(newEntry);
     } catch (e) {

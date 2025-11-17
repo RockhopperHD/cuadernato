@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { DictionaryEntry, CustomListPayload } from '../types';
 import { BackIcon } from './icons';
+import { normalizeEntryId } from '../utils/entryIds';
 
 const CIPHER_KEY = 'cuadernato-static-key-2024';
 
@@ -42,26 +43,26 @@ export const ImportListScreen: React.FC<ImportListScreenProps> = ({ onImport, on
       return;
     }
     let calculatedSum = 0;
-    const paddedIds: string[] = [];
+    const normalizedIds: string[] = [];
     for (const id of ids) {
       const cleanId = id.trim();
       if (!/^\d+$/.test(cleanId)) {
         setError(`Invalid ID "${cleanId}". All IDs must be numbers.`);
         return;
       }
-      const paddedId = cleanId.padStart(6, '0');
-      if (!wordIdSet.has(paddedId)) {
+      const normalizedId = normalizeEntryId(cleanId);
+      if (!wordIdSet.has(normalizedId)) {
         setError(`Word with ID "${cleanId}" does not exist in the dictionary.`);
         return;
       }
-      paddedIds.push(paddedId);
+      normalizedIds.push(normalizedId);
       calculatedSum += parseInt(cleanId, 10);
     }
     if (calculatedSum !== parseInt(checksum, 10)) {
       setError('Checksum does not match. Please verify your list.');
       return;
     }
-    onImport(paddedIds, checksum, 'Imported List', undefined, true); // No password for old format
+    onImport(normalizedIds, checksum, 'Imported List', undefined, true); // No password for old format
   }
 
   const handleCustomImport = (code: string) => {

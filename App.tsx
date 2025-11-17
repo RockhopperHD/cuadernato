@@ -2,7 +2,7 @@
 
 
 // Temporary comment to refresh PR
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { DICTIONARY_DATA } from './data/dictionary';
 import { DictionaryEntry, AppMode, ModalType } from './types';
 import { SearchBar } from './components/SearchBar';
@@ -21,6 +21,19 @@ import { EntryTester } from './components/EntryTester';
 // Helper to remove accents from a string for comparison
 const removeAccents = (str: string): string => {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
+
+const hasDiacritics = (term: string): boolean => removeAccents(term) !== term;
+
+const compareWithAccentPreference = (a: string, b: string, preferPlain: boolean): number => {
+  if (preferPlain) {
+    const aHasAccent = hasDiacritics(a);
+    const bHasAccent = hasDiacritics(b);
+    if (aHasAccent !== bHasAccent) {
+      return aHasAccent ? 1 : -1;
+    }
+  }
+  return a.localeCompare(b);
 };
 
 // Custom hook for localStorage state
@@ -82,6 +95,16 @@ const App: React.FC = () => {
     });
     return set;
   }, [dictionaryData]);
+
+  const entryLookup = useMemo(() => {
+    const map = new Map<string, DictionaryEntry>();
+    dictionaryData.forEach(item => {
+      map.set(item.id, item);
+    });
+    return map;
+  }, [dictionaryData]);
+
+  const lookupEntryById = useCallback((id: string) => entryLookup.get(id) ?? null, [entryLookup]);
 
   // Settings state
   const [showVulgar, setShowVulgar] = useState(true);
@@ -219,14 +242,15 @@ const App: React.FC = () => {
       : !showVulgar;
 
     if (isVulgarFilterActive) {
-        visibleData = dictionaryData.filter(entry => 
-            !entry.meanings.some(m => m.spanish.tags?.includes('VULGAR'))
+        visibleData = dictionaryData.filter(entry =>
+            !entry.meanings.some(m => m.tags?.visible?.includes('VULGAR'))
         );
     }
 
     if (!query) return [];
     const lowerCaseQuery = query.toLowerCase();
     const normalizedQuery = removeAccents(lowerCaseQuery);
+    const preferPlainLetters = lowerCaseQuery === normalizedQuery;
 
     const filtered = visibleData.reduce<SearchResult[]>((acc, entry) => {
       if (isListLocked && activeListSet.has(entry.id)) {
@@ -340,13 +364,17 @@ const App: React.FC = () => {
         if (!a.matchedExact && b.matchedExact) return 1;
         if (a.isPrimary && !b.isPrimary) return -1;
         if (!a.isPrimary && b.isPrimary) return 1;
-        return a.matchedTerm.toLowerCase().localeCompare(b.matchedTerm.toLowerCase());
+        return compareWithAccentPreference(
+          a.matchedTerm.toLowerCase(),
+          b.matchedTerm.toLowerCase(),
+          preferPlainLetters
+        );
       });
 
       const bestMatch = matches[0];
 
       // Special handling for the 'ser'/'estar' entry
-      if (entry.id === '000013' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
+      if (entry.id === '13' && lang === 'ES' && (lowerCaseQuery === 'ser' || lowerCaseQuery === 'estar')) {
         const relevantMeaningIndex = entry.meanings.findIndex(m => m.spanish.word === lowerCaseQuery);
         if (relevantMeaningIndex !== -1) {
           acc.push({
@@ -376,7 +404,11 @@ const App: React.FC = () => {
     return filtered.sort((a, b) => {
       if (a.matchedExact && !b.matchedExact) return -1;
       if (!a.matchedExact && b.matchedExact) return 1;
-      return a.matchedTerm.toLowerCase().localeCompare(b.matchedTerm.toLowerCase());
+      return compareWithAccentPreference(
+        a.matchedTerm.toLowerCase(),
+        b.matchedTerm.toLowerCase(),
+        preferPlainLetters
+      );
     });
 
   }, [query, lang, dictionaryData, showVulgar, isListLocked, activeListSet, listShowVulgar, spanishHeadwordSet]);
@@ -644,6 +676,7 @@ const App: React.FC = () => {
                             setViewingWordEntry(null);
                             setModal({ type: 'listStatus' });
                           }}
+                          lookupEntryById={lookupEntryById}
                     />
                 </div>
             </Modal>
@@ -681,9 +714,9 @@ const App: React.FC = () => {
           <Modal title="Word Details" onClose={() => setViewingWordEntry(null)}>
               <div className="max-h-[70vh] overflow-y-auto -m-6">
                   <WordDetails
-                        entry={viewingWordEntry} 
+                        entry={viewingWordEntry}
                         lang={'EN'} // Default to EN view for simplicity, as query isn't available
-                        onStar={toggleStar} 
+                        onStar={toggleStar}
                         query={''}
                         isWordOnList={activeListSet.has(viewingWordEntry.id)}
                         isListLocked={isListLocked}
@@ -691,6 +724,7 @@ const App: React.FC = () => {
                           setViewingWordEntry(null);
                           setModal({ type: 'listStatus' });
                         }}
+                        lookupEntryById={lookupEntryById}
                   />
               </div>
           </Modal>
@@ -785,15 +819,16 @@ const App: React.FC = () => {
               </aside>
               <main className="w-full md:w-2/3 bg-slate-50 dark:bg-[#181f33] flex-grow overflow-y-auto">
                 {selectedEntry ? (
-                  <WordDetails 
-                    entry={selectedEntry} 
-                    lang={lang} 
-                    onStar={toggleStar} 
+                  <WordDetails
+                    entry={selectedEntry}
+                    lang={lang}
+                    onStar={toggleStar}
                     query={query}
                     isWordOnList={activeListSet.has(selectedEntry.id)}
                     isListLocked={isListLocked}
                     onListIconClick={() => setModal({ type: 'listStatus' })}
                     matchedTerm={selectedSearchMatch?.matchedTerm ?? null}
+                    lookupEntryById={lookupEntryById}
                   />
                 ) : query ? (
                   <div className="flex flex-col items-center justify-center h-full text-center p-8">

@@ -1,15 +1,46 @@
 
 import React, { useMemo, useState } from 'react';
-import { PartOfSpeech, SpanishSide, Tense, Mood } from '../types';
-import { generateConjugations, mergeConjugations } from '../utils/conjugation';
+import { PartOfSpeech, SpanishSide, Tense, Mood, MeaningTags, PronounConjugation } from '../types';
+import { generateConjugations, getIrregularOverrides, IrregularOverride } from '../utils/conjugation';
+import { InfoIcon } from './icons';
 
 interface ConjugationChartProps {
   spanish: SpanishSide;
   pos: PartOfSpeech;
+  tags?: MeaningTags;
 }
 
 const TENSES: Tense[] = ['present', 'preterite', 'imperfect'];
 const MOODS: Mood[] = ['indicative', 'subjunctive'];
+
+const CORE_CHART_COMBOS = new Set<`${Mood}:${Tense}`>([
+  'indicative:present',
+  'indicative:preterite',
+  'indicative:imperfect',
+  'subjunctive:present',
+  'subjunctive:imperfect',
+]);
+
+const SPECIAL_SCOPE_LABELS: Record<string, string> = {
+  imper_affirm: 'Imperative (affirmative)',
+  imper_neg: 'Imperative (negative)',
+  gerund: 'Gerund',
+  gerundio: 'Gerund',
+  pp: 'Past participle',
+};
+
+const PRONOUN_LABELS: Record<keyof PronounConjugation, string> = {
+  yo: 'yo',
+  tu: 'tú',
+  el: 'él/ella/ud.',
+  nosotros: 'nosotros',
+  vosotros: 'vosotros',
+  ellos: 'ellos/ellas/uds.',
+};
+
+const formatMood = (mood: Mood) => (mood === 'indicative' ? 'Indicative' : 'Subjunctive');
+const formatTense = (tense: Tense) =>
+  tense.charAt(0).toUpperCase() + tense.slice(1);
 
 const renderSpecialText = (text: string): React.ReactNode => {
   const parts = text.split(/(\(\(\(.*?\)\)\)|\(\(.*?\)\)|\(.*?\))/g);
@@ -30,16 +61,44 @@ const renderSpecialText = (text: string): React.ReactNode => {
   });
 };
 
-export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos }) => {
+const formatSpecialLabel = (override: Extract<IrregularOverride, { kind: 'special' }>) => {
+  const base = SPECIAL_SCOPE_LABELS[override.form] || override.form.replace(/_/g, ' ');
+  return override.pronounLabel ? `${base} — ${override.pronounLabel}` : base;
+};
+
+const formatConjugationLabel = (override: Extract<IrregularOverride, { kind: 'conjugation' }>) => {
+  const base = `${formatMood(override.mood)} ${formatTense(override.tense)}`;
+  return override.pronoun ? `${base} — ${PRONOUN_LABELS[override.pronoun]}` : base;
+};
+
+const shouldSurfaceOverride = (override: IrregularOverride) => {
+  if (override.kind === 'special') {
+    return true;
+  }
+  const key = `${override.mood}:${override.tense}` as `${Mood}:${Tense}`;
+  return !CORE_CHART_COMBOS.has(key);
+};
+
+export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos, tags }) => {
   const [tense, setTense] = useState<Tense>('present');
   const [mood, setMood] = useState<Mood>('indicative');
-  const { exceptions } = spanish;
 
-  const autoConjugations = useMemo(() => generateConjugations(spanish, pos), [spanish, pos]);
-  const conjugations = useMemo(
-    () => mergeConjugations(autoConjugations, spanish.conjugations),
-    [autoConjugations, spanish.conjugations]
-  );
+  const conjugations = useMemo(() => generateConjugations(spanish, pos, tags), [spanish, pos, tags]);
+  const irregularOverrides = useMemo(() => getIrregularOverrides(tags), [tags]);
+  const exceptionRows = useMemo(() => {
+    return irregularOverrides
+      .filter(shouldSurfaceOverride)
+      .map((override, index) => {
+        if (override.kind === 'special') {
+          return { key: `special-${override.form}-${index}`, label: formatSpecialLabel(override), value: override.value };
+        }
+        return {
+          key: `conj-${override.mood}-${override.tense}-${override.pronoun ?? 'all'}-${index}`,
+          label: formatConjugationLabel(override),
+          value: override.value,
+        };
+      });
+  }, [irregularOverrides]);
 
   const cycleTense = () => {
     const currentIndex = TENSES.indexOf(tense);
@@ -78,29 +137,33 @@ export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos
         </div>
       <div className="grid grid-cols-2 border border-yellow-500/50 rounded-md min-h-[218px]">
         {currentConjugation ? (
-            <>
-                <div className="border-r border-b border-yellow-500/50">{renderCell("yo", currentConjugation.yo)}</div>
-                <div className="border-b border-yellow-500/50">{renderCell("nosotros", currentConjugation.nosotros)}</div>
-                <div className="border-r border-b border-yellow-500/50">{renderCell("tú", currentConjugation.tu)}</div>
-                <div className="border-b border-yellow-500/50">{renderCell("vosotros", currentConjugation.vosotros)}</div>
-                <div className="border-r border-yellow-500/50">{renderCell("él/ella/ud.", currentConjugation.el)}</div>
-                <div>{renderCell("ellos/ellas/uds.", currentConjugation.ellos)}</div>
-            </>
+          <>
+            <div className="border-r border-b border-yellow-500/50">{renderCell('yo', currentConjugation.yo)}</div>
+            <div className="border-b border-yellow-500/50">{renderCell('nosotros', currentConjugation.nosotros)}</div>
+            <div className="border-r border-b border-yellow-500/50">{renderCell('tú', currentConjugation.tu)}</div>
+            <div className="border-b border-yellow-500/50">{renderCell('vosotros', currentConjugation.vosotros)}</div>
+            <div className="border-r border-yellow-500/50">{renderCell('él/ella/ud.', currentConjugation.el)}</div>
+            <div>{renderCell('ellos/ellas/uds.', currentConjugation.ellos)}</div>
+          </>
         ) : (
-            <div className="col-span-2 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-4">
-                <div className="text-5xl font-bold text-yellow-500/50">?</div>
-                <div className="mt-2 text-center text-sm">This verb form is not available in the dictionary.</div>
+          <div className="col-span-2 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-4">
+            <InfoIcon className="w-12 h-12 text-yellow-500/70" />
+            <div className="mt-2 text-center text-sm">
+              Spanish doesn’t form a preterite subjunctive, so there’s nothing to display.
             </div>
+          </div>
         )}
       </div>
-       {exceptions && exceptions.length > 0 && (
-        <div className="mt-3 p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-md border border-indigo-200 dark:border-indigo-800/50">
-          <h4 className="font-bold text-sm uppercase tracking-wider text-indigo-800 dark:text-indigo-200 mb-2">Exceptions & Irregular Forms</h4>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            {exceptions.map((ex, index) => (
-              <div key={index} className="flex items-baseline gap-2">
-                <span className="font-semibold text-indigo-700 dark:text-indigo-300 capitalize">{ex.type} ({ex.pronoun}):</span>
-                <span className="font-mono text-lg font-bold text-indigo-500 dark:text-indigo-400">{renderSpecialText(ex.word)}</span>
+      {exceptionRows.length > 0 && (
+        <div className="mt-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Exceptions</p>
+          <div className="mt-2 border border-slate-200 dark:border-slate-700 rounded-xl divide-y divide-slate-200 dark:divide-slate-700">
+            {exceptionRows.map(row => (
+              <div key={row.key} className="px-3 py-2 text-sm text-slate-600 dark:text-slate-200 flex items-center justify-between gap-4">
+                <span className="font-medium text-slate-500 dark:text-slate-300">{row.label}</span>
+                <span className="font-semibold text-slate-900 dark:text-white">
+                  {renderSpecialText(row.value)}
+                </span>
               </div>
             ))}
           </div>
