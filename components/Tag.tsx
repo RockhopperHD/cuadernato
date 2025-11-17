@@ -6,7 +6,7 @@ interface TagProps {
 
 const TAG_STYLES: Record<string, { label: string; bg: string; text: string; tooltip: string }> = {
   VULGAR: { label: 'VULGAR', bg: 'bg-red-500', text: 'text-white', tooltip: 'This word is considered vulgar or offensive.' },
-  REFL: { label: 'REFL', bg: 'bg-green-500', text: 'text-white', tooltip: 'This verb is reflexive, so the action reflects back on the subject.' },
+  REFL: { label: 'Reflexive', bg: 'bg-green-500', text: 'text-white', tooltip: 'This verb is reflexive, so the action reflects back on the subject.' },
   LATAM: { label: 'LATAM', bg: 'bg-sky-500', text: 'text-white', tooltip: 'This usage is specific to or most common in Latin America.' },
   SPAIN: { label: 'SPAIN', bg: 'bg-amber-500', text: 'text-white', tooltip: 'This usage is specific to or most common in Spain.' },
   GS: {

@@ -328,9 +328,9 @@ const applyOrthographicTag = (
   }
 };
 
-type IrregularOverride =
+export type IrregularOverride =
   | { kind: 'conjugation'; mood: Mood; tense: Tense; pronoun?: keyof PronounConjugation; value: string }
-  | { kind: 'special'; form: string; value: string };
+  | { kind: 'special'; form: string; value: string; pronounLabel?: string };
 
 const IRREGULAR_SCOPE_MAP: Record<string, { mood: Mood; tense: Tense } | null> = {
   ind_pres: { mood: 'indicative', tense: 'present' },
@@ -364,7 +364,7 @@ const parseIrregularTag = (tag: string): IrregularOverride | null => {
   const normalizedScope = IRREGULAR_SCOPE_MAP[scope];
   const value = valueRaw.trim();
   if (!normalizedScope) {
-    return { kind: 'special', form: scope, value };
+    return { kind: 'special', form: scope, value, pronounLabel: pronRaw?.trim() || undefined };
   }
   return {
     kind: 'conjugation',
@@ -413,6 +413,13 @@ const applyDefectiveTag = (forms: ConjugationTable) => {
   });
 };
 
+export const getIrregularOverrides = (tags?: MeaningTags): IrregularOverride[] => {
+  const invisibleTags = tags?.invisible ?? [];
+  return invisibleTags
+    .map(parseIrregularTag)
+    .filter((override): override is IrregularOverride => Boolean(override));
+};
+
 export const generateConjugations = (
   spanish: SpanishSide,
   pos: PartOfSpeech,
@@ -440,9 +447,7 @@ export const generateConjugations = (
     }
   });
 
-  const irregularOverrides = invisibleTags
-    .map(parseIrregularTag)
-    .filter((override): override is IrregularOverride => Boolean(override));
+  const irregularOverrides = getIrregularOverrides(tags);
 
   if (irregularOverrides.length > 0) {
     applyIrregularOverrides(working, irregularOverrides);

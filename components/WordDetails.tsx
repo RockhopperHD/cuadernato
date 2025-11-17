@@ -234,17 +234,13 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
                                         )}
                                     </div>
 
-                                    {spanish.note && (
-                                        <div className="mt-4 pl-4 border-l-2 border-sky-400/50 text-slate-600 dark:text-slate-300">
-                                            <p className="text-sm font-semibold uppercase tracking-wide text-sky-600 dark:text-sky-300">Spanish Note</p>
-                                            <p className="text-sm mt-1">{spanish.note}</p>
-                                        </div>
-                                    )}
-
-                                    {english.note && (
-                                        <div className="mt-4 pl-4 border-l-2 border-emerald-400/50 text-slate-600 dark:text-slate-300">
-                                            <p className="text-sm font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">English Note</p>
-                                            <p className="text-sm mt-1">{english.note}</p>
+                                    {(spanish.note || english.note) && (
+                                        <div className="mt-4 rounded-xl bg-white shadow-sm border border-white/20 dark:bg-white/5 dark:border-white/10 text-slate-700 dark:text-slate-100 p-4">
+                                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Notes</p>
+                                            <div className="mt-2 space-y-2 text-sm">
+                                                {spanish.note && <p>{spanish.note}</p>}
+                                                {english.note && <p>{english.note}</p>}
+                                            </div>
                                         </div>
                                     )}
 
