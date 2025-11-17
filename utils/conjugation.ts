@@ -85,6 +85,8 @@ const splitReflexive = (value: string) => {
   return { prefix: '', core: value };
 };
 
+const stripHighlightMarkers = (value: string) => value.replace(/[()]/g, '');
+
 const removeDiacritics = (value: string) => value.normalize('NFD').replace(/[̀-ͯ]/g, '');
 const ACCENT_CHAR_PATTERN = /[áéíóúÁÉÍÓÚñÑüÜ]/g;
 
@@ -289,6 +291,8 @@ const ORTHO_RULES: Record<
   'g>j': { match: 'g', replace: 'j', highlight: 'irregular', condition: 'beforeA' },
 };
 
+const YO_ALTERNATION_TAGS = new Set(['go', 'zco', 'jo', 'igo']);
+
 const shouldApplyOrthChange = (ending: string, condition: 'beforeE' | 'beforeA') => {
   const letter = normalizeFirstLetter(ending);
   if (condition === 'beforeE') {
@@ -326,6 +330,40 @@ const applyOrthographicTag = (
   if (config.affectPreteriteYo) {
     applyTo('indicative', 'preterite', ['yo']);
   }
+};
+
+const propagateYoStemToSubjunctive = (
+  forms: ConjugationTable,
+  details: ReturnType<typeof getVerbBase>,
+  tags?: MeaningTags
+) => {
+  if (!details) return;
+  const subjBlock = forms.subjunctive?.present;
+  const indicativeYo = forms.indicative?.present?.yo;
+  if (!subjBlock || !indicativeYo) return;
+
+  const hasYoTag = (tags?.invisible ?? []).some(tag => YO_ALTERNATION_TAGS.has(tag));
+  if (!hasYoTag) return;
+
+  const yoEnding = endsWithEnding('indicative', 'present', 'yo', details.ending);
+  if (!yoEnding) return;
+
+  const { core } = splitReflexive(indicativeYo);
+  const cleanCore = stripHighlightMarkers(core);
+  if (!cleanCore.endsWith(yoEnding)) return;
+
+  const yoStem = cleanCore.slice(0, cleanCore.length - yoEnding.length);
+  if (!yoStem) return;
+
+  const subjEndings = CONJUGATION_ENDINGS.subjunctive?.present?.[details.ending];
+  if (!subjEndings) return;
+
+  (Object.keys(subjBlock) as (keyof PronounConjugation)[]).forEach((pronoun) => {
+    const ending = subjEndings[pronoun];
+    if (!ending) return;
+    const prefix = details.reflexive ? `${REFLEXIVE_PRONOUNS[pronoun]} ` : '';
+    subjBlock[pronoun] = `${prefix}${yoStem}${ending}`;
+  });
 };
 
 export type IrregularOverride =
@@ -446,6 +484,8 @@ export const generateConjugations = (
       applyDefectiveTag(working);
     }
   });
+
+  propagateYoStemToSubjunctive(working, details, tags);
 
   const irregularOverrides = getIrregularOverrides(tags);
 

@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from 'react';
 import { PartOfSpeech, SpanishSide, Tense, Mood, MeaningTags, PronounConjugation } from '../types';
 import { generateConjugations, getIrregularOverrides, IrregularOverride } from '../utils/conjugation';
+import { InfoIcon } from './icons';
 
 interface ConjugationChartProps {
   spanish: SpanishSide;
@@ -136,29 +137,33 @@ export const ConjugationChart: React.FC<ConjugationChartProps> = ({ spanish, pos
         </div>
       <div className="grid grid-cols-2 border border-yellow-500/50 rounded-md min-h-[218px]">
         {currentConjugation ? (
-            <>
-                <div className="border-r border-b border-yellow-500/50">{renderCell("yo", currentConjugation.yo)}</div>
-                <div className="border-b border-yellow-500/50">{renderCell("nosotros", currentConjugation.nosotros)}</div>
-                <div className="border-r border-b border-yellow-500/50">{renderCell("tú", currentConjugation.tu)}</div>
-                <div className="border-b border-yellow-500/50">{renderCell("vosotros", currentConjugation.vosotros)}</div>
-                <div className="border-r border-yellow-500/50">{renderCell("él/ella/ud.", currentConjugation.el)}</div>
-                <div>{renderCell("ellos/ellas/uds.", currentConjugation.ellos)}</div>
-            </>
+          <>
+            <div className="border-r border-b border-yellow-500/50">{renderCell('yo', currentConjugation.yo)}</div>
+            <div className="border-b border-yellow-500/50">{renderCell('nosotros', currentConjugation.nosotros)}</div>
+            <div className="border-r border-b border-yellow-500/50">{renderCell('tú', currentConjugation.tu)}</div>
+            <div className="border-b border-yellow-500/50">{renderCell('vosotros', currentConjugation.vosotros)}</div>
+            <div className="border-r border-yellow-500/50">{renderCell('él/ella/ud.', currentConjugation.el)}</div>
+            <div>{renderCell('ellos/ellas/uds.', currentConjugation.ellos)}</div>
+          </>
         ) : (
-            <div className="col-span-2 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-4">
-                <div className="text-5xl font-bold text-yellow-500/70">ℹ️</div>
-                <div className="mt-2 text-center text-sm">Spanish doesn’t form a preterite subjunctive, so there’s nothing to display.</div>
+          <div className="col-span-2 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-4">
+            <InfoIcon className="w-12 h-12 text-yellow-500/70" />
+            <div className="mt-2 text-center text-sm">
+              Spanish doesn’t form a preterite subjunctive, so there’s nothing to display.
             </div>
+          </div>
         )}
       </div>
       {exceptionRows.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Exceptions</p>
-          <div className="mt-2 border border-slate-200 dark:border-slate-700 rounded-lg divide-y divide-slate-200 dark:divide-slate-700">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Exceptions</p>
+          <div className="mt-2 border border-slate-200 dark:border-slate-700 rounded-xl divide-y divide-slate-200 dark:divide-slate-700">
             {exceptionRows.map(row => (
-              <div key={row.key} className="flex items-center justify-between px-3 py-2 text-sm text-slate-700 dark:text-slate-200">
-                <span className="font-medium mr-4">{row.label}</span>
-                <span className="font-semibold text-slate-900 dark:text-white">{row.value}</span>
+              <div key={row.key} className="px-3 py-2 text-sm text-slate-600 dark:text-slate-200 flex items-center justify-between gap-4">
+                <span className="font-medium text-slate-500 dark:text-slate-300">{row.label}</span>
+                <span className="font-semibold text-slate-900 dark:text-white">
+                  {renderSpecialText(row.value)}
+                </span>
               </div>
             ))}
           </div>
