@@ -23,6 +23,19 @@ const removeAccents = (str: string): string => {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 };
 
+const hasDiacritics = (term: string): boolean => removeAccents(term) !== term;
+
+const compareWithAccentPreference = (a: string, b: string, preferPlain: boolean): number => {
+  if (preferPlain) {
+    const aHasAccent = hasDiacritics(a);
+    const bHasAccent = hasDiacritics(b);
+    if (aHasAccent !== bHasAccent) {
+      return aHasAccent ? 1 : -1;
+    }
+  }
+  return a.localeCompare(b);
+};
+
 // Custom hook for localStorage state
 function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [storedValue, setStoredValue] = useState<T>(() => {
@@ -237,6 +250,7 @@ const App: React.FC = () => {
     if (!query) return [];
     const lowerCaseQuery = query.toLowerCase();
     const normalizedQuery = removeAccents(lowerCaseQuery);
+    const preferPlainLetters = lowerCaseQuery === normalizedQuery;
 
     const filtered = visibleData.reduce<SearchResult[]>((acc, entry) => {
       if (isListLocked && activeListSet.has(entry.id)) {
@@ -350,7 +364,11 @@ const App: React.FC = () => {
         if (!a.matchedExact && b.matchedExact) return 1;
         if (a.isPrimary && !b.isPrimary) return -1;
         if (!a.isPrimary && b.isPrimary) return 1;
-        return a.matchedTerm.toLowerCase().localeCompare(b.matchedTerm.toLowerCase());
+        return compareWithAccentPreference(
+          a.matchedTerm.toLowerCase(),
+          b.matchedTerm.toLowerCase(),
+          preferPlainLetters
+        );
       });
 
       const bestMatch = matches[0];
@@ -386,7 +404,11 @@ const App: React.FC = () => {
     return filtered.sort((a, b) => {
       if (a.matchedExact && !b.matchedExact) return -1;
       if (!a.matchedExact && b.matchedExact) return 1;
-      return a.matchedTerm.toLowerCase().localeCompare(b.matchedTerm.toLowerCase());
+      return compareWithAccentPreference(
+        a.matchedTerm.toLowerCase(),
+        b.matchedTerm.toLowerCase(),
+        preferPlainLetters
+      );
     });
 
   }, [query, lang, dictionaryData, showVulgar, isListLocked, activeListSet, listShowVulgar, spanishHeadwordSet]);

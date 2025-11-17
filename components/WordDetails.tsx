@@ -158,25 +158,35 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
             accentLabel?: string;
             isWordOnList?: boolean;
             isConnectedCard?: boolean;
-            queryLabel?: string | null;
         }
     ) => {
-        const { showControls, applyMatchFilter, accentLabel, isWordOnList: sectionWordOnList, isConnectedCard, queryLabel } = options;
+        const { showControls, applyMatchFilter, accentLabel, isWordOnList: sectionWordOnList, isConnectedCard } = options;
         const baseMeanings = applyMatchFilter ? filterMeaningsByMatch(targetEntry.meanings) : targetEntry.meanings;
         const sortedMeanings = sortMeanings(baseMeanings);
         const listIconColor = isListLocked ? 'text-blue-500' : 'text-green-500';
+        const leadingMeaning = sortedMeanings[0] ?? baseMeanings[0] ?? targetEntry.meanings[0];
+        const labelWord = leadingMeaning
+            ? lang === 'ES'
+                ? leadingMeaning.spanish.display_word ?? leadingMeaning.spanish.word
+                : leadingMeaning.english.word
+            : null;
 
         const sectionBody = (
             <div className={isConnectedCard ? 'p-6 md:p-8' : ''}>
+                {!isConnectedCard && (
+                    <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400 mb-3">
+                        Entry #{formatEntryId(targetEntry.id)}
+                    </p>
+                )}
                 {targetEntry.grand_note && (
                     <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/30">
                         <h3 className="text-xl font-bold text-center mb-2 text-slate-900 dark:text-yellow-100">{targetEntry.grand_note.title}</h3>
                         <p className="text-slate-900 dark:text-yellow-200">{targetEntry.grand_note.description}</p>
                     </div>
                 )}
-                {queryLabel && !isConnectedCard && (
-                    <p className="mb-4 text-left text-sm text-slate-600 dark:text-slate-300 lowercase">
-                        <span className="font-bold text-base text-slate-900 dark:text-white">{queryLabel}</span>
+                {labelWord && (
+                    <p className="mb-4 text-left text-base text-slate-600 dark:text-slate-300 lowercase">
+                        <span className="font-black text-lg text-slate-900 dark:text-white">{labelWord}</span>
                         <span className="ml-2 font-semibold text-slate-600 dark:text-slate-300">means</span>
                     </p>
                 )}
@@ -235,9 +245,9 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
                                     </div>
 
                                     {(spanish.note || english.note) && (
-                                        <div className="mt-4 rounded-xl bg-white shadow-sm border border-white/20 dark:bg-white/5 dark:border-white/10 text-slate-700 dark:text-slate-100 p-4">
-                                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Notes</p>
-                                            <div className="mt-2 space-y-2 text-sm">
+                                        <div className="mt-4">
+                                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Notes</p>
+                                            <div className="mt-2 border-l-4 border-white/80 dark:border-white/60 pl-4 space-y-2 text-sm text-slate-700 dark:text-slate-100">
                                                 {spanish.note && <p>{spanish.note}</p>}
                                                 {english.note && <p>{english.note}</p>}
                                             </div>
@@ -318,17 +328,6 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
         return acc;
     }, []);
 
-    const trimmedQuery = query.trim();
-    const labelBaseMeanings = filterMeaningsByMatch(entry.meanings);
-    const sortedLabelMeanings = sortMeanings(labelBaseMeanings);
-    const labelMeaning = sortedLabelMeanings[0] ?? entry.meanings[0];
-    const queryLabel =
-        trimmedQuery && labelMeaning
-            ? lang === 'ES'
-                ? labelMeaning.spanish.display_word ?? labelMeaning.spanish.word
-                : labelMeaning.english.word
-            : null;
-
     return (
         <div className="p-4 md:p-6 lg:p-8 overflow-y-auto h-full space-y-10">
             {renderMeaningSections(entry, {
@@ -336,7 +335,6 @@ export const WordDetails: React.FC<WordDetailsProps> = ({
                 applyMatchFilter: true,
                 isWordOnList,
                 isConnectedCard: false,
-                queryLabel,
             })}
 
             {uniqueConnectedEntries.length > 0 && (
